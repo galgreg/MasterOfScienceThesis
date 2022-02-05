@@ -1,0 +1,13 @@
+# .gitignore content for LaTex repository module
+*.aux
+*.lof
+*.log
+*.lot
+*.toc
+*.gz
+*.pdf
+*.dvi
+*.bbl
+*.blg
+*.out
+_minted-main

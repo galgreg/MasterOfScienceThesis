@@ -1,0 +1,4 @@
+# .gitignore content for repository root directory
+application/aplikacja_notatki/
+materialy_pomocnicze/
+UnitySDK.log
