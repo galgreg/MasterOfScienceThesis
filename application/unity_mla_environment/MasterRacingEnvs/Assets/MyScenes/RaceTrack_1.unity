@@ -14753,7 +14753,7 @@ BoxCollider:
   m_GameObject: {fileID: 250357847}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.23656514, y: 2.0000005, z: 0.39747912}
   m_Center: {x: -0.036429565, y: 0.00033495884, z: 0.0062545547}
@@ -57932,6 +57932,68 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.54553366, y: 2.0000005, z: 1.0000005}
   m_Center: {x: 0.0073753195, y: 0.000025422263, z: 0.000010050338}
+--- !u!1001 &1009816906
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1994655607}
+    m_Modifications:
+    - target: {fileID: 7484614119369558441, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_Name
+      value: CheckpointSingle (57)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_RootOrder
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 32.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6.4972243
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.9966394
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.08191455
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 369.397
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+--- !u!4 &1009816907 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7484614119369558445, guid: 64a461cadc8dc196e819353279f89d03, type: 3}
+  m_PrefabInstance: {fileID: 1009816906}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1013051689
 GameObject:
   m_ObjectHideFlags: 0
@@ -83128,7 +83190,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498048749}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.41853517, y: 2.0000005, z: 1.0000005}
@@ -112715,6 +112777,7 @@ Transform:
   - {fileID: 1643549580}
   - {fileID: 1271209675}
   - {fileID: 64497172}
+  - {fileID: 1009816907}
   m_Father: {fileID: 316827363}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -112992,7 +113055,7 @@ BoxCollider:
   m_GameObject: {fileID: 2003034602}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.2278718, y: 2.0000005, z: 0.43849957}
   m_Center: {x: 0.108139694, y: -0.0016739777, z: -0.00011760059}

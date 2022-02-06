@@ -22,13 +22,18 @@ public class TrackCheckpoints : MonoBehaviour
     public void CarThroughCheckpoint(CheckpointSingle checkpointSingle) {
         if (m_checkpointSingleList.IndexOf(checkpointSingle) == m_nextCheckpointSingleIdx) {
         // Correct index.
-            m_nextCheckpointSingleIdx =
-                    (m_nextCheckpointSingleIdx + 1) % m_checkpointSingleList.Count;
-            // TODO - emit reward signal.
+            m_nextCheckpointSingleIdx += 1;
+            // TODO - emit normal reward signal.
             Debug.Log("Correct checkpoint!");
+
+            if (m_nextCheckpointSingleIdx == m_checkpointSingleList.Count) {
+                // All checkpoints passed, so add more reward and request to 
+                // finish simulation.
+                Debug.Log("Race finished!");
+            }
         } else {
         // Invalid index.
-            // TODO - emit penalty signal.
+            // TODO - emit big penalty signal and finish training.
             Debug.Log("Wrong checkpoint!");
         }
     }
