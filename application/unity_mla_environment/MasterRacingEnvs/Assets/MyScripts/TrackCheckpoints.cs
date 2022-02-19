@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TrackCheckpoints : MonoBehaviour
 {
+    public CarAgent CarAgentObject;
     private List<CheckpointSingle> m_checkpointSingleList;
     private int m_nextCheckpointSingleIdx;
 
@@ -21,20 +22,14 @@ public class TrackCheckpoints : MonoBehaviour
 
     public void CarThroughCheckpoint(CheckpointSingle checkpointSingle) {
         if (m_checkpointSingleList.IndexOf(checkpointSingle) == m_nextCheckpointSingleIdx) {
-        // Correct index.
             m_nextCheckpointSingleIdx += 1;
-            // TODO - emit normal reward signal.
-            Debug.Log("Correct checkpoint!");
+            CarAgentObject.CorrectCheckpointEvent();
 
             if (m_nextCheckpointSingleIdx == m_checkpointSingleList.Count) {
-                // All checkpoints passed, so add more reward and request to 
-                // finish simulation.
-                Debug.Log("Race finished!");
+                CarAgentObject.RaceFinishEvent();
             }
         } else {
-        // Invalid index.
-            // TODO - emit big penalty signal and finish training.
-            Debug.Log("Wrong checkpoint!");
+            CarAgentObject.WrongCheckpointEvent();
         }
     }
 }
