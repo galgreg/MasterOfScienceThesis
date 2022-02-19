@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using VehiclePhysics;
 
 public class CarAgent : Agent
 {
@@ -13,10 +14,14 @@ public class CarAgent : Agent
     [Header("CarAgent transform")]
     public Vector3 StartAgentPosition = new Vector3(0.0f, 0.0f, 0.0f);
     public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
-    
+
+    private VehicleBase m_vehicleBase;
+
     // Start is called before the first frame update.
     void Start() {
-        // TODO
+        m_vehicleBase = CarAgentObject.GetComponent<VehicleBase>();
+        m_vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, 4);
+        m_vehicleBase.data.Set(Channel.Input, InputData.Key, 1);
     }
 
     // It executes before each agent's episode begin.
@@ -30,8 +35,7 @@ public class CarAgent : Agent
         var continuousActions = actionBuffers.ContinuousActions;
         float throttle = continuousActions[0];
         float steeringAngle = continuousActions[1];
-
-        // TODO - set throttle and steering angle on CarAgentObject input.
+        _setVehicleInput(throttle, steeringAngle);
     }
 
     // Heuristic is used for testing purposes
@@ -51,5 +55,15 @@ public class CarAgent : Agent
     }
     public void WrongCheckpointEvent() {
         // TODO
+    }
+
+    private void _setVehicleInput(float throttle, float steeringAngle) {
+        Debug.Log("_setVehicleInput" + throttle + " " + steeringAngle);
+        const int MAX_VAL = 10000;
+        m_vehicleBase.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
+        m_vehicleBase.data.Set(Channel.Input, InputData.Throttle,
+                throttle > 0.0f ? (int)(throttle * MAX_VAL) : 0);
+        m_vehicleBase.data.Set(Channel.Input, InputData.Brake,
+                throttle < 0.0f ? (int)(-throttle * MAX_VAL) : 0);
     }
 }

@@ -103489,12 +103489,28 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2069814030545375921, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+    - target: {fileID: 1323062565206536385, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+      propertyPath: DecisionPeriod
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: externalIgnition
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2069814030545375921, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+    - target: {fileID: 0}
       propertyPath: throttleAndBrakeMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2069814030545375922, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2069814030545375922, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+      propertyPath: gearbox.type
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2069814030545375922, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
@@ -103577,23 +103593,22 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3752696626555800470, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
-      propertyPath: CarAgentObject
-      value: 
-      objectReference: {fileID: 1834526423}
+    - target: {fileID: 5439501698652501567, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+      propertyPath: m_InferenceDevice
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5439501698652501567, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
---- !u!1 &1834526423 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2069814030545375925, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
-  m_PrefabInstance: {fileID: 1834526419}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1834526424 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3752696626555800470, guid: f7a352f52c0b4034a8e157c2e33e54c4, type: 3}
   m_PrefabInstance: {fileID: 1834526419}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1834526423}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f8d45ccaeeed5c0e8ba38fb5d3e4100, type: 3}

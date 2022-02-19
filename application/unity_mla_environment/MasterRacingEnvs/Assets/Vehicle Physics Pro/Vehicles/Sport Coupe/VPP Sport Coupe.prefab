@@ -421,9 +421,9 @@ GameObject:
   - component: {fileID: 2069814030545375927}
   - component: {fileID: 2069814030545375926}
   - component: {fileID: 2069814030545375922}
-  - component: {fileID: 2069814030545375921}
   - component: {fileID: 2069814030545375933}
   - component: {fileID: 5439501698652501567}
+  - component: {fileID: 1323062565206536385}
   - component: {fileID: 3752696626555800470}
   - component: {fileID: 5694900701936986323}
   m_Layer: 8
@@ -725,47 +725,6 @@ MonoBehaviour:
   parkModeReactionFactor: 0.95
   maxSubsystemsEnergy: 100000
   "\u202A\u206C\u202D\u206D\u200B\u206E\u202B\u202B\u202D\u206D\u206B\u200E\u206B\u202C\u206B\u202C\u202B\u206F\u202C\u200F\u202B\u202C\u202C\u200B\u206C\u206E\u202A\u202B\u200B\u200B\u200F\u200D\u206F\u202C\u200C\u206F\u202D\u206E\u206D\u206A\u202E": 1
---- !u!114 &2069814030545375921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2069814030545375925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 541707468, guid: b8873f7cd5fec6f49a4b37228b9b23ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  throttleAndBrakeMode: 0
-  brakeOnThrottleBackwards: 0
-  applyClutchOnHandbrake: 1
-  unlockDrivelineOnHandbrake: 1
-  progressiveSteerMode: 0
-  movementRate: 0.25
-  autoCenterRate: 0.01
-  ignitionKey: 107
-  steerAxis: Horizontal
-  throttleAndBrakeAxis: Vertical
-  handbrakeAxis: Jump
-  clutchAxis: Fire1
-  gearShiftButton: Fire2
-  gearModeSelectButton: Fire3
-  keyboardNumbersSelectGears: 1
-  neutralGear: 110
-  reverseGear: 114
-  disableSteerInput: 0
-  disableThrottleInput: 0
-  disableBrakeInput: 0
-  disableClutchInput: 0
-  externalThrottle: 0
-  reverse: 0
-  externalBrake: 0
-  externalHandbrake: 0
-  externalSteer: 0
-  externalClutch: 0
-  externalIgnition: 1
-  lockBrakesOnEnable: 0
 --- !u!114 &2069814030545375933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,7 +780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 0
+    VectorObservationSize: 1
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
@@ -831,14 +790,28 @@ MonoBehaviour:
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
-  m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_InferenceDevice: 3
+  m_BehaviorType: 1
   m_BehaviorName: CarAgentBehaviour
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
+--- !u!114 &1323062565206536385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069814030545375925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecisionPeriod: 5
+  TakeActionsBetweenDecisions: 1
 --- !u!114 &3752696626555800470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -855,9 +828,9 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  CarAgentObject: {fileID: 2069814030545375925}
   StartAgentPosition: {x: 241.89, y: 0.19, z: 212.63}
   StartAgentRotation: {x: 0, y: 9.76, z: 0}
-  CarAgentScale: 1
 --- !u!114 &5694900701936986323
 MonoBehaviour:
   m_ObjectHideFlags: 0
