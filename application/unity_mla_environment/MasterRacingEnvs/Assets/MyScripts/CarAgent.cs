@@ -15,8 +15,12 @@ public class CarAgent : Agent
     public Vector3 StartAgentPosition = new Vector3(0.0f, 0.0f, 0.0f);
     public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
 
+    // Reference to vehicle controller 
     private VPVehicleController m_vehicleController;
+    // Quaternion object for start agent rotation.
     private Quaternion m_quatStartAgentRotation;
+    // It states if should be reposition done on episode begin.
+    private bool m_reposOnEpisodeBegin = true;
     private const float CORRECT_CHECKPOINT_REWARD = 1.0f;
     private const float WRONG_CHECKPOINT_PENALTY = -1.0f;
     private const float RACE_FINISHED_REWARD = 1.0f;
@@ -35,10 +39,10 @@ public class CarAgent : Agent
 
     // It executes before each agent's episode begin.
     public override void OnEpisodeBegin() {
-        // Reset car to its start position and start rotation.
-        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation);
-        // Set manual gear position on first.
-        m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
+        if (m_reposOnEpisodeBegin) {
+            _doCarReposition();
+            m_reposOnEpisodeBegin = false;
+        }
     }
 
     // Define here, what means actions received from policy.
@@ -68,9 +72,9 @@ public class CarAgent : Agent
     }
     public void WrongCheckpointEvent() {
         SetReward(WRONG_CHECKPOINT_PENALTY);
+        m_reposOnEpisodeBegin = true;
         EndEpisode();
     }
-
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
         m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
@@ -78,5 +82,12 @@ public class CarAgent : Agent
                 throttle > 0.0f ? (int)(throttle * MAX_VAL) : 0);
         m_vehicleController.data.Set(Channel.Input, InputData.Brake,
                 throttle < 0.0f ? (int)(-throttle * MAX_VAL) : 0);
+    }
+
+    private void _doCarReposition() {
+        // Reset car to its start position and start rotation.
+        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation);
+        // Set manual gear position on first.
+        m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
     }
 }

@@ -5680,7 +5680,6 @@ GameObject:
   m_Component:
   - component: {fileID: 96118413}
   - component: {fileID: 96118415}
-  - component: {fileID: 96118414}
   m_Layer: 0
   m_Name: DriverCamera
   m_TagString: Untagged
@@ -5702,14 +5701,6 @@ Transform:
   m_Father: {fileID: 155461266}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &96118414
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 96118412}
-  m_Enabled: 1
 --- !u!20 &96118415
 Camera:
   m_ObjectHideFlags: 0
@@ -9761,7 +9752,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: CarAgentBehaviour
   TeamId: 0
   m_UseChildSensors: 1
@@ -9815,12 +9806,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 96118415}
   m_SensorName: DriverCameraSensor
-  m_Width: 50
-  m_Height: 50
+  m_Width: 64
+  m_Height: 36
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
   m_Compression: 1
+--- !u!114 &155461277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155461267}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Record: 0
+  NumStepsToRecord: 0
+  DemonstrationName: RaceTrack_1_Demo_1
+  DemonstrationDirectory: Assets/MyDemonstrations
 --- !u!1 &157539035
 GameObject:
   m_ObjectHideFlags: 0
