@@ -6,6 +6,8 @@ MasterRacingEnvs/[Bb]uild/
 MasterRacingEnvs/[Bb]uilds/
 MasterRacingEnvs/[Ll]ogs/
 MasterRacingEnvs/[Mm]emoryCaptures/
+MasterRacingEnvs/Assets/ML-Agents/Timers/*.json
+MasterRacingEnvs/Assets/ML-Agents/Timers/*.json.meta
 
 # Never ignore Asset meta data
 !MasterRacingEnvs/[Aa]ssets/**/*.meta

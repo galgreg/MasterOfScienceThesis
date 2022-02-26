@@ -15,7 +15,8 @@ public class CarAgent : Agent
     public Vector3 StartAgentPosition = new Vector3(0.0f, 0.0f, 0.0f);
     public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
 
-    private VehicleBase m_vehicleBase;
+    private VPVehicleController m_vehicleController;
+    private Quaternion m_quatStartAgentRotation;
     private const float CORRECT_CHECKPOINT_REWARD = 1.0f;
     private const float WRONG_CHECKPOINT_PENALTY = -1.0f;
     private const float RACE_FINISHED_REWARD = 1.0f;
@@ -23,15 +24,17 @@ public class CarAgent : Agent
 
     // Start is called before the first frame update.
     void Start() {
-        m_vehicleBase = CarAgentObject.GetComponent<VehicleBase>();
-        m_vehicleBase.data.Set(Channel.Input, InputData.AutomaticGear, 4);
-        m_vehicleBase.data.Set(Channel.Input, InputData.Key, 1);
+        m_quatStartAgentRotation = Quaternion.Euler(
+                StartAgentRotation.x,
+                StartAgentRotation.y,
+                StartAgentRotation.z);
+        m_vehicleController = CarAgentObject.GetComponent<VPVehicleController>();
+        m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
     }
 
     // It executes before each agent's episode begin.
     public override void OnEpisodeBegin() {
-        CarAgentObject.transform.position = StartAgentPosition;
-        CarAgentObject.transform.eulerAngles = StartAgentRotation;
+        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation);
     }
 
     // Define here, what means actions received from policy.
@@ -66,10 +69,10 @@ public class CarAgent : Agent
 
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
-        m_vehicleBase.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
-        m_vehicleBase.data.Set(Channel.Input, InputData.Throttle,
+        m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
+        m_vehicleController.data.Set(Channel.Input, InputData.Throttle,
                 throttle > 0.0f ? (int)(throttle * MAX_VAL) : 0);
-        m_vehicleBase.data.Set(Channel.Input, InputData.Brake,
+        m_vehicleController.data.Set(Channel.Input, InputData.Brake,
                 throttle < 0.0f ? (int)(-throttle * MAX_VAL) : 0);
     }
 }
