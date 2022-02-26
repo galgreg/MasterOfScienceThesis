@@ -16,6 +16,10 @@ public class CarAgent : Agent
     public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
 
     private VehicleBase m_vehicleBase;
+    private const float CORRECT_CHECKPOINT_REWARD = 1.0f;
+    private const float WRONG_CHECKPOINT_PENALTY = -1.0f;
+    private const float RACE_FINISHED_REWARD = 1.0f;
+    private const float SMALL_STEP_PENALTY = -0.005f;
 
     // Start is called before the first frame update.
     void Start() {
@@ -36,6 +40,7 @@ public class CarAgent : Agent
         float throttle = continuousActions[0];
         float steeringAngle = continuousActions[1];
         _setVehicleInput(throttle, steeringAngle);
+        AddReward(SMALL_STEP_PENALTY);
     }
 
     // Heuristic is used for testing purposes
@@ -48,17 +53,18 @@ public class CarAgent : Agent
     }
 
     public void CorrectCheckpointEvent() {
-        // TODO
+        SetReward(CORRECT_CHECKPOINT_REWARD);
     }
     public void RaceFinishEvent() {
-        // TODO
+        SetReward(RACE_FINISHED_REWARD);
+        EndEpisode();
     }
     public void WrongCheckpointEvent() {
-        // TODO
+        SetReward(WRONG_CHECKPOINT_PENALTY);
+        EndEpisode();
     }
 
     private void _setVehicleInput(float throttle, float steeringAngle) {
-        Debug.Log("_setVehicleInput" + throttle + " " + steeringAngle);
         const int MAX_VAL = 10000;
         m_vehicleBase.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
         m_vehicleBase.data.Set(Channel.Input, InputData.Throttle,

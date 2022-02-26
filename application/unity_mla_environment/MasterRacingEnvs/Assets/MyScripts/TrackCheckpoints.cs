@@ -27,9 +27,11 @@ public class TrackCheckpoints : MonoBehaviour
 
             if (m_nextCheckpointSingleIdx == m_checkpointSingleList.Count) {
                 CarAgentObject.RaceFinishEvent();
+                m_nextCheckpointSingleIdx = 0;
             }
         } else {
             CarAgentObject.WrongCheckpointEvent();
+            m_nextCheckpointSingleIdx = 0;
         }
     }
 }
