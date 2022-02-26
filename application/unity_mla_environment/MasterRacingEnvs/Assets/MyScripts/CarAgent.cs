@@ -29,12 +29,16 @@ public class CarAgent : Agent
                 StartAgentRotation.y,
                 StartAgentRotation.z);
         m_vehicleController = CarAgentObject.GetComponent<VPVehicleController>();
+        // Set ignition key position on start.
         m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
     }
 
     // It executes before each agent's episode begin.
     public override void OnEpisodeBegin() {
+        // Reset car to its start position and start rotation.
         m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation);
+        // Set manual gear position on first.
+        m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
     }
 
     // Define here, what means actions received from policy.
