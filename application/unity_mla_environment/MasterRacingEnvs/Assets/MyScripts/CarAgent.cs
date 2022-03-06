@@ -41,8 +41,8 @@ public class CarAgent : Agent
     public override void OnEpisodeBegin() {
         if (m_reposOnEpisodeBegin) {
             _doCarReposition();
-            m_reposOnEpisodeBegin = false;
         }
+        m_reposOnEpisodeBegin = true;
     }
 
     // Define here, what means actions received from policy.
@@ -68,6 +68,7 @@ public class CarAgent : Agent
     }
     public void RaceFinishEvent() {
         SetReward(RACE_FINISHED_REWARD);
+        m_reposOnEpisodeBegin = false;
         EndEpisode();
     }
     public void WrongCheckpointEvent() {
