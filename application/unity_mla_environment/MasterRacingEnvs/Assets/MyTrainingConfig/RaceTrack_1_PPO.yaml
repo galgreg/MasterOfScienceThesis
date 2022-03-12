@@ -1,3 +1,16 @@
+# Command to run from ~/projekty/praca_magisterska/application/unity_mla_environment:
+# mlagents-learn MasterRacingEnvs/Assets/MyTrainingConfig/RaceTrack_1_PPO.yaml --run-id=RaceTrack_1_PPO_2 ----results-dir=MasterRacingEnvs/Assets/MyTrainingResults
+
+engine_settings:
+  width: 64 # default = 84
+  height: 36 # default = 84
+  quality_level: 5 # default = 5
+  time_scale: 100 # default = 20
+  target_frame_rate: -1 # default = -1
+  capture_frame_rate: 60 # default = 60
+  no_graphics: false
+torch_settings:
+  device: cuda # default = cpu
 behaviors:
   CarAgentBehaviour:
     trainer_type: ppo
@@ -49,28 +62,9 @@ behaviors:
           vis_encode_type: simple # default = simple, all values: simple, nature_cnn, resnet, match3, fully_connected
           conditioning_type: none # default = hyper, all values: hyper, none
         learning_rate: 0.0003 # Optional, default = 3e-4, typical range: 1e-5 - 1e-3
-        use_actions: false # default = false
+        use_actions: true # default = false
         use_vail: false # default = false
-    behavior_cloning:
+    behavioral_cloning:
       demo_path: MasterRacingEnvs/Assets/MyDemonstrations/RaceTrack1Demo1.demo # Required, no default
       strength: 0.5 # default = 1.0, typical range: 0.1 - 0.5
       steps: 0 # default = 0
-#env_settings:
-  #env_path: ??
-  #env_args: ??
-  #base_port: ??
-  #num_envs: ??
-  #seed: ??
-  #max_lifetime_restarts: ??
-  #restarts_rate_limit_n: ??
-  #restarts_rate_limit_period_s: ??
-engine_settings:
-  width: 64 # default = 84
-  height: 36 # default = 84
-  quality_level: 5 # default = 5
-  time_scale: 100 # default = 20
-  target_frame_rate: -1 # default = -1
-  capture_frame_rate: 60 # default = 60
-  no_graphics: false
-torch_settings:
-  device: cuda # default = cpu

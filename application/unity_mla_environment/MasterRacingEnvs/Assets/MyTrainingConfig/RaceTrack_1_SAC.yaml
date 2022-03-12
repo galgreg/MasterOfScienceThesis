@@ -1,3 +1,13 @@
+engine_settings:
+  width: 64 # default = 84
+  height: 36 # default = 84
+  quality_level: ?? # default = 5
+  time_scale: ?? # default = 20
+  target_frame_rate: ?? # default = -1
+  capture_frame_rate: ?? # default = 60
+  no_graphics: false
+torch_settings:
+  device: cuda # default = cpu
 behaviors:
   CarAgentBehaviour:
     trainer_type: sac
@@ -52,29 +62,10 @@ behaviors:
         learning_rate: ?? # Optional, default = 3e-4, typical range: 1e-5 - 1e-3
         use_actions: ?? # default = false
         use_vail: ?? # default = false
-    behavior_cloning:
+    behavioral_cloning:
       demo_path: ?? # Required, no default
       strength: ?? # default = 1.0, typical range: 0.1 - 0.5
       steps: ?? # default = 0
       batch_size: ?? # default = batch_size of trainer, typical range: 512 - 5120
       num_epoch: ?? # default = num_epoch of trainer, typical range: 3 - 10
       samples_per_update: ?? # default = 0, typical range: buffer_size
-env_settings:
-  env_path: ??
-  env_args: ??
-  base_port: ??
-  num_envs: ??
-  seed: ??
-  max_lifetime_restarts: ??
-  restarts_rate_limit_n: ??
-  restarts_rate_limit_period_s: ??
-engine_settings:
-  width: 64 # default = 84
-  height: 36 # default = 84
-  quality_level: ?? # default = 5
-  time_scale: ?? # default = 20
-  target_frame_rate: ?? # default = -1
-  capture_frame_rate: ?? # default = 60
-  no_graphics: false
-torch_settings:
-  device: cuda # default = cpu

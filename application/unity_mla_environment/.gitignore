@@ -7,9 +7,13 @@ MasterRacingEnvs/[Bb]uilds/
 MasterRacingEnvs/[Ll]ogs/
 MasterRacingEnvs/[Mm]emoryCaptures/
 MasterRacingEnvs/Assets/ML-Agents/Timers/
+MasterRacingEnvs/Assets/MyTrainingResults/
 
-# Never ignore Asset meta data
+# Never ignore Asset meta data...
 !MasterRacingEnvs/[Aa]ssets/**/*.meta
+
+# ...except these ones:
+MasterRacingEnvs/Assets/MyTrainingResults.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # MasterRacingEnvs/[Aa]ssets/AssetStoreTools*
