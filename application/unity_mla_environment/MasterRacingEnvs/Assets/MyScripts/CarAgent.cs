@@ -24,6 +24,7 @@ public class CarAgent : Agent
     void Start() {
         // Retrieve transform from CarAgentObject.
         m_carTransform = CarAgentObject.transform;
+        m_comTransform = m_carTransform.Find("CoM");
         // Convert StartAgentRotation to quaternion.
         m_quatStartAgentRotation = Quaternion.Euler(
                 StartAgentRotation.x,
@@ -147,12 +148,13 @@ public class CarAgent : Agent
         car ray does intersect with the road.
     */
     private bool _isOutOfRoad() {
-        // TODO - implementacja.
-        //##############
-        // throw new System.NotImplementedException();
-        return false;
-        //##############
+        return !Physics.Raycast(
+                m_comTransform.position,
+                -(m_comTransform.up),
+                1.0f,
+                RACE_TRACK_LAYER_MASK);
     }
+
     /*
         It returns value from the range <-1:1>, where -1 means the worst car driving
         direction (car drives in the opposite direction) and 1 means the best
@@ -196,6 +198,8 @@ public class CarAgent : Agent
 
     // Reference to car transform object.
     private Transform m_carTransform;
+    // Reference to car's center-of-mass transform.
+    private Transform m_comTransform;
     // Next checkpoint XZ position.
     private Vector2 m_nextCheckpointPos;
 
@@ -211,6 +215,8 @@ public class CarAgent : Agent
     private List<Vector2> m_checkpointsPos;
     // Index of next checkpoint index.
     private int m_nextCheckpointIdx = 0;
+    // Race track layer mask constant.
+    private const int RACE_TRACK_LAYER_MASK = 1 << 8;
 
 // --------------------- Reward and penalty constants. ---------------------- //
     // Encourage to accelerate rather than brake.

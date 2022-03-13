@@ -9046,7 +9046,7 @@ GameObject:
   - component: {fileID: 149159950}
   - component: {fileID: 149159949}
   - component: {fileID: 149159948}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Drift Track
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9820,7 +9820,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155461267}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
   m_Name: 
