@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CheckpointSingle : MonoBehaviour
 {
-    private TrackCheckpoints m_trackCheckpoints;
+    public void SetCarAgent(CarAgent carAgent) {
+        m_carAgent = carAgent;
+    }
     
     private void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent<CarComponent>(out CarComponent car)) {
-            m_trackCheckpoints.CarThroughCheckpoint(this);
+            m_carAgent.OnCheckpointTrigger(this);
         }
     }
 
-    public void SetTrackCheckpoints(TrackCheckpoints trackCheckpoints) {
-        m_trackCheckpoints = trackCheckpoints;
-    }
+    private CarAgent m_carAgent;
 }
