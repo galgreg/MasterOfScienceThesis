@@ -47,15 +47,12 @@ public class CarAgent : Agent
         m_checkpointsPos = new List<Vector2>();
         foreach (Transform checkpoint in Checkpoints) {
             var checkpointSingle = checkpoint.GetComponent<CheckpointSingle>();
-            checkpointSingle.SetCarAgent(this);
             m_checkpoints.Add(checkpointSingle);
             m_checkpointsPos.Add(new Vector2(checkpoint.position.x, checkpoint.position.z));
         }
 
         // Get vehicle controller component.
         m_vehicleController = CarAgentObject.GetComponent<VPVehicleController>();
-        // Set ignition key position on start.
-        m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
     }
 
     // It executes before each agent's episode begin.
@@ -67,6 +64,26 @@ public class CarAgent : Agent
             m_endEpisodeOnCrossTheLine = false;
         }
         m_reposOnEpisodeBegin = true;
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out CheckpointSingle checkpointSingle)) {
+            if (m_checkpoints.IndexOf(checkpointSingle) == m_nextCheckpointIdx) {
+                if (m_nextCheckpointIdx == 0) {
+                    if (m_endEpisodeOnCrossTheLine) {
+                        m_reposOnEpisodeBegin = false;
+                        EndEpisode();
+                    } else {
+                        m_endEpisodeOnCrossTheLine = true;
+                    }
+                }
+                m_nextCheckpointIdx =
+                        (m_nextCheckpointIdx + 1) % m_checkpoints.Count;
+                m_nextCheckpointPos = m_checkpointsPos[m_nextCheckpointIdx];
+            } else {
+                EndEpisode();
+            }
+        }
     }
 
     // Define here, what means actions received from policy.
@@ -86,23 +103,6 @@ public class CarAgent : Agent
         // Left (negative) and right (positive).
         continuousActionsOut[1] = Input.GetAxis("Horizontal");
     }
-
-    public void OnCheckpointTrigger(CheckpointSingle checkpointSingle) {
-        if (m_checkpoints.IndexOf(checkpointSingle) == m_nextCheckpointIdx) {
-            if (m_nextCheckpointIdx == 0) {
-                if (m_endEpisodeOnCrossTheLine) {
-                    m_reposOnEpisodeBegin = false;
-                    EndEpisode();
-                } else {
-                    m_endEpisodeOnCrossTheLine = true;
-                }
-            }
-            m_nextCheckpointIdx = (m_nextCheckpointIdx + 1) % m_checkpoints.Count;
-            m_nextCheckpointPos = m_checkpointsPos[m_nextCheckpointIdx];
-        } else {
-            EndEpisode();
-        }
-    }
     
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
@@ -115,7 +115,9 @@ public class CarAgent : Agent
 
     private void _doCarReposition() {
         // Reset car to its start position and start rotation.
-        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation);
+        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation, true);
+        // Set ignition key position on start.
+        m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
         // Set manual gear position on first.
         m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
     }
@@ -267,5 +269,5 @@ public class CarAgent : Agent
     // Encourage to keep the correct driving direction.
     private const float CAR_DIRECTION_REWARD = 0.25f;
     // Encourage to minimize steps needed to finish episode.
-    private const float STEP_PENALTY = -0.05f;
+    private const float STEP_PENALTY = -0.1f;
 }

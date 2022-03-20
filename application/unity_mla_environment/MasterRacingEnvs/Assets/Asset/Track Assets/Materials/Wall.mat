@@ -80,11 +80,11 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.52205884, g: 0.52205884, b: 0.52205884, a: 1}
+    - _Color: {r: 0.60708594, g: 1, b: 0, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecColor: {r: 0.4044118, g: 0.32709777, b: 0.32709777, a: 1}
+    - _SpecColor: {r: 0.6903883, g: 0.9716981, b: 0.43543077, a: 1}
   m_BuildTextureStacks: []
 --- !u!1002 &2100001
 EditorExtensionImpl:
