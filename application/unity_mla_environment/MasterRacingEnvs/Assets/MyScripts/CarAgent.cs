@@ -6,9 +6,6 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using VehiclePhysics;
 
-/*
-    TODO - dobrać właściwe wartości dla stałych wykorzystywanych przy wyliczaniu nagród i kar!
-*/
 public class CarAgent : Agent
 {
 // ------------------------- Public data members. --------------------------- //
@@ -123,29 +120,23 @@ public class CarAgent : Agent
     }
 
     private void _computeStepRewards(float throttle, float steeringAngle) {
-        // Add throttle reward.
-        AddReward(THROTTLE_REWARD * throttle);
-        // Add steering angle penalty.
-        AddReward(STEERING_ANGLE_PENALTY * System.Math.Abs(steeringAngle));
-        
-        // Get number of side rays intersecting with the road.
-        int roadIntersectRaysCount = _getRoadIntersectRaysCount();
-        
-        // Add out-of-road penalty or road-center-distance reward.
         if (_isOutOfRoad()) {
-            // Add penalty based on how far out of road the car is.
-            int numOfSideRays = RAYS_ANGLES.Length / 2;
-            AddReward(OUT_OF_ROAD_PENALTY * (1.0f / numOfSideRays) * (numOfSideRays - roadIntersectRaysCount));
+            SetReward(-1.0f);
+            EndEpisode();
         } else {
+            // Add throttle reward.
+            AddReward(THROTTLE_REWARD * throttle);
+            // Add steering angle penalty.
+            AddReward(STEERING_ANGLE_PENALTY * System.Math.Abs(steeringAngle));
+            // Get number of side rays intersecting with the road.
+            int roadIntersectRaysCount = _getRoadIntersectRaysCount();
             // Add reward based on how close to the center of road the car is.
             AddReward(ROAD_CENTER_DISTANCE_REWARD * (1.0f / RAYS_ANGLES.Length) * roadIntersectRaysCount);
+            // Add driving direction reward (or penalty).
+            AddReward(CAR_DIRECTION_REWARD * _getDirectionScalar());
+            // Add step penalty.
+            AddReward(STEP_PENALTY);
         }
-
-        // Add driving direction reward (or penalty).
-        AddReward(CAR_DIRECTION_REWARD * _getDirectionScalar());
-
-        // Add step penalty.
-        AddReward(STEP_PENALTY);
     }
 
     /*
@@ -262,8 +253,6 @@ public class CarAgent : Agent
     private const float THROTTLE_REWARD = 0.25f;
     // Discourage to do redundant steering wheel movements.
     private const float STEERING_ANGLE_PENALTY = -0.25f;
-    // Discourage to pull off the road.
-    private const float OUT_OF_ROAD_PENALTY = -0.25f;
     // Encourage to keep car on the center of the road.
     private const float ROAD_CENTER_DISTANCE_REWARD = 0.25f;
     // Encourage to keep the correct driving direction.
