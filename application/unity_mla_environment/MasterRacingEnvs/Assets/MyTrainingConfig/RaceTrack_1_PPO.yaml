@@ -2,8 +2,8 @@
 # mlagents-learn MasterRacingEnvs/Assets/MyTrainingConfig/RaceTrack_1_PPO.yaml --run-id=RaceTrack_1_PPO_2 ----results-dir=MasterRacingEnvs/Assets/MyTrainingResults
 
 engine_settings:
-  width: 64 # default = 84
-  height: 36 # default = 84
+  width: 320 # default = 84
+  height: 180 # default = 84
   quality_level: 5 # default = 5
   time_scale: 20 # default = 20
   target_frame_rate: -1 # default = -1
@@ -16,7 +16,7 @@ behaviors:
     trainer_type: ppo
     summary_freq: 20000 # default = 50000
     time_horizon: 256 # default = 64, typical range: 32 - 2048
-    max_steps: 2000000 # default = 500000, typical range: 5e5 - 1e7
+    max_steps: 1000000 # default = 500000, typical range: 5e5 - 1e7
     keep_checkpoints: 5 # default = 5
     checkpoint_interval: 500000 # default = 500000
     threaded: true # default = false
