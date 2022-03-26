@@ -9743,7 +9743,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: CarAgentBehaviour
   TeamId: 0
   m_UseChildSensors: 1
@@ -9798,8 +9798,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 96118415}
   m_SensorName: DriverCameraSensor
-  m_Width: 320
-  m_Height: 180
+  m_Width: 240
+  m_Height: 135
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1

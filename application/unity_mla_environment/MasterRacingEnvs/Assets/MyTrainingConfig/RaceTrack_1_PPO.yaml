@@ -2,15 +2,15 @@
 # mlagents-learn MasterRacingEnvs/Assets/MyTrainingConfig/RaceTrack_1_PPO.yaml --run-id=RaceTrack_1_PPO_2 ----results-dir=MasterRacingEnvs/Assets/MyTrainingResults
 
 engine_settings:
-  width: 320 # default = 84
-  height: 180 # default = 84
+  width: 240 # default = 84
+  height: 135 # default = 84
   quality_level: 5 # default = 5
   time_scale: 20 # default = 20
   target_frame_rate: -1 # default = -1
   capture_frame_rate: 60 # default = 60
   no_graphics: false
-#torch_settings:
-  #device: cuda # default = cpu
+torch_settings:
+  device: cuda # default = cpu
 behaviors:
   CarAgentBehaviour:
     trainer_type: ppo
