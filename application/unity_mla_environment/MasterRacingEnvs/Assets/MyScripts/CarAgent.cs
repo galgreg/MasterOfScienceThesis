@@ -9,23 +9,21 @@ using VehiclePhysics;
 public class CarAgent : Agent
 {
 // ------------------------- Public data members. --------------------------- //
-    [Header("CarAgent object")]
+    [Header("Car agent related values")]
     public GameObject CarAgentObject;
-
-    [Header("CarAgent transform")]
     public Vector3 StartAgentPosition = new Vector3(0.0f, 0.0f, 0.0f);
     public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
 
-    [Header("Track checkpoints object")]
+    [Header("Other values")]
     public Transform Checkpoints;
 
 // ------------------------------ Methods. ---------------------------------- //
     // Constructor
     CarAgent() {
-        RAYS_ANGLES = new float[NUM_OF_RAYS_ANGLES];
-        float angleInterval = (MAX_RAY_ANGLE - MIN_RAY_ANGLE) / (NUM_OF_RAYS_ANGLES - 1);
-        for (int i = 0; i < NUM_OF_RAYS_ANGLES; ++i) {
-            RAYS_ANGLES[i] = MIN_RAY_ANGLE + i * angleInterval;
+        RAY_ANGLES = new float[NUM_OF_RAY_ANGLES];
+        float angleInterval = (MAX_RAY_ANGLE - MIN_RAY_ANGLE) / (NUM_OF_RAY_ANGLES - 1);
+        for (int i = 0; i < NUM_OF_RAY_ANGLES; ++i) {
+            RAY_ANGLES[i] = MIN_RAY_ANGLE + i * angleInterval;
         }
     }
 
@@ -39,13 +37,25 @@ public class CarAgent : Agent
                 StartAgentRotation.x,
                 StartAgentRotation.y,
                 StartAgentRotation.z);
-        // Initialize checkpoints related members.
-        m_checkpoints = new List<CheckpointSingle>();
-        m_checkpointsPos = new List<Vector2>();
+        
+        // Create temp arrays (needed to simplify m_trackSectors initialization)
+        Vector2[] checkptPos = new Vector2[Checkpoints.childCount];
+        CheckpointSingle[] checkpts = new CheckpointSingle[Checkpoints.childCount];
+        int idx = 0;
         foreach (Transform checkpoint in Checkpoints) {
-            var checkpointSingle = checkpoint.GetComponent<CheckpointSingle>();
-            m_checkpoints.Add(checkpointSingle);
-            m_checkpointsPos.Add(new Vector2(checkpoint.position.x, checkpoint.position.z));
+            checkpts[idx] = checkpoint.GetComponent<CheckpointSingle>();
+            checkptPos[idx] = new Vector2(checkpoint.position.x, checkpoint.position.z);
+            ++idx;
+        }
+        
+        // Initialize list of track sectors.
+        m_trackSectors = new List<TrackSector>();
+        for (int i = 0; i < checkpts.Length; ++i) {
+            int nextPosIdx = (i+1) % checkpts.Length;
+            m_trackSectors.Add(new TrackSector(
+                    checkpts[nextPosIdx],
+                    checkptPos[nextPosIdx] - checkptPos[i],
+                    checkpts[i].SectorSpeed));
         }
 
         // Get vehicle controller component.
@@ -56,17 +66,15 @@ public class CarAgent : Agent
     public override void OnEpisodeBegin() {
         if (m_reposOnEpisodeBegin) {
             _doCarReposition();
-            m_nextCheckpointIdx = 0;
-            m_nextCheckpointPos = m_checkpointsPos[0];
-            m_endEpisodeOnCrossTheLine = false;
+            m_curSectorIdx = _lastSectorIdx();
         }
         m_reposOnEpisodeBegin = true;
     }
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out CheckpointSingle checkpointSingle)) {
-            if (m_checkpoints.IndexOf(checkpointSingle) == m_nextCheckpointIdx) {
-                if (m_nextCheckpointIdx == 0) {
+            if (m_trackSectors[m_curSectorIdx].nextCheckpoint() == checkpointSingle) {
+                if (m_curSectorIdx == _lastSectorIdx()) {
                     if (m_endEpisodeOnCrossTheLine) {
                         m_reposOnEpisodeBegin = false;
                         EndEpisode();
@@ -74,9 +82,7 @@ public class CarAgent : Agent
                         m_endEpisodeOnCrossTheLine = true;
                     }
                 }
-                m_nextCheckpointIdx =
-                        (m_nextCheckpointIdx + 1) % m_checkpoints.Count;
-                m_nextCheckpointPos = m_checkpointsPos[m_nextCheckpointIdx];
+                m_curSectorIdx = (m_curSectorIdx + 1) % m_trackSectors.Count;
             } else {
                 EndEpisode();
             }
@@ -89,7 +95,7 @@ public class CarAgent : Agent
         float throttle = continuousActions[0];
         float steeringAngle = continuousActions[1];
         _setVehicleInput(throttle, steeringAngle);
-        _computeStepRewards(throttle, steeringAngle);
+        _computeStepRewards(throttle);
     }
 
     // Heuristic is used for testing purposes
@@ -119,33 +125,28 @@ public class CarAgent : Agent
         m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
     }
 
-    private void _computeStepRewards(float throttle, float steeringAngle) {
+    private void _computeStepRewards(float throttle) {
         if (_isOutOfRoad()) {
             SetReward(-1.0f);
             EndEpisode();
         } else {
+            // Add velocity reward.
+            float velocityReward = _speedReward() * _directionReward();
+            AddReward(RW_VELOCITY * velocityReward);
             // Add throttle reward.
-            AddReward(THROTTLE_REWARD * throttle);
-            // Add steering angle penalty.
-            AddReward(STEERING_ANGLE_PENALTY * System.Math.Abs(steeringAngle));
-            // Get number of side rays intersecting with the road.
-            int roadIntersectRaysCount = _getRoadIntersectRaysCount();
-            // Add reward based on how close to the center of road the car is.
-            AddReward(ROAD_CENTER_DISTANCE_REWARD * (1.0f / RAYS_ANGLES.Length) * roadIntersectRaysCount);
-            // Add driving direction reward (or penalty).
-            AddReward(CAR_DIRECTION_REWARD * _getDirectionScalar());
-            // Add step penalty.
-            AddReward(STEP_PENALTY);
+            AddReward(RW_THROTTLE * throttle);
+            // Add road center reward.
+            AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
         }
     }
 
     /*
         Get number of side car rays, which intersect with the road.
     */
-    private int _getRoadIntersectRaysCount() {
-        int intersectRaysCount = 0;
-        for (int i = 0; i < RAYS_ANGLES.Length; ++i) {
-            float angle = RAYS_ANGLES[i];
+    private int _numOfRaysOnTheRoad() {
+        int numOfRays = 0;
+        for (int i = 0; i < RAY_ANGLES.Length; ++i) {
+            float angle = RAY_ANGLES[i];
             Vector3 leftRayDir =
                     Quaternion.AngleAxis(angle, m_comTransform.forward) * -(m_comTransform.up);
             Vector3 rightRayDir =
@@ -155,18 +156,17 @@ public class CarAgent : Agent
                     leftRayDir,
                     5.0f,
                     RACE_TRACK_LAYER_MASK)) {
-                intersectRaysCount += 1;
+                numOfRays += 1;
             }
             if (Physics.Raycast(
                     m_comTransform.position,
                     rightRayDir,
                     5.0f,
                     RACE_TRACK_LAYER_MASK)) {
-                intersectRaysCount += 1;
+                numOfRays += 1;
             }
         }
-
-        return intersectRaysCount;
+        return numOfRays;
     }
     /*
         Check if car is outside of road - it's achieved by checking, if center
@@ -181,6 +181,21 @@ public class CarAgent : Agent
     }
 
     /*
+        It returns value from the range <-1:1>, where -1 means the worst and 1
+        the best car speed possible. 
+    */
+    private float _speedReward() {
+        // Get expected speed.
+        int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
+        // Get actual speed.
+        int actSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
+        // Compute both parts of the fraction.
+        float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
+        float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
+        // Return result.
+        return numerator / denominator + 1;
+    }
+    /*
         It returns value from the range <-1:1>, where -1 means the worst car driving
         direction (car drives in the opposite direction) and 1 means the best
         car driving direction (car drives exactly in the right direction).
@@ -194,12 +209,9 @@ public class CarAgent : Agent
 
         All vectors are 2D, because only X and Z axes are needed.
     */
-    private float _getDirectionScalar() {
-        // Get car XZ position.
-        Vector2 carPosXZ = new Vector2(m_carTransform.position.x, m_carTransform.position.z);
-
-        // Compute expected car direction.
-        Vector2 expectedDir = m_nextCheckpointPos - carPosXZ;
+    private float _directionReward() {
+        // Get expected car direction.
+        Vector2 expectedDir = m_trackSectors[m_curSectorIdx].expectedDir();
         
         // Get actual car direction.
         Vector2 actualDir = new Vector2(m_carTransform.forward.x, m_carTransform.forward.z);
@@ -209,6 +221,10 @@ public class CarAgent : Agent
 
         // Compute cosinus for angle and return as result.
         return Mathf.Cos(Mathf.Deg2Rad * angle);
+    }
+
+    private int _lastSectorIdx() {
+        return m_trackSectors.Count - 1;
     }
 
 // ------------------------- Private data members. -------------------------- //
@@ -225,38 +241,46 @@ public class CarAgent : Agent
     private Transform m_carTransform;
     // Reference to car's center-of-mass transform.
     private Transform m_comTransform;
-    // Next checkpoint XZ position.
-    private Vector2 m_nextCheckpointPos;
 
     /*
-        List of CheckpointSingle objects. The order must match with the order of
-        items being children of Checkpoints transform.
+        List of track sectors. Track sector is a road segment placed between two
+        consecutive checkpoints. Each track sector has reference to the next checkpoint
+        (the checkpoint which ends the sector) as well as expected driving direction vector
+        and expected speed scalar.
     */
-    private List<CheckpointSingle> m_checkpoints;
+    private List<TrackSector> m_trackSectors;
     /*
-        List of XZ checkpoint positions. The order must match with the order of
-        items being children of Checkpoints transform.
+        Index of track sector where currently the car is.
     */
-    private List<Vector2> m_checkpointsPos;
-    // Index of next checkpoint index.
-    private int m_nextCheckpointIdx = 0;
-    // Race track layer mask constant.
-    private const int RACE_TRACK_LAYER_MASK = 1 << 8;
+    private int m_curSectorIdx = 0;
+
     // Array of angles between car rays and -(m_comTransform.up) direction vector.
-    private readonly float[] RAYS_ANGLES = { 72.5f, 73.5f, 74.5f, 75.5f, 76.5f, 77.5f, 78.5f, 79.5f, 80.5f, 81.5f, 82.5f, 83.5f, 84.5f, 85.5f };
+    private readonly float[] RAY_ANGLES;
+    private const int NUM_OF_RAY_ANGLES = 14;
     private const float MIN_RAY_ANGLE = 72.5f;
     private const float MAX_RAY_ANGLE = 85.5f;
-    private const int NUM_OF_RAYS_ANGLES = 14;
+    
+    // Race track layer mask constant.
+    private const int RACE_TRACK_LAYER_MASK = 1 << 8;
+
+    // Max speed possible to achieve by car on this track.
+    private const int MAX_SPEED = 34000;
 
 // --------------------- Reward and penalty constants. ---------------------- //
-    // Encourage to accelerate rather than brake.
-    private const float THROTTLE_REWARD = 0.25f;
-    // Discourage to do redundant steering wheel movements.
-    private const float STEERING_ANGLE_PENALTY = -0.25f;
-    // Encourage to keep car on the center of the road.
-    private const float ROAD_CENTER_DISTANCE_REWARD = 0.25f;
-    // Encourage to keep the correct driving direction.
-    private const float CAR_DIRECTION_REWARD = 0.25f;
-    // Encourage to minimize steps needed to finish episode.
-    private const float STEP_PENALTY = -0.1f;
+    /*
+        Weight of the velocity reward. Velocity reward encourage agent to keep
+        the car driving with the right speed toward the right direction
+        (because Velocity = Speed * Direction).
+    */
+    private const float RW_VELOCITY = 0.5f;
+    /*
+        Encourage to accelerate rather than brake - especially needed
+        at the beginning of the training.
+    */
+    private const float RW_THROTTLE = 0.25f;
+    /*
+        Encourage to keep car driving on the middle of the road.
+    */
+    private const float RW_ROAD_CENTER = 0.25f;
+    
 }
