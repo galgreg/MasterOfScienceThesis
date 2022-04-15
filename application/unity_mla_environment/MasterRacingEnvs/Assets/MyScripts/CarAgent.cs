@@ -38,7 +38,7 @@ public class CarAgent : Agent
                 StartAgentRotation.y,
                 StartAgentRotation.z);
         
-        // Create temp arrays (needed to simplify m_trackSectors initialization)
+        // Create temp arrays (needed to simplify initialization of track sectors)
         Vector2[] checkptPos = new Vector2[Checkpoints.childCount];
         CheckpointSingle[] checkpts = new CheckpointSingle[Checkpoints.childCount];
         int idx = 0;
@@ -73,7 +73,7 @@ public class CarAgent : Agent
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out CheckpointSingle checkpointSingle)) {
-            if (m_trackSectors[m_curSectorIdx].nextCheckpoint() == checkpointSingle) {
+            if (_isNextCheckpoint(checkpointSingle)) {
                 if (m_curSectorIdx == _lastSectorIdx()) {
                     if (m_endEpisodeOnCrossTheLine) {
                         m_reposOnEpisodeBegin = false;
@@ -107,6 +107,13 @@ public class CarAgent : Agent
         continuousActionsOut[1] = Input.GetAxis("Horizontal");
     }
     
+    /*
+        Check if given checkpoint is the next checkpoint which should be triggered.
+    */
+    private bool _isNextCheckpoint(CheckpointSingle checkpointSingle) {
+        return m_trackSectors[m_curSectorIdx].nextCheckpoint() == checkpointSingle;
+    }
+
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
         m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
@@ -168,6 +175,7 @@ public class CarAgent : Agent
         }
         return numOfRays;
     }
+
     /*
         Check if car is outside of road - it's achieved by checking, if center
         car ray does intersect with the road.
@@ -223,6 +231,7 @@ public class CarAgent : Agent
         return Mathf.Cos(Mathf.Deg2Rad * angle);
     }
 
+    // Get index of the last track sector.
     private int _lastSectorIdx() {
         return m_trackSectors.Count - 1;
     }
@@ -266,7 +275,7 @@ public class CarAgent : Agent
     // Max speed possible to achieve by car on this track.
     private const int MAX_SPEED = 34000;
 
-// --------------------- Reward and penalty constants. ---------------------- //
+// --------------------- Reward weight constants. ---------------------- //
     /*
         Weight of the velocity reward. Velocity reward encourage agent to keep
         the car driving with the right speed toward the right direction
@@ -282,5 +291,4 @@ public class CarAgent : Agent
         Encourage to keep car driving on the middle of the road.
     */
     private const float RW_ROAD_CENTER = 0.25f;
-    
 }
