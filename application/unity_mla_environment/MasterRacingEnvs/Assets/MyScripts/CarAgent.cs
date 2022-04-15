@@ -95,7 +95,7 @@ public class CarAgent : Agent
         float throttle = continuousActions[0];
         float steeringAngle = continuousActions[1];
         _setVehicleInput(throttle, steeringAngle);
-        _computeStepRewards(throttle);
+        _computeStepRewards(throttle, steeringAngle);
     }
 
     // Heuristic is used for testing purposes
@@ -132,18 +132,31 @@ public class CarAgent : Agent
         m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
     }
 
-    private void _computeStepRewards(float throttle) {
+    private void _computeStepRewards(float throttle, float steeringAngle) {
         if (_isOutOfRoad()) {
             SetReward(-1.0f);
             EndEpisode();
         } else {
-            // Add velocity reward.
-            float velocityReward = _speedReward() * _directionReward();
-            AddReward(RW_VELOCITY * velocityReward);
             // Add throttle reward.
             AddReward(RW_THROTTLE * throttle);
-            // Add road center reward.
-            AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
+
+            // Add steering angle penalty.
+            AddReward(RW_STEERING_ANGLE * Mathf.Abs(steeringAngle));
+
+            // Add other rewards, but only if throttle is greater than 0.
+            if (throttle > 0) {
+                // Add velocity reward.
+                float velocityReward = _speedReward() * _directionReward();
+                AddReward(RW_VELOCITY * velocityReward);
+                // Add road center reward.
+                AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
+            }
+
+            /*
+                Small constant penalty for each step - it used to encourage agent
+                to run faster (actually to have shorter episodes).
+            */
+            AddReward(RW_PER_STEP_PENALTY);
         }
     }
 
@@ -193,15 +206,22 @@ public class CarAgent : Agent
         the best car speed possible. 
     */
     private float _speedReward() {
-        // Get expected speed.
-        int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
         // Get actual speed.
         int actSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
-        // Compute both parts of the fraction.
-        float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
-        float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
-        // Return result.
-        return numerator / denominator + 1;
+
+        // Return worst possible reward if the speed is lesser than minimal allowed speed.
+        if (actSpeed < MIN_ALLOWED_SPEED) {
+            return -1;
+        } else {
+            // Get expected speed.
+            int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
+            
+            // Compute both parts of the fraction.
+            float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
+            float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
+            // Return result.
+            return numerator / denominator + 1;
+        }
     }
     /*
         It returns value from the range <-1:1>, where -1 means the worst car driving
@@ -275,20 +295,35 @@ public class CarAgent : Agent
     // Max speed possible to achieve by car on this track.
     private const int MAX_SPEED = 34000;
 
+    /*
+        Minimal allowed speed for the car - below that value the agent will
+        receive worst possible speed reward.
+    */
+    private const int MIN_ALLOWED_SPEED = 2000;
+
 // --------------------- Reward weight constants. ---------------------- //
     /*
         Weight of the velocity reward. Velocity reward encourage agent to keep
         the car driving with the right speed toward the right direction
         (because Velocity = Speed * Direction).
     */
-    private const float RW_VELOCITY = 0.5f;
+    private const float RW_VELOCITY = 0.4f;
     /*
         Encourage to accelerate rather than brake - especially needed
         at the beginning of the training.
     */
-    private const float RW_THROTTLE = 0.25f;
+    private const float RW_THROTTLE = 0.3f;
+    /*
+        Encourage to not overusing steering wheel rotations.
+    */
+    private const float RW_STEERING_ANGLE = -0.3f;
     /*
         Encourage to keep car driving on the middle of the road.
     */
-    private const float RW_ROAD_CENTER = 0.25f;
+    private const float RW_ROAD_CENTER = 0.3f;
+    /*
+        Little penalty for each step - used to encourage agent to drive faster
+        (actually to have shorter episodes).
+    */
+    private const float RW_PER_STEP_PENALTY = -0.01f;
 }
