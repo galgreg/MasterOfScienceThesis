@@ -11,8 +11,8 @@ public class CarAgent : Agent
 // ------------------------- Public data members. --------------------------- //
     [Header("Car agent related values")]
     public GameObject CarAgentObject;
-    public Vector3 StartAgentPosition = new Vector3(0.0f, 0.0f, 0.0f);
-    public Vector3 StartAgentRotation = new Vector3(0.0f, 0.0f, 0.0f);
+
+    public CarLocation[] StartCarLocations;
 
     [Header("Other values")]
     public Transform Checkpoints;
@@ -32,11 +32,6 @@ public class CarAgent : Agent
         // Retrieve transform from CarAgentObject.
         m_carTransform = CarAgentObject.transform;
         m_comTransform = m_carTransform.Find("CoM");
-        // Convert StartAgentRotation to quaternion.
-        m_quatStartAgentRotation = Quaternion.Euler(
-                StartAgentRotation.x,
-                StartAgentRotation.y,
-                StartAgentRotation.z);
         
         // Create temp arrays (needed to simplify initialization of track sectors)
         Vector2[] checkptPos = new Vector2[Checkpoints.childCount];
@@ -66,7 +61,7 @@ public class CarAgent : Agent
     public override void OnEpisodeBegin() {
         if (m_reposOnEpisodeBegin) {
             _doCarReposition();
-            m_curSectorIdx = _lastSectorIdx();
+            m_curSectorIdx = m_lastSectorIdx;
         }
         m_reposOnEpisodeBegin = true;
     }
@@ -74,7 +69,9 @@ public class CarAgent : Agent
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out CheckpointSingle checkpointSingle)) {
             if (_isNextCheckpoint(checkpointSingle)) {
-                if (m_curSectorIdx == _lastSectorIdx()) {
+                AddReward(RW_PASSED_CHECKPOINT);
+
+                if (m_curSectorIdx == m_lastSectorIdx) {
                     if (m_endEpisodeOnCrossTheLine) {
                         m_reposOnEpisodeBegin = false;
                         EndEpisode();
@@ -124,8 +121,19 @@ public class CarAgent : Agent
     }
 
     private void _doCarReposition() {
+        // Choose one of available start locations.
+        int locationIdx = Random.Range(0, StartCarLocations.Length);
+        var startLocation = StartCarLocations[locationIdx];
+        var startPos = startLocation.CarPosition;
+        var quatRotation = Quaternion.Euler(startLocation.CarRotation);
+        if (startLocation.FirstCheckpointIndex > 0) {
+            m_lastSectorIdx = startLocation.FirstCheckpointIndex - 1;
+        } else {
+            m_lastSectorIdx = m_trackSectors.Count - 1;
+        }
+
         // Reset car to its start position and start rotation.
-        m_vehicleController.HardReposition(StartAgentPosition, m_quatStartAgentRotation, true);
+        m_vehicleController.HardReposition(startPos, quatRotation, true);
         // Set ignition key position on start.
         m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
         // Set manual gear position on first.
@@ -137,21 +145,11 @@ public class CarAgent : Agent
             SetReward(-1.0f);
             EndEpisode();
         } else {
-            // Add throttle reward.
-            AddReward(RW_THROTTLE * throttle);
-
-            // Add steering angle penalty.
-            AddReward(RW_STEERING_ANGLE * Mathf.Abs(steeringAngle));
-
-            // Add other rewards, but only if throttle is greater than 0.
-            if (throttle > 0) {
-                // Add velocity reward.
-                float velocityReward = _speedReward() * _directionReward();
-                AddReward(RW_VELOCITY * velocityReward);
-                // Add road center reward.
-                AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
-            }
-
+            // Add velocity reward.
+            float velocityReward = _speedReward() * _directionReward();
+            AddReward(RW_VELOCITY * velocityReward);
+            // Add road center reward.
+            AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
             /*
                 Small constant penalty for each step - it used to encourage agent
                 to run faster (actually to have shorter episodes).
@@ -206,22 +204,24 @@ public class CarAgent : Agent
         the best car speed possible. 
     */
     private float _speedReward() {
-        // Get actual speed.
-        int actSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
+        return 1.0f;
 
-        // Return worst possible reward if the speed is lesser than minimal allowed speed.
-        if (actSpeed < MIN_ALLOWED_SPEED) {
-            return -1;
-        } else {
-            // Get expected speed.
-            int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
+        // // Get actual speed.
+        // int actSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
+
+        // // Return worst possible reward if the speed is lesser than minimal allowed speed.
+        // if (actSpeed < MIN_ALLOWED_SPEED) {
+        //     return -1;
+        // } else {
+        //     // Get expected speed.
+        //     int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
             
-            // Compute both parts of the fraction.
-            float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
-            float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
-            // Return result.
-            return numerator / denominator + 1;
-        }
+        //     // Compute both parts of the fraction.
+        //     float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
+        //     float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
+        //     // Return result.
+        //     return numerator / denominator + 1;
+        // }
     }
     /*
         It returns value from the range <-1:1>, where -1 means the worst car driving
@@ -251,11 +251,6 @@ public class CarAgent : Agent
         return Mathf.Cos(Mathf.Deg2Rad * angle);
     }
 
-    // Get index of the last track sector.
-    private int _lastSectorIdx() {
-        return m_trackSectors.Count - 1;
-    }
-
 // ------------------------- Private data members. -------------------------- //
     // Reference to vehicle controller 
     private VPVehicleController m_vehicleController;
@@ -282,6 +277,10 @@ public class CarAgent : Agent
         Index of track sector where currently the car is.
     */
     private int m_curSectorIdx = 0;
+    /*
+        Last sector index.
+    */
+    private int m_lastSectorIdx = 0;
 
     // Array of angles between car rays and -(m_comTransform.up) direction vector.
     private readonly float[] RAY_ANGLES;
@@ -307,22 +306,17 @@ public class CarAgent : Agent
         the car driving with the right speed toward the right direction
         (because Velocity = Speed * Direction).
     */
-    private const float RW_VELOCITY = 0.4f;
-    /*
-        Encourage to accelerate rather than brake - especially needed
-        at the beginning of the training.
-    */
-    private const float RW_THROTTLE = 0.3f;
-    /*
-        Encourage to not overusing steering wheel rotations.
-    */
-    private const float RW_STEERING_ANGLE = -0.3f;
+    private const float RW_VELOCITY = 0.3f;
     /*
         Encourage to keep car driving on the middle of the road.
     */
-    private const float RW_ROAD_CENTER = 0.3f;
+    private const float RW_ROAD_CENTER = 0.2f;
     /*
-        Little penalty for each step - used to encourage agent to drive faster
+        Reward for passing checkpoint.
+    */
+    private const float RW_PASSED_CHECKPOINT = 0.5f;
+    /*
+        Small penalty for each step - used to encourage agent to drive faster
         (actually to have shorter episodes).
     */
     private const float RW_PER_STEP_PENALTY = -0.01f;
