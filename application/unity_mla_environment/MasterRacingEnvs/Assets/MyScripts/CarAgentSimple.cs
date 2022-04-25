@@ -27,8 +27,23 @@ public class CarAgentSimple : Agent
 
     // When car collides with barriers.
     void OnCollisionEnter(Collision other) {
-        // Add collision penalty.
-        _addReward(RW_COLLISION * Mathf.Pow(m_currentNormSpeed, 2));
+        // Set true on m_doesCollide.
+        m_doesCollide = true;
+
+        // Add collision enter penalty.
+        _addReward(RW_COLLISION_ENTER * Mathf.Pow(m_currentNormSpeed, 2));
+    }
+
+    // When collision with barriers curretly occurs.
+    void OnCollisionStay(Collision other) {
+        // Add collision stay penalty
+        _addReward(RW_COLLISION_STAY);
+    }
+
+    // When collision with barriers does end.
+    void OnCollisionExit(Collision other) {
+        // Set false on m_doesCollide.
+        m_doesCollide = false;
     }
 
     // When car drives through finish line checkpoint.
@@ -58,6 +73,9 @@ public class CarAgentSimple : Agent
 
         // Add current normalized speed as an observation.
         sensor.AddObservation(m_currentNormSpeed);
+
+        // Add to observations information, if car does currently collide with barriers.
+        sensor.AddObservation(m_doesCollide ? 1.0f : 0.0f); 
     }
 
     // Defines what means output returned by neural network.
@@ -138,9 +156,10 @@ public class CarAgentSimple : Agent
     private bool m_isGearReverse = false;
     // Current speed at normalized form - it must be value between -1 to 1.
     private float m_currentNormSpeed = 0.0f;
-
     // Time of lap begin.
     private float m_beginLapTime = 0.0f;
+    // Checks if car is currently colliding or not.
+    private bool m_doesCollide = false;
 
 // ------------------------- Private constants. ----------------------------- //
     // Max speed possible to achieve by car on this track.
@@ -148,5 +167,6 @@ public class CarAgentSimple : Agent
 
 //---------------------- Reward weight (RW) constants. ---------------------- //
     private const float RW_SPEED = 1.0f;
-    private const float RW_COLLISION = -1.0f;
+    private const float RW_COLLISION_ENTER = -1.0f;
+    private const float RW_COLLISION_STAY = -0.5f;
 }
