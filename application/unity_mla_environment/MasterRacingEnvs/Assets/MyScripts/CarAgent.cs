@@ -8,91 +8,89 @@ using VehiclePhysics;
 
 public class CarAgent : Agent
 {
-// ------------------------- Public data members. --------------------------- //
+// ------------ Public data members (to set from Unity editor). ------------- //
     [Header("Car agent related values")]
     public GameObject CarAgentObject;
 
-    public CarLocation[] StartCarLocations;
+    public Vector3 StartCarPosition;
+    public Vector3 StartCarRotation;
 
-    [Header("Other values")]
-    public Transform Checkpoints;
-
-// ------------------------------ Methods. ---------------------------------- //
-    // Constructor
-    CarAgent() {
-        RAY_ANGLES = new float[NUM_OF_RAY_ANGLES];
-        float angleInterval = (MAX_RAY_ANGLE - MIN_RAY_ANGLE) / (NUM_OF_RAY_ANGLES - 1);
-        for (int i = 0; i < NUM_OF_RAY_ANGLES; ++i) {
-            RAY_ANGLES[i] = MIN_RAY_ANGLE + i * angleInterval;
-        }
-    }
-
+// -------- Methods overriden from UnityEngine.MonoBehaviour class. --------- //
     // Start is called before the first frame update.
     void Start() {
-        // Retrieve transform from CarAgentObject.
-        m_carTransform = CarAgentObject.transform;
-        m_comTransform = m_carTransform.Find("CoM");
-        
-        // Create temp arrays (needed to simplify initialization of track sectors)
-        Vector2[] checkptPos = new Vector2[Checkpoints.childCount];
-        CheckpointSingle[] checkpts = new CheckpointSingle[Checkpoints.childCount];
-        int idx = 0;
-        foreach (Transform checkpoint in Checkpoints) {
-            checkpts[idx] = checkpoint.GetComponent<CheckpointSingle>();
-            checkptPos[idx] = new Vector2(checkpoint.position.x, checkpoint.position.z);
-            ++idx;
-        }
-        
-        // Initialize list of track sectors.
-        m_trackSectors = new List<TrackSector>();
-        for (int i = 0; i < checkpts.Length; ++i) {
-            int nextPosIdx = (i+1) % checkpts.Length;
-            m_trackSectors.Add(new TrackSector(
-                    checkpts[nextPosIdx],
-                    checkptPos[nextPosIdx] - checkptPos[i],
-                    checkpts[i].SectorSpeed));
-        }
+        // Create quaternion from StartCarRotation.
+        m_quatStartAgentRotation = Quaternion.Euler(StartCarRotation);
 
         // Get vehicle controller component.
         m_vehicleController = CarAgentObject.GetComponent<VPVehicleController>();
     }
 
+    // When car collides with barriers.
+    void OnCollisionEnter(Collision other) {
+        // Set true on m_doesCollide.
+        m_doesCollide = true;
+
+        // Add collision enter penalty.
+        _addReward(RW_COLLISION_ENTER * Mathf.Pow(m_currentNormSpeed, 2));
+    }
+
+    // When collision with barriers curretly occurs.
+    void OnCollisionStay(Collision other) {
+        // Add collision stay penalty
+        _addReward(RW_COLLISION_STAY);
+    }
+
+    // When collision with barriers does end.
+    void OnCollisionExit(Collision other) {
+        // Set false on m_doesCollide.
+        m_doesCollide = false;
+    }
+
+    // When car drives through finish line checkpoint.
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out FinishLine finishLine)) {
+            // Print lap time for current episode.
+            float endLapTime = Time.time;
+            string lapTime = (endLapTime - m_beginLapTime).ToString("0.00");
+            Debug.Log("Lap time for episode " + CompletedEpisodes + ": " + lapTime + " secs.");
+
+            // End episode.
+            EndEpisode();
+        }
+    }
+
+// ---------- Methods overriden from Unity.MLAgents.Agent class. ------------ //
     // It executes before each agent's episode begin.
     public override void OnEpisodeBegin() {
-        if (m_reposOnEpisodeBegin) {
-            _doCarReposition();
-            m_curSectorIdx = m_lastSectorIdx;
-        }
-        m_reposOnEpisodeBegin = true;
+        _resetCarPosition();
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out CheckpointSingle checkpointSingle)) {
-            if (_isNextCheckpoint(checkpointSingle)) {
-                AddReward(RW_PASSED_CHECKPOINT);
+    // Collect vector observations.
+    public override void CollectObservations(VectorSensor sensor) {
+        // Compute current normalized car speed.
+        float carSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
+        m_currentNormSpeed = carSpeed / MAX_SPEED;
 
-                if (m_curSectorIdx == m_lastSectorIdx) {
-                    if (m_endEpisodeOnCrossTheLine) {
-                        m_reposOnEpisodeBegin = false;
-                        EndEpisode();
-                    } else {
-                        m_endEpisodeOnCrossTheLine = true;
-                    }
-                }
-                m_curSectorIdx = (m_curSectorIdx + 1) % m_trackSectors.Count;
-            } else {
-                EndEpisode();
-            }
-        }
+        // Add current normalized speed as an observation.
+        sensor.AddObservation(m_currentNormSpeed);
+
+        // Add to observations information, if car does currently collide with barriers.
+        sensor.AddObservation(m_doesCollide ? 1.0f : 0.0f); 
     }
 
-    // Define here, what means actions received from policy.
+    // Defines what means output returned by neural network.
+    // Here also are computed rewards usual for each step.
     public override void OnActionReceived(ActionBuffers actionBuffers) {
+        // Get values for throttle and steeringAngle.
         var continuousActions = actionBuffers.ContinuousActions;
-        float throttle = continuousActions[0];
-        float steeringAngle = continuousActions[1];
+        float throttle = Mathf.Clamp(continuousActions[0], -1.0f, 1.0f);
+        float steeringAngle = Mathf.Clamp(continuousActions[1], -1.0f, 1.0f);
+        
+        // Set vehicle input (it means throttle and steering angle).
         _setVehicleInput(throttle, steeringAngle);
-        _computeStepRewards(throttle, steeringAngle);
+
+        // Add speed reward
+        _addReward(RW_SPEED * m_currentNormSpeed);
     }
 
     // Heuristic is used for testing purposes
@@ -103,221 +101,72 @@ public class CarAgent : Agent
         // Left (negative) and right (positive).
         continuousActionsOut[1] = Input.GetAxis("Horizontal");
     }
-    
-    /*
-        Check if given checkpoint is the next checkpoint which should be triggered.
-    */
-    private bool _isNextCheckpoint(CheckpointSingle checkpointSingle) {
-        return m_trackSectors[m_curSectorIdx].nextCheckpoint() == checkpointSingle;
-    }
 
+// --------------------------- Private methods. ----------------------------- //
+    // Set vehicle input from given throttle and steeringAngle value.
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
         m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
+        
+        if (m_currentNormSpeed < 0.0f) {
+            throttle = -throttle;
+        } else if (m_currentNormSpeed == 0.0f) {
+            if (throttle > 0 && m_isGearReverse) {
+                m_vehicleController.data.Set(Channel.Input, InputData.AutomaticGear, 4);
+                m_isGearReverse = false;
+            } else if (throttle < 0) {
+                if (!m_isGearReverse) {
+                    m_vehicleController.data.Set(Channel.Input, InputData.AutomaticGear, 2);
+                    m_isGearReverse = true;
+                }
+                throttle = -throttle;
+            }
+        }
+
         m_vehicleController.data.Set(Channel.Input, InputData.Throttle,
                 throttle > 0.0f ? (int)(throttle * MAX_VAL) : 0);
         m_vehicleController.data.Set(Channel.Input, InputData.Brake,
                 throttle < 0.0f ? (int)(-throttle * MAX_VAL) : 0);
     }
 
-    private void _doCarReposition() {
-        // Choose one of available start locations.
-        int locationIdx = Random.Range(0, StartCarLocations.Length);
-        var startLocation = StartCarLocations[locationIdx];
-        var startPos = startLocation.CarPosition;
-        var quatRotation = Quaternion.Euler(startLocation.CarRotation);
-        if (startLocation.FirstCheckpointIndex > 0) {
-            m_lastSectorIdx = startLocation.FirstCheckpointIndex - 1;
-        } else {
-            m_lastSectorIdx = m_trackSectors.Count - 1;
-        }
-
+    // Reset car to its start position.
+    private void _resetCarPosition() {
         // Reset car to its start position and start rotation.
-        m_vehicleController.HardReposition(startPos, quatRotation, true);
+        m_vehicleController.HardReposition(
+                StartCarPosition, m_quatStartAgentRotation, true);
         // Set ignition key position on start.
         m_vehicleController.data.Set(Channel.Input, InputData.Key, 1);
-        // Set manual gear position on first.
-        m_vehicleController.data.Set(Channel.Input, InputData.ManualGear, 1);
+        // Set automatic gear on drive mode.
+        m_vehicleController.data.Set(Channel.Input, InputData.AutomaticGear, 4);
+        // Reset begin lap time.
+        m_beginLapTime = Time.time;
     }
 
-    private void _computeStepRewards(float throttle, float steeringAngle) {
-        if (_isOutOfRoad()) {
-            SetReward(-1.0f);
-            EndEpisode();
-        } else {
-            // Add velocity reward.
-            float velocityReward = _speedReward() * _directionReward();
-            AddReward(RW_VELOCITY * velocityReward);
-            // Add road center reward.
-            AddReward(RW_ROAD_CENTER * (1.0f / RAY_ANGLES.Length) * _numOfRaysOnTheRoad());
-            /*
-                Small constant penalty for each step - it used to encourage agent
-                to run faster (actually to have shorter episodes).
-            */
-            AddReward(RW_PER_STEP_PENALTY);
-        }
+    // Add reward, clamped to range [-1.0f : 1.0f].
+    private void _addReward(float reward) {
+        AddReward(Mathf.Clamp(reward, -1.0f, 1.0f));
     }
 
-    /*
-        Get number of side car rays, which intersect with the road.
-    */
-    private int _numOfRaysOnTheRoad() {
-        int numOfRays = 0;
-        for (int i = 0; i < RAY_ANGLES.Length; ++i) {
-            float angle = RAY_ANGLES[i];
-            Vector3 leftRayDir =
-                    Quaternion.AngleAxis(angle, m_comTransform.forward) * -(m_comTransform.up);
-            Vector3 rightRayDir =
-                    Quaternion.AngleAxis(-angle, m_comTransform.forward) * -(m_comTransform.up);
-            if (Physics.Raycast(
-                    m_comTransform.position,
-                    leftRayDir,
-                    5.0f,
-                    RACE_TRACK_LAYER_MASK)) {
-                numOfRays += 1;
-            }
-            if (Physics.Raycast(
-                    m_comTransform.position,
-                    rightRayDir,
-                    5.0f,
-                    RACE_TRACK_LAYER_MASK)) {
-                numOfRays += 1;
-            }
-        }
-        return numOfRays;
-    }
-
-    /*
-        Check if car is outside of road - it's achieved by checking, if center
-        car ray does intersect with the road.
-    */
-    private bool _isOutOfRoad() {
-        return !Physics.Raycast(
-                m_comTransform.position,
-                -(m_comTransform.up),
-                1.0f,
-                RACE_TRACK_LAYER_MASK);
-    }
-
-    /*
-        It returns value from the range <-1:1>, where -1 means the worst and 1
-        the best car speed possible. 
-    */
-    private float _speedReward() {
-        return 1.0f;
-
-        // // Get actual speed.
-        // int actSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
-
-        // // Return worst possible reward if the speed is lesser than minimal allowed speed.
-        // if (actSpeed < MIN_ALLOWED_SPEED) {
-        //     return -1;
-        // } else {
-        //     // Get expected speed.
-        //     int expSpeed = m_trackSectors[m_curSectorIdx].expectedSpeed();
-            
-        //     // Compute both parts of the fraction.
-        //     float numerator = -2 * Mathf.Abs(expSpeed - actSpeed);
-        //     float denominator = Mathf.Max(expSpeed, MAX_SPEED - expSpeed);
-        //     // Return result.
-        //     return numerator / denominator + 1;
-        // }
-    }
-    /*
-        It returns value from the range <-1:1>, where -1 means the worst car driving
-        direction (car drives in the opposite direction) and 1 means the best
-        car driving direction (car drives exactly in the right direction).
-
-        Algorithm used to compute result:
-        1) Get car position (carPos) and next checkpoint position (nextCheckpointPos)
-        2) Compute expected car direction vector (expectedDir) from equation: nextCheckpointPos - carPos.
-        3) Get actual car direction vector (actualDir) by accessing car's Transform.forward vector.
-        4) Compute angle (angle) between direction vectors, using Vector2.angle method.
-        5) Compute cosinus for angle and return as result.
-
-        All vectors are 2D, because only X and Z axes are needed.
-    */
-    private float _directionReward() {
-        // Get expected car direction.
-        Vector2 expectedDir = m_trackSectors[m_curSectorIdx].expectedDir();
-        
-        // Get actual car direction.
-        Vector2 actualDir = new Vector2(m_carTransform.forward.x, m_carTransform.forward.z);
-
-        // Compute angle between expectedDir and actualDir.
-        float angle = Vector2.Angle(expectedDir, actualDir);
-
-        // Compute cosinus for angle and return as result.
-        return Mathf.Cos(Mathf.Deg2Rad * angle);
-    }
-
-// ------------------------- Private data members. -------------------------- //
-    // Reference to vehicle controller 
+// ------------------------ Private data members. --------------------------- //
+    // Reference to vehicle controller.
     private VPVehicleController m_vehicleController;
     // Quaternion object for start agent rotation.
     private Quaternion m_quatStartAgentRotation;
-    // Used to check, if reposition should be done on episode begin.
-    private bool m_reposOnEpisodeBegin = true;
-    // Used to check, if episode should be ended on the cross of the lap line.
-    private bool m_endEpisodeOnCrossTheLine = false;
+    // Used to check if reverse gear is set.
+    private bool m_isGearReverse = false;
+    // Current speed at normalized form - it must be value between -1 to 1.
+    private float m_currentNormSpeed = 0.0f;
+    // Time of lap begin.
+    private float m_beginLapTime = 0.0f;
+    // Checks if car is currently colliding or not.
+    private bool m_doesCollide = false;
 
-    // Reference to car transform object.
-    private Transform m_carTransform;
-    // Reference to car's center-of-mass transform.
-    private Transform m_comTransform;
-
-    /*
-        List of track sectors. Track sector is a road segment placed between two
-        consecutive checkpoints. Each track sector has reference to the next checkpoint
-        (the checkpoint which ends the sector) as well as expected driving direction vector
-        and expected speed scalar.
-    */
-    private List<TrackSector> m_trackSectors;
-    /*
-        Index of track sector where currently the car is.
-    */
-    private int m_curSectorIdx = 0;
-    /*
-        Last sector index.
-    */
-    private int m_lastSectorIdx = 0;
-
-    // Array of angles between car rays and -(m_comTransform.up) direction vector.
-    private readonly float[] RAY_ANGLES;
-    private const int NUM_OF_RAY_ANGLES = 14;
-    private const float MIN_RAY_ANGLE = 72.5f;
-    private const float MAX_RAY_ANGLE = 85.5f;
-    
-    // Race track layer mask constant.
-    private const int RACE_TRACK_LAYER_MASK = 1 << 8;
-
+// ------------------------- Private constants. ----------------------------- //
     // Max speed possible to achieve by car on this track.
-    private const int MAX_SPEED = 34000;
+    private const float MAX_SPEED = 35000.0f;
 
-    /*
-        Minimal allowed speed for the car - below that value the agent will
-        receive worst possible speed reward.
-    */
-    private const int MIN_ALLOWED_SPEED = 2000;
-
-// --------------------- Reward weight constants. ---------------------- //
-    /*
-        Weight of the velocity reward. Velocity reward encourage agent to keep
-        the car driving with the right speed toward the right direction
-        (because Velocity = Speed * Direction).
-    */
-    private const float RW_VELOCITY = 0.3f;
-    /*
-        Encourage to keep car driving on the middle of the road.
-    */
-    private const float RW_ROAD_CENTER = 0.2f;
-    /*
-        Reward for passing checkpoint.
-    */
-    private const float RW_PASSED_CHECKPOINT = 0.5f;
-    /*
-        Small penalty for each step - used to encourage agent to drive faster
-        (actually to have shorter episodes).
-    */
-    private const float RW_PER_STEP_PENALTY = -0.01f;
+//---------------------- Reward weight (RW) constants. ---------------------- //
+    private const float RW_SPEED = 1.0f;
+    private const float RW_COLLISION_ENTER = -1.0f;
+    private const float RW_COLLISION_STAY = -0.5f;
 }

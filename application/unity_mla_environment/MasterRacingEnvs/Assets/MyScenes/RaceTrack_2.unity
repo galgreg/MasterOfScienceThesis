@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!20 &178174469 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 4485289507824383938, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-  m_PrefabInstance: {fileID: 1714324970}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &981169442
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -285,6 +280,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 202464178825624883, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2488106781909616345, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -307,22 +306,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2488106783292227961, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
       propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2488106783496791408, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-      propertyPath: gearbox.type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2488106783496791408, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-      propertyPath: gearbox.automaticShiftInterval
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2488106783496791408, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-      propertyPath: gearbox.automaticTransitionTime
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2488106783496791409, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2488106783496791413, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
@@ -639,95 +622,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
---- !u!1 &1714324971 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2488106783496791415, guid: 6d0e52c8245945f3f95d1a4fe485883d, type: 3}
-  m_PrefabInstance: {fileID: 1714324970}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1714324972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714324971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BrainParameters:
-    VectorObservationSize: 2
-    NumStackedVectorObservations: 1
-    m_ActionSpec:
-      m_NumContinuousActions: 2
-      BranchSizes: 
-    VectorActionSize: 02000000
-    VectorActionDescriptions: []
-    VectorActionSpaceType: 1
-    hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
-  m_InferenceDevice: 0
-  m_BehaviorType: 0
-  m_BehaviorName: CarAgentSimpleBehaviour
-  TeamId: 0
-  m_UseChildSensors: 1
-  m_UseChildActuators: 1
-  m_DeterministicInference: 0
-  m_ObservableAttributeHandling: 0
---- !u!114 &1714324973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714324971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d16f9959cc724b12b57339dafb63e7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 3600
-  CarAgentObject: {fileID: 1714324971}
-  StartCarPosition: {x: 13.68, y: -1.287, z: -10.27}
-  StartCarRotation: {x: 0, y: 90, z: 0}
---- !u!114 &1714324974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714324971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecisionPeriod: 2
-  TakeActionsBetweenDecisions: 1
---- !u!114 &1714324975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714324971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 282f342c2ab144bf38be65d4d0c4e07d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Camera: {fileID: 178174469}
-  m_SensorName: CarAgentSensor
-  m_Width: 240
-  m_Height: 135
-  m_Grayscale: 0
-  m_ObservationType: 0
-  m_ObservationStacks: 1
-  m_Compression: 1
 --- !u!1001 &721792128370253433
 PrefabInstance:
   m_ObjectHideFlags: 0
