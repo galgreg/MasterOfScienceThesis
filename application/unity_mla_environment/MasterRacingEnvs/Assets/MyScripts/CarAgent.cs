@@ -11,9 +11,11 @@ public class CarAgent : Agent
 // ------------ Public data members (to set from Unity editor). ------------- //
     [Header("Car agent related values")]
     public GameObject CarAgentObject;
-
     public Vector3 StartCarPosition;
     public Vector3 StartCarRotation;
+
+    [Header("Others")]
+    public Light DirectionalLight;
 
 // -------- Methods overriden from UnityEngine.MonoBehaviour class. --------- //
     // Start is called before the first frame update.
@@ -63,6 +65,7 @@ public class CarAgent : Agent
     // It executes before each agent's episode begin.
     public override void OnEpisodeBegin() {
         _resetCarPosition();
+        _changeLightProperties();
     }
 
     // Collect vector observations.
@@ -103,11 +106,28 @@ public class CarAgent : Agent
     }
 
 // --------------------------- Private methods. ----------------------------- //
+    // Set new random properties for directional light.
+    private void _changeLightProperties() {
+        var lightTransf = DirectionalLight.transform;
+        lightTransf.position = new Vector3(
+            Random.Range(-160.0f, 150.0f),
+            Random.Range(6.0f, 50.0f),
+            Random.Range(-75.0f, 60.0f)
+        );
+        lightTransf.rotation = Quaternion.Euler(new Vector3(
+            Random.Range(0.0f, 180.0f),
+            Random.Range(0.0f, 360.0f),
+            0.0f
+        ));
+        DirectionalLight.intensity = Random.Range(0.0f, 2.0f);
+        DirectionalLight.color = Random.ColorHSV();
+    }
+
     // Set vehicle input from given throttle and steeringAngle value.
     private void _setVehicleInput(float throttle, float steeringAngle) {
         const int MAX_VAL = 10000;
         m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
-        
+
         if (m_currentNormSpeed < 0.0f) {
             throttle = -throttle;
         } else if (m_currentNormSpeed == 0.0f) {
@@ -166,7 +186,7 @@ public class CarAgent : Agent
     private const float MAX_SPEED = 35000.0f;
 
 //---------------------- Reward weight (RW) constants. ---------------------- //
-    private const float RW_SPEED = 1.0f;
+    private const float RW_SPEED = 0.5f;
     private const float RW_COLLISION_ENTER = -1.0f;
     private const float RW_COLLISION_STAY = -0.5f;
 }
