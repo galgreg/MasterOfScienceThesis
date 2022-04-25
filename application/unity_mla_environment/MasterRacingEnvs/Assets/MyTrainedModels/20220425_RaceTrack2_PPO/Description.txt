@@ -1,0 +1,43 @@
+Scene settings:
+1) Directional light turned off.
+2) Vehicle Controller:
+    - Turned off all car driving assists except of ABS.
+    - Gearbox set to automatic with 0 seconds time for Gear transition time and shift interval.
+
+Input:
+1) Visual observations: 240x135 RGB images
+2) Vector observations:
+    - normalized speed (float value from range [-1:1]). Negative speed is for reverse driving.
+    - collision flag -> 1.0f if car currently collides with barrier, 0.0f otherwise.
+
+Output:
+1) Steering angle as normalized value from range [-1:1].
+2) Throttle/braking level as normalized value from range [-1:1].
+
+Training details:
+1) Model trained on RaceTrack_2 scene, with single instance of car agent.
+2) Each episode always started from the same car position and rotation:
+    - Car Position: Vector3(13.6800003,-1.28699994,-10.2700005)
+    - Car Rotation: Vector3(0,90,0)
+3) PPO used to train a model (check configuration).
+4) Training took 1647798 simulation steps.
+5) Max Step set to 3600.
+6) Decision requester:
+    - Decision Period: 2
+    - Take Actions between Decisions: true
+
+Model as a training result:
+1) Model is able to drive safely several laps before crashing. Driving pace is quite unstable. Time trial executed for 8 laps resulted in following lap times:
+    1. 55,06 s
+    2. 55,86 s
+    3. 57,84 s
+    4. 60,80 s <- WORST
+    5. 56,20 s
+    6. 57,46 s
+    7. 48,74 s <- BEST
+    8. DNF (crash on the first corner).
+
+Difference between best and worst lap time is 12 seconds.
+
+2) Model cannot continue driving after serious crash, when car is rotated circa 90 degrees to the road.
+3) Model cannot deal with directional light turned on, when road color becomes brighter and brighter.
