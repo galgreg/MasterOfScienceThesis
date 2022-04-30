@@ -108,19 +108,21 @@ public class CarAgent : Agent
 // --------------------------- Private methods. ----------------------------- //
     // Set new random properties for directional light.
     private void _changeLightProperties() {
-        var lightTransf = DirectionalLight.transform;
-        lightTransf.position = new Vector3(
-            Random.Range(-160.0f, 150.0f),
-            Random.Range(6.0f, 50.0f),
-            Random.Range(-75.0f, 60.0f)
-        );
-        lightTransf.rotation = Quaternion.Euler(new Vector3(
-            Random.Range(0.0f, 180.0f),
-            Random.Range(0.0f, 360.0f),
-            0.0f
-        ));
-        DirectionalLight.intensity = Random.Range(0.0f, 2.0f);
-        DirectionalLight.color = Random.ColorHSV();
+        if (DirectionalLight != null) {
+            var lightTransf = DirectionalLight.transform;
+            lightTransf.position = new Vector3(
+                Random.Range(-160.0f, 150.0f),
+                Random.Range(6.0f, 50.0f),
+                Random.Range(-75.0f, 60.0f)
+            );
+            lightTransf.rotation = Quaternion.Euler(new Vector3(
+                Random.Range(0.0f, 180.0f),
+                Random.Range(0.0f, 360.0f),
+                0.0f
+            ));
+            DirectionalLight.intensity = Random.Range(0.0f, 2.0f);
+            DirectionalLight.color = Random.ColorHSV();
+        }
     }
 
     // Set vehicle input from given throttle and steeringAngle value.
