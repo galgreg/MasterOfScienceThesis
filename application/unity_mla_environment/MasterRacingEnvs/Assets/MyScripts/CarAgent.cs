@@ -186,7 +186,7 @@ public class CarAgent : Agent
     private const float MAX_SPEED = 35000.0f;
 
 //---------------------- Reward weight (RW) constants. ---------------------- //
-    private const float RW_SPEED = 0.5f;
+    private const float RW_SPEED = 0.75f;
     private const float RW_COLLISION_ENTER = -1.0f;
     private const float RW_COLLISION_STAY = -0.5f;
 }
