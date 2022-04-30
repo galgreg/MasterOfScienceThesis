@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 6197773538153460613}
   - component: {fileID: 5503357083153520738}
   m_Layer: 8
-  m_Name: CarAgent
+  m_Name: SimpleCarAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

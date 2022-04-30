@@ -6,7 +6,7 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using VehiclePhysics;
 
-public class CarAgent : Agent
+public class SimpleCarAgent : Agent
 {
 // ------------ Public data members (to set from Unity editor). ------------- //
     [Header("Car agent related values")]
