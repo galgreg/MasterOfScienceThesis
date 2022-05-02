@@ -16,7 +16,7 @@ behaviors:
     trainer_type: ppo
     summary_freq: 20000 # default = 50000
     time_horizon: 256 # default = 64, typical range: 32 - 2048
-    max_steps: 5000000 # default = 500000, typical range: 5e5 - 1e7
+    max_steps: 10000000 # default = 500000, typical range: 5e5 - 1e7
     keep_checkpoints: 10 # default = 5
     checkpoint_interval: 500000 # default = 500000
     threaded: true # default = false
