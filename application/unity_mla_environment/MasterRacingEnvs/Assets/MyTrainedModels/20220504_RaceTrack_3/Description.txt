@@ -1,0 +1,30 @@
+Scene settings:
+1) Directional light turned on, and set to different positions, orientations, intensities and colors for each episode.
+2) Vehicle Controller:
+    - Turned off all car driving assists except of ABS.
+    - Gearbox set to automatic with 0 seconds time for Gear transition time and shift interval.
+
+Input:
+1) Visual observations: 240x135 RGB images
+2) Vector observations:
+    - normalized speed (float value from range [-1:1]). Negative speed is for reverse driving.
+    - collision flag -> 1.0f if car currently collides with barrier, 0.0f otherwise.
+
+Output:
+1) Steering angle as normalized value from range [-1:1].
+2) Throttle/braking level as normalized value from range [-1:1].
+
+Training details:
+1) Model trained on RaceTrack_3 scene, with single instance of car agent.
+2) Car agent reset randomly to one of given position and orientation for each training episode.
+3) PPO used to train a model (check configuration).
+4) Training took 12999786 simulation steps.
+5) Max Step set to 6000.
+6) Decision requester:
+    - Decision Period: 2
+    - Take Actions between Decisions: true
+
+Model as a training result:
+1) Model is usually able to drive safely no more than a few corners before crashing. Driving pace is difficult to measure, because still it's rare case when agent is able to drive whole lap without serious crash. Crashes happen too often, so that's model should not be considered as an accepted one (to show on thesis defense, for example).
+2) Model cannot continue driving after serious crash, when car is rotated circa 90 degrees to the road (but sometimes it's possible).
+3) Model is able to deal with various directional light settings, but still are some edge cases, where agent behaviour is suboptimal.

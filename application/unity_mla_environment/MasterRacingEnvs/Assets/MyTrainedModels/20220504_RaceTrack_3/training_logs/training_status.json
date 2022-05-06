@@ -1,0 +1,110 @@
+{
+    "CarAgentBehaviour": {
+        "checkpoints": [
+            {
+                "steps": 11999838,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-11999838.onnx",
+                "reward": -2671.8892555236816,
+                "creation_time": 1651562821.626444,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-11999838.pt"
+                ]
+            },
+            {
+                "steps": 12499761,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-12499761.onnx",
+                "reward": 411.716316065751,
+                "creation_time": 1651572115.3122516,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-12499761.pt"
+                ]
+            },
+            {
+                "steps": 12999786,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-12999786.onnx",
+                "reward": 317.8033266477287,
+                "creation_time": 1651581121.7293575,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-12999786.pt"
+                ]
+            },
+            {
+                "steps": 13499951,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-13499951.onnx",
+                "reward": 76.31100546816985,
+                "creation_time": 1651589923.8988948,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-13499951.pt"
+                ]
+            },
+            {
+                "steps": 13999826,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-13999826.onnx",
+                "reward": 1105.683723449707,
+                "creation_time": 1651598794.5830593,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-13999826.pt"
+                ]
+            },
+            {
+                "steps": 14499916,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-14499916.onnx",
+                "reward": -221.65491521917284,
+                "creation_time": 1651607780.8540251,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-14499916.pt"
+                ]
+            },
+            {
+                "steps": 14999963,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-14999963.onnx",
+                "reward": -445.6357489898801,
+                "creation_time": 1651616567.2562094,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-14999963.pt"
+                ]
+            },
+            {
+                "steps": 15499998,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-15499998.onnx",
+                "reward": 661.3787223426625,
+                "creation_time": 1651625300.5936046,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-15499998.pt"
+                ]
+            },
+            {
+                "steps": 15999943,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-15999943.onnx",
+                "reward": 662.0557610318065,
+                "creation_time": 1651634045.792216,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-15999943.pt"
+                ]
+            },
+            {
+                "steps": 16255494,
+                "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-16255494.onnx",
+                "reward": -299.28853736817837,
+                "creation_time": 1651638489.0183232,
+                "auxillary_file_paths": [
+                    "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-16255494.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 16255494,
+            "file_path": "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour.onnx",
+            "reward": -299.28853736817837,
+            "creation_time": 1651638489.0183232,
+            "auxillary_file_paths": [
+                "MasterRacingEnvs/Assets/MyTrainingResults/RaceTrack_3_PPO/CarAgentBehaviour/CarAgentBehaviour-16255494.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.8.1+cu102"
+    }
+}

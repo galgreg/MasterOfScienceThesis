@@ -1,5 +1,5 @@
 Scene settings:
-1) Directional ligth turned on, and set to different positions, orientations, intensities and colors for each episode.
+1) Directional light turned on, and set to different positions, orientations, intensities and colors for each episode.
 2) Vehicle Controller:
     - Turned off all car driving assists except of ABS.
     - Gearbox set to automatic with 0 seconds time for Gear transition time and shift interval.
