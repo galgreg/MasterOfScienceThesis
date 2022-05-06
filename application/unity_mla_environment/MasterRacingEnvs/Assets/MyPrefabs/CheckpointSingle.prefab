@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7484614119369558444}
   - component: {fileID: 7484614119369558447}
   - component: {fileID: 7484614119369558446}
-  - component: {fileID: 7484614119369558434}
+  - component: {fileID: -1178412493490624044}
   m_Layer: 0
   m_Name: CheckpointSingle
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7484614119369558434
+--- !u!114 &-1178412493490624044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +105,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7484614119369558441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81690dce2fdb57f4fbff6c6858467e22, type: 3}
+  m_Script: {fileID: 11500000, guid: de1cd45e348244f049f321edfec1a7dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SectorSpeed: 0
