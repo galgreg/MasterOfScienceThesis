@@ -1,0 +1,204 @@
+\documentclass[twoside,a4paper,12pt]{extreport} %,draft,openright
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[MeX]{polski}
+\usepackage{gensymb}
+\usepackage{epsf}
+
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+\pdffalse
+\else
+\pdfoutput=1
+\pdftrue
+\fi
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\pdfcompresslevel=9
+\else
+\usepackage{graphicx}
+\fi
+\usepackage{mdwlist}
+\usepackage{subfigure}
+\usepackage{latexsym,amssymb}
+\usepackage{setspace,cite}
+\usepackage{indentfirst}
+\usepackage{mathtools}
+\usepackage{url}
+%% #### Ustawianie łamania linii dla adresów URL podawanych w bibliografii #### %%
+\usepackage{breakurl}
+\usepackage[breaklinks]{hyperref}
+\def\UrlBreaks{\do\/\do-}
+%% #################################################################### %%
+\usepackage[justification=centering]{caption}
+\usepackage{multirow}
+\usepackage[figuresright]{rotating}
+\usepackage{csquotes}
+\usepackage{listings,xcolor}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{layout}
+\usepackage{verbatim}
+\newfloat{lstfloat}{htbp}{lop}
+\floatname{lstfloat}{Listing}
+\usepackage{enumitem}
+\usepackage{minted}
+
+%% ############### JSON listing's style definition ############### %%
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\fontsize{9}{9}\ttfamily,
+    showstringspaces=false,
+    breaklines=true,
+    string=[s]{"}{"},
+    stringstyle=\color{orange},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+%% #################################################################### %%
+\def\lstfloatautorefname{Listing} % needed for hyperref/auroref
+
+\newenvironment{bottompar}{\par\vspace*{\fill}}{\clearpage}
+\BeforeBeginEnvironment{figure}{\vskip-2ex}
+\AfterEndEnvironment{figure}{\vskip-1ex}
+\lstset{showstringspaces=false}
+
+% for margins left, right top bottom
+\usepackage{anysize}
+\marginsize{3cm}{2.5cm}{2.5cm}{2.5cm}
+\let\origdoublepage\cleardoublepage    %%komenda wstawiająca czyste kartki
+\newcommand{\clearemptydoublepage}{%
+  \clearpage
+  {\pagestyle{empty}\origdoublepage}%
+}
+\let\cleardoublepage\clearemptydoublepage
+
+
+%\usepackage{draft} %draft option - doesn't put full figures in -
+            % useful when editing
+%does the headers on the pages - keep in
+\usepackage{fancyhdr}
+
+%omitting any of these makes the thesis compile without the omitted
+%chapter - good for editing single chapters.
+%\includeonly{header,appendix}
+
+\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+\makeatletter
+\patchcmd{\@makechapterhead}{\vspace*{50\p@}}{}{}{}% Removes space above \chapter head
+\makeatother
+\usepackage{titlesec}
+\titlespacing\section{0pt}{4pt plus 1pt minus 2pt}{0pt plus 1pt minus 2pt}
+\titlespacing\subsection{0pt}{4pt plus 0.5pt minus 2pt}{0pt plus 0.5pt minus 2pt}
+\titlespacing\subsubsection{0pt}{4pt plus 0.5pt minus 2pt}{0pt plus 0pt minus 2pt}
+\begin{document}
+\DeclareGraphicsExtensions{.pdf,.png,.eps}
+\newpage
+
+%Puts page numbering of preamble in roman and of main body of thesis in
+%arabic. Also defines how chapters and sections are made
+\pagenumbering{arabic}
+\setcounter{page}{1} \pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername%
+\ \thechapter:\,\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\,\ #1}}
+
+%DEFINES TITLE PAGE, and contains abstract, acknowledgements, etc.
+
+\include{header}
+
+\newpage
+Słowa kluczowe: \hspace{0.5cm} \textit{konwolucyjne sieci neuronowe, uczenie ze wzmocnieniem} \\[1cm]
+\textbf{Oświadczenie autora pracy}\\
+
+Ja, niżej podpisany: \\
+
+\hspace{1.5cm} imię (imiona) i nazwisko: Grzegorz Galios \\
+
+\hspace{1.5cm} autor pracy dyplomowej pt. 
+\textit{„Zastosowanie konwolucyjnej sieci neuronowej w procesie sterowania samochodem w symulowanym środowisku”}\\
+
+Numer albumu: 315850 \\
+
+Student Wydziału Nauk Ścisłych i Technicznych Uniwersytetu Śląskiego w Katowicach \\ 
+
+kierunku studiów: Informatyka - niestacjonarne II stopnia \\
+
+specjalności: Inteligentne Systemy Informatyczne \\
+
+Oświadczam, że w/w. praca dyplomowa:   
+\begin{itemize}
+\item została przygotowana przeze mnie samodzielnie$^1$,  
+\item nie narusza praw autorskich w rozumieniu ustawy z dnia 4 lutego 1994 r. o prawie autorskim i prawach pokrewnych (tekst jednolity Dz. U. z 2006 r. Nr 90, poz. 631, z późn. zm.) oraz dóbr osobistych chronionych prawem cywilnym,  
+\item nie zawiera danych i informacji, które uzyskałem w sposób niedozwolony,  
+\item nie była podstawą nadania dyplomu uczelni wyższej lub tytułu zawodowego ani mnie, ani innej osobie.  
+\end{itemize}
+Oświadczam również, że treść pracy dyplomowej zamieszczonej przeze mnie w Archiwum Prac Dyplomowych jest identyczna z treścią zawartą w wydrukowanej wersji pracy. \\[0.5cm]
+\textbf{Jestem świadomy odpowiedzialności karnej za złożenie fałszywego oświadczenia.} \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft}
+\centering
+\textbf{...............................}\\
+\textbf{Data}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright}
+\textbf{...............................}\\
+\textbf{Podpis autora pracy}
+\end{flushright}
+\end{minipage} \\[1cm]
+$^1$ uwzględniając merytoryczny wkład promotora (w ramach prowadzonego seminarium dyplomowego)
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+\setcounter{secnumdepth}{2}
+\tableofcontents
+\newpage
+
+%sets up headers for lefthand and righthand pages.
+\pagenumbering{arabic}
+\fancyhead[LE,RO]{\slshape \rightmark}
+\fancyhead[LO,RE]{\slshape \leftmark}
+\fancyfoot[C]{\thepage}
+
+\setlength{\parskip}{1ex} %odstępy między akapitami
+\onehalfspacing
+
+%\input{Rozdzialy/wstep.tex}
+%\input{Rozdzialy/samochody_autonomiczne.tex}
+%\input{Rozdzialy/wstep_do_uczenia_maszynowego.tex}
+%\input{Rozdzialy/projekt_systemu_i_opis_narzedzi.tex}
+%\input{Rozdzialy/opis_implementacji.tex}
+%\input{Rozdzialy/eksperymenty_obliczeniowe.tex}
+%\input{Rozdzialy/podsumowanie.tex}
+
+%   this is for BibTeX
+\bibliographystyle{plplain}
+\bibliography{literatura}
+
+%adds the bibliography to the table of contents
+\addcontentsline{toc}{chapter}
+         {\protect\numberline{Bibliografia\hspace{-96pt}}}
+\end{document}
