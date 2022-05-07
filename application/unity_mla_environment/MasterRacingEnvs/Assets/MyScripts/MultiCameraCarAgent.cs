@@ -45,7 +45,7 @@ public class MultiCameraCarAgent : Agent
         m_doesCollide = true;
 
         // Add collision enter penalty.
-        _addReward(RW_COLLISION_ENTER * Mathf.Pow(m_currentNormSpeed, 2));
+        _addReward(RW_COLLISION_ENTER * Mathf.Pow(m_currentVelocity, 2));
     }
 
     // When collision with barriers curretly occurs.
@@ -67,24 +67,21 @@ public class MultiCameraCarAgent : Agent
             float endLapTime = Time.time;
             string lapTime = (endLapTime - m_beginLapTime).ToString("0.00");
             Debug.Log("Lap time for episode " + CompletedEpisodes + ": " + lapTime + " secs.");
-
+            
             // End episode.
             EndEpisode();
         } else if (other.TryGetComponent(out CheckpointSingle checkpoint)) {
-            if (checkpoint == m_checkpts[m_nextCheckptIdx]) {
-                // Correct checkpoint - update value of m_nextCheckptId.
+            int checkptIdx = System.Array.IndexOf(m_checkpts, checkpoint);
+            if (checkptIdx != -1) {
                 if (m_dirReversed) {
-                    if (m_nextCheckptIdx > 0) {
-                        m_nextCheckptIdx -= 1;
+                    if (checkptIdx > 0) {
+                        m_nextCheckptIdx = checkptIdx - 1;
                     } else {
                         m_nextCheckptIdx = m_checkpts.Length - 1;
                     }
                 } else {
-                    m_nextCheckptIdx = (m_nextCheckptIdx + 1) % m_checkpts.Length;
+                    m_nextCheckptIdx = (checkptIdx + 1) % m_checkpts.Length;
                 }
-            } else {
-                // Wrong checkpoint - end episode.
-                EndEpisode();
             }
         }
     }
@@ -98,20 +95,14 @@ public class MultiCameraCarAgent : Agent
 
     // Collect vector observations.
     public override void CollectObservations(VectorSensor sensor) {
-        // Compute current normalized car speed.
-        float carSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
-        m_currentNormSpeed = carSpeed / MAX_SPEED;
+        // Compute current car velocity (in normalized form).
+        m_currentSpeed = m_vehicleController.data.Get(Channel.Vehicle, VehicleData.Speed);
+        m_currentVelocity = m_currentSpeed / MAX_SPEED * _directionScalar();
 
-        // Compute current direction scalar.
-        m_currentDirScalar = _directionScalar();
+        // Add current normalized velocity as an observation.
+        sensor.AddObservation(m_currentVelocity);
 
-        // Add current normalized speed as an observation.
-        sensor.AddObservation(m_currentNormSpeed);
-
-        // Add current direction scalar as an observation.
-        sensor.AddObservation(m_currentDirScalar);
-
-        // Add to observations information, if car does currently collide with barriers.
+        // Add to observations information, if car is currently colliding with barriers.
         sensor.AddObservation(m_doesCollide ? 1.0f : 0.0f); 
     }
 
@@ -126,11 +117,8 @@ public class MultiCameraCarAgent : Agent
         // Set vehicle input (it means throttle and steering angle).
         _setVehicleInput(throttle, steeringAngle);
 
-        // Add speed reward
-        _addReward(RW_SPEED * m_currentNormSpeed);
-
-        // Add reward for the direction scalar.
-        _addReward(RW_DIR_SCALAR * m_currentDirScalar);
+        // Add velocity reward.
+        _addReward(RW_VELOCITY * m_currentVelocity);
     }
 
     // Heuristic is used for testing purposes
@@ -167,9 +155,9 @@ public class MultiCameraCarAgent : Agent
         const int MAX_VAL = 10000;
         m_vehicleController.data.Set(Channel.Input, InputData.Steer, (int)(steeringAngle * MAX_VAL));
 
-        if (m_currentNormSpeed < 0.0f) {
+        if (m_currentSpeed < 0) {
             throttle = -throttle;
-        } else if (m_currentNormSpeed == 0.0f) {
+        } else if (m_currentSpeed == 0) {
             if (throttle > 0 && m_isGearReverse) {
                 m_vehicleController.data.Set(Channel.Input, InputData.AutomaticGear, 4);
                 m_isGearReverse = false;
@@ -193,7 +181,13 @@ public class MultiCameraCarAgent : Agent
         // Reset car location.
         int locationIndex = Random.Range(0, StartCarLocations.Count);
         var carLocation = StartCarLocations[locationIndex];
-        var quatRotation = Quaternion.Euler(carLocation.Rotation);
+
+        float yAxisRotDeviation = Random.Range(-45.0f, 45.0f);
+        Vector3 carRotation = new Vector3(
+                carLocation.Rotation.x,
+                carLocation.Rotation.y + yAxisRotDeviation,
+                carLocation.Rotation.z);
+        var quatRotation = Quaternion.Euler(carRotation);
         m_vehicleController.HardReposition(carLocation.Position, quatRotation, true);
         
         // Reset m_nextCheckptIdx and m_isReversed.
@@ -260,10 +254,11 @@ public class MultiCameraCarAgent : Agent
     private Quaternion m_quatStartAgentRotation;
     // Used to check if reverse gear is set.
     private bool m_isGearReverse = false;
-    // Current speed at normalized form - it must be value from the range [-1 : 1].
-    private float m_currentNormSpeed = 0.0f;
-    // Current direction scalar value. It must be value from the range [-1 : 1].
-    private float m_currentDirScalar = 0.0f;
+    // Current car speed. It's measured in m/s * 1000 (e.g. 14,5 m/s = 14500).
+    private int m_currentSpeed = 0;
+    // Current velocity at normalized form - it must be value from the range [-1 : 1].
+    // Velocity = Speed * DirectionScalar
+    private float m_currentVelocity = 0.0f;
     // Time of lap begin.
     private float m_beginLapTime = 0.0f;
     // Checks if car is currently colliding or not.
@@ -283,8 +278,7 @@ public class MultiCameraCarAgent : Agent
     private const float MAX_SPEED = 35000.0f;
 
 //---------------------- Reward weight (RW) constants. ---------------------- //
-    private const float RW_SPEED = 0.5f;
-    private const float RW_DIR_SCALAR = 0.5f;
+    private const float RW_VELOCITY = 0.5f;
     private const float RW_COLLISION_ENTER = -1.0f;
     private const float RW_COLLISION_STAY = -0.5f;
 }
