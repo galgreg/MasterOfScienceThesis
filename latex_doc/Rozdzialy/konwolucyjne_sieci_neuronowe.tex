@@ -1,6 +1,6 @@
 \chapter{Konwolucyjne sieci neuronowe}
 \vspace{-1cm}
-Konwolucyjna sieć neuronowa (CNN) jest specjalnym typem sieci, przystosowanej do analizy danych z obrazu \cite{baheti:cnnGuide}\cite{springer:cnnOverview}. Została zaprojektowana do automatycznego i adaptacyjnego uczenia się o przestrzennych wzorcach obecnych na obrazie oraz o hierarchii, jaką te wzorce tworzą. Rozpoznawanie wzorców przez sieć rozpoczyna się od najprostszych kształtów, a z każdą kolejną warstwą konstruowane są wzorce wyższego poziomu.
+Konwolucyjna sieć neuronowa (CNN) jest specjalnym typem sieci, przystosowanej do analizy danych z obrazu \cite{baheti:cnnGuide, springer:cnnOverview}. Została zaprojektowana do automatycznego i adaptacyjnego uczenia się o przestrzennych wzorcach obecnych na obrazie oraz o hierarchii, jaką te wzorce tworzą. Rozpoznawanie wzorców przez sieć rozpoczyna się od najprostszych kształtów, a z każdą kolejną warstwą konstruowane są wzorce wyższego poziomu.
 
 Tradycyjne sieci neuronowe były fatalnie przystosowane do analizy obrazów. Aby to zrozumieć, należy zobaczyć w jaki sposób obrazy są przechowywane w formie cyfrowej. Każdy obraz to macierz liczb rzeczywistych o wymiarach $\textbf{szerokość} \times \textbf{wysokość} \times \textbf{liczba kanałów}$. Z kolei standardowe sieci neuronowe oczekują na wejście danych w formacie tablicy jednowymiarowej. Problemem nie jest niezgodność reprezentacji danych, tylko fatalna skalowalność rozwiązania - w samej tylko warstwie wejściowej, sieć musi posiadać liczbę neuronów równą liczbie elementów w macierzy. Wraz ze wzrostem rozdzielczości analizowanych obrazów, lawinowo rośnie liczba parametrów sieci. Dla macierzy o wymiarach $200 \times 200 \times 3$ warstwa wejściowa musiałaby składać się z \textbf{120000 neuronów}, a w rzeczywistości wykorzystuje się obrazy o znacznie większych rozdzielczościach. Działanie na tak ogromnej liczbie parametrów jest kłopotliwe i znacznie utrudnia wytrenowanie sieci.
 
@@ -23,6 +23,7 @@ Każda warstwa konwolucyjna składa się z tzw. \textbf{filtrów} (zwanych równ
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/conv-layer.png}
 \caption{Przykład działania filtru w warstwie konwolucyjnej}
+\source{https://www.v7labs.com/blog/convolutional-neural-networks-guide}
 \label{ConvLayers}
 \end{center}
 \end{figure}
@@ -60,6 +61,7 @@ Na rysunku \ref{MaxPooling} zaprezentowano przykład działania warstwy łączen
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/max-pool.png}
 \caption{Przykład działania warstwy łączeniowej}
+\source{https://www.v7labs.com/blog/convolutional-neural-networks-guide}
 \label{MaxPooling}
 \end{center}
 \end{figure}
@@ -69,7 +71,7 @@ Na rysunku \ref{MaxPooling} zaprezentowano przykład działania warstwy łączen
 Służą normalizacji wyjścia z warstw poprzednich. Warstwa normalizacyjna jest dodawana pomiędzy warstwą konwolucyjną a łączeniową, dzięki czemu każda z warstw może się uczyć niezależnie od siebie i w ten sposób uniknąć nadmiernego dopasowania modelu. Pomimo tych zalet, warstwy normalizacyjne są rzadko wykorzystywane w zaawansowanych architekturach, ponieważ mają niewielki wpływ na efektywność uczenia takich sieci.
 
 \subsection{Warstwy w Pełni Połączone}
-Stanowią ostatni etap w przepływie danych przez sieć konwolucyjną. Wygenerowane wcześniej mapy cech zostają przekształcone do postaci jednowymiarowej i wprowadzone na wejście do zwykłej, w pełni połączonej sieci neuronowej. Zadaniem tej sieci jest wygenerowanie ostatecznego wyniku, a może to być np. klasyfikacja obrazu do jednej z kilku zdefiniowanych uprzednio klas.
+Stanowią ostatni etap w przepływie danych przez sieć konwolucyjną. Wygenerowane wcześniej mapy cech zostają przekształcone do postaci jednowymiarowej i wprowadzone na wejście do zwykłej, w pełni połączonej sieci neuronowej. Zadaniem tej sieci jest wygenerowanie ostatecznego wyniku zwracanego przez sieć.
 
 \subsection{Funkcja aktywacji w ostatniej warstwie}
 Ostatnia warstwa sieci konwolucyjnej ma zazwyczaj inną funkcję aktywacji, a jej wybór jest podyktowany typem zadania wykonywanego przez sieć neuronową. Z tego powodu najczęściej stosuje się funkcję:
@@ -100,15 +102,7 @@ Znając elementy składowe konwolucyjnej sieci neuronowej, przyjrzyjmy się jak 
 \section{Trening}
 Trening sieci jest procesem poszukiwania odpowiednich filtrów dla warstw konwolucyjnych oraz odpowiednich wag dla warstw w pełni połączonych. Algorytm propagacji wstecznej \cite{kostadinov:backpropagation} jest powszechnie wykorzystywaną metodą nauki sieci neuronowej, gdzie funkcja straty \cite{brownlee:lossFun} oraz algorytm spadku gradientu \cite{kwiatkowski:gradientDescent} odgrywają kluczową rolę. Skuteczność sieci jest obliczana z funkcji straty przy propagacji wprzód dla danych ze zbioru treningowego, a parametry do wyuczenia (czyli filtry oraz wagi) są aktualizowane zgodnie z wynikami uzyskanymi przez funkcję straty, wspomagając się przy tym algorytmami propagacji wstecznej oraz spadku gradientu.
 
-Przy nauce sieci neuronowych powszechnie korzysta się z dwóch funkcji straty: \textbf{entropii krzyżowej} (dla klasyfikacji wieloklasowej) \cite{brownlee:crossEntropy} oraz \textbf{błędu średniokwadratowego} (dla regresji do wartości ciągłych). Funkcja straty jest jednym z hiperparametrów sieci, który musi zostać wybrany przed rozpoczęciem treningu. \\
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=15cm]{resources/figures/datasets.png}
-\caption{Podział zbioru danych użytych do wyuczenia sieci}
-\label{DatasetDivision}
-\end{center}
-\end{figure}
+Przy nauce sieci neuronowych powszechnie korzysta się z dwóch funkcji straty: \textbf{entropii krzyżowej} (dla klasyfikacji wieloklasowej) \cite{brownlee:crossEntropy} oraz \textbf{błędu średniokwadratowego} (dla regresji do wartości ciągłych). Funkcja straty jest jednym z hiperparametrów sieci, który musi zostać wybrany przed rozpoczęciem treningu.
 
 Aby trening sieci mógł się udać, należy zgromadzić odpowiednio duży oraz zróżnicowany zbiór danych. Następnie trzeba ten zbiór podzielić na 3 podzbiory:
 \begin{enumerate*}
@@ -117,7 +111,16 @@ Aby trening sieci mógł się udać, należy zgromadzić odpowiednio duży oraz 
 \item \textbf{Testowy} - powinien zostać użyty tylko jeden raz: po zakończeniu treningu sieci. Zbiór testowy służy ocenie skuteczności wytrenowanej sieci.
 \end{enumerate*}
 
-Oddzielne zestawy do walidacji i testów są konieczne, ponieważ zawsze istnieje potrzeba dostrojenia hiperparametrów sieci. Proces ten dokonuje się w oparciu o skuteczność sieci na zbiorze walidacyjnym, co sprawia że część danych z tego zbioru ,,wycieka'' do samego modelu. W rezultacie, sieć może osiągnąć efekt nadmiernego dopasowania się \cite{goyal:overfittingGuide} do zbioru walidacyjnego, mimo iż nie jest na nim uczona. Dlatego też do końcowej oceny skuteczności sieci stosuje się całkowicie osobny zbiór danych, który nie był wcześniej ,,widziany'' przez sieć neuronową. W ten sposób można zweryfikować poziom osiągniętej skuteczności na wytrenowanym modelu oraz sprawdzić, czy model ten nie został przeuczony na danych treningowych lub walidacyjnych.
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{resources/figures/datasets.png}
+\caption{Podział zbioru danych użytych do wyuczenia sieci}
+\source{https://insightsimaging.springeropen.com/articles/10.1007/s13244-018-0639-9}
+\label{DatasetDivision}
+\end{center}
+\end{figure}
+
+Podział zbioru danych został zaprezentowany na rysunku \ref{DatasetDivision}. Oddzielne zestawy do walidacji i testów są konieczne, ponieważ zawsze istnieje potrzeba dostrojenia hiperparametrów sieci. Proces ten dokonuje się w oparciu o skuteczność sieci na zbiorze walidacyjnym, co sprawia że część danych z tego zbioru ,,wycieka'' do samego modelu. W rezultacie, sieć może osiągnąć efekt nadmiernego dopasowania się \cite{goyal:overfittingGuide} do zbioru walidacyjnego, mimo iż nie jest na nim uczona. Dlatego też do końcowej oceny skuteczności sieci stosuje się całkowicie osobny zbiór danych, który nie był wcześniej ,,widziany'' przez sieć neuronową. W ten sposób można zweryfikować poziom osiągniętej skuteczności na wytrenowanym modelu oraz sprawdzić, czy model ten nie został przeuczony na danych treningowych lub walidacyjnych.
 
 \section{Przykłady z literatury}
 Badając zagadnienie sieci konwolucyjnych, nie sposób nie wspomnieć o kilku wypracowanych modelach, które miały niebagatelny wkład w rozwój dziedziny:
@@ -136,13 +139,12 @@ Zwycięsca konkursu \textit{ILSVRC} w 2015 roku, opracowany przez grupę badawcz
 
 \section{Obszary zastosowań}
 Konwolucyjne sieci neuronowe są obecnie wykorzystywane z sukcesem w wielu zadaniach z zakresu wizji komputerowej \cite{kumar:cnnApplications}. Wśród nich można wymienić:
-
 \begin{enumerate*}
 \item \textbf{Rozpoznawanie twarzy} - sieci konwolucyjne są powszechnie używane do wykrywania twarzy na obrazach. Sieć może wykrywać i rozpoznawać z dużą dokładnością różne cechy twarzy, takie jak oczy, nos i usta, redukując przy tym zniekształcenia powstałe na skutek złego oświetlenia obrazu.
 \item \textbf{Rozpoznawanie emocji} - sieci konwolucyjne okazały się bardzo dobrze sprawdzać przy klasyfikacji różnych wyrazów twarzy, odzwierciedlających emocje człowieka. Sieciom w klasyfikacji nie przeszkadza zmienna pozycja twarzy wobec kamery oraz zmienne warunki oświetleniowe.
 \item \textbf{Wykrywanie obiektów} - odbywa się poprzez klasyfikację obiektów na podstawie ich kształtu, kolorów oraz innych cech charakterystycznych dla danej grupy obiektów. Odpowiednio wytrenowana sieć konwolucyjna potrafi wykrywać bardzo szeroką gamę obiektów. Do wykrywania obiektów wykorzystuje się techniki segmentacji semantycznej oraz instancyjnej.
 \item \textbf{Samochody autonomiczne} - sieci konwolucyjne są stosowane jako podstawowy komponent oprogramowania modelu percepcji opartego na obrazie z kamer. Trening sieci odbywa się przy wykorzystaniu techniki zwanej \textit{uczeniem ze wzmocnieniem}, która koncentruje się na pozytywnych i negatywnych informacjach zwrotnych ze środowiska, aby poprawić zachowanie sieci w danych sytuacjach.
-\item \textbf{Tłumaczenie automatyczne} - okazuje się, że sieci konwolucyjne po odpowiednim treningu znakomicie sobie radzą z automatycznym tłumaczeniem pomiędzy takimi językami, jak angielski i francuski lub angielski i chiński. Przetłumaczone teksty charakteryzują się wysokim poziomem zgodności z oryginałem.
+\item \textbf{Tłumaczenie automatyczne} - okazuje się, że sieci konwolucyjne po odpowiednim treningu znakomicie sobie radzą z automatycznym tłumaczeniem, a przetłumaczone teksty charakteryzują się wysokim poziomem zgodności z oryginałem.
 \item \textbf{Analiza danych medycznych} - modele uczenia maszynowego znalazły szerokie pole zastosowań w branży medycznej. Konwolucyjne sieci neuronowe mogą być użyte np. do identyfikacji guzów oraz innych nieprawidłowości na obrazach rentgenowskich. Są również stosowane przy wykrywaniu nowotworów na obrazach z badania tomografii komputerowej. Wytrenowana sieć jest w stanie wykrywać raka z dużą skutecznością, dochodzącą do 95\%. Dla porównania, lekarze-patolodzy biorący udział w badaniach osiągali skuteczność poniżej 90\%.
 \item \textbf{Uwierzytelnianie biometryczne} - biometryczne uwierzytelnianie tożsamości użytkownika odbywa się na podstawie identyfikacji zestawu cech fizycznych, związanych z daną osobą. Sieci konwolucyjne świetnie się do tego sprawdzają. 
 \item \textbf{Klasyfikacja dokumentów} - sieci konwolucyjne mogą klasyfikować dokumenty do różnych kategorii. Kategoria może być identyfikowana na podstawie treści dokumentu, rozkładu tekstu lub wielu innych cech. Konwolucyjne sieci neuronowe dla lepszego zrozumienia dokumentu mogą analizować zarówno tekst, jak i obraz. Modele CNN są również z powodzeniem stosowane do generowania streszczeń i podsumowań dokumentów na podstawie ich zawartości.
@@ -156,18 +158,20 @@ Przed naukowcami pracującymi nad rozwojem sieci konwolucyjnych stoi szereg trud
 Jednym z najwęższych gardeł do rozważenia przy projektowaniu sieci konwolucyjnych jest ilość oraz rodzaj dostępnej pamięci, oferowanej przez współczesne karty graficzne. Większość kart jest ograniczona rozmiarem pamięci nieprzekraczającym kilku gigabajtów, co może być niewystarczające dla bardzo głębokich sieci konwolucyjnych z ogromną liczbą parametrów. Ponadto na sieci konwolucyjne mogą zostać nałożone restrykcyjne wymogi maksymalnego czasu odpowiedzi, co oznacza że wydajność sprzętu na którym sieci są uruchomione nagle zyskuje na znaczeniu. Więcej rozważań na temat efektywnego wykorzystania pamięci przez konwolucyjne sieci neuronowe można znaleźć w artykule \cite{cnn:memoryRequirements}.
 
 \subsection{Zagrożenia bezpieczeństwa}
-Sieci konwolucyjne są obecnie szeroko wykorzystywanym rozwiązaniem, począwszy od edytorów zdjęć i wideo, a skończywszy na oprogramowaniu medycznym i samochodach autonomicznych. Chociaż te sieci niesamowicie zbliżyły się w ostatnich latach do postrzegania świata w sposób zarezerwowany dotychczas tylko zwierzętom i ludziom, to wciąż istnieje wiele sytuacji w których sieć neuronowa całkowicie traci swoją skuteczność i generuje błędne wyniki. Głównym źródłem takich problemów są cyberataki dokonywane przez hakerów, a lwią część ataków stanowią tzw. \textbf{ataki kontradyktoryjne} (z ang. \textit{adversarial attacks}) \cite{dickson:adversarialMl}. Ataki te polegają w skrócie na dokładaniu do obrazu szumów niewidocznych dla człowieka, które wprowadzają sieć neuronową w błąd. Badania prowadzone w tej dziedzinie przyniosły już wiele zaskakujących wyników. Przykładowo, naukowcy z grupy badawczej LabSix w 2017 roku opublikowali artykuł \cite{labsix:foolingNNs}, w którym pokazali że odpowiednio zmodyfikowana zabawka w kształcie żółwia potrafi całkowicie zmylić popularną sieć neuronową klasyfikującą obrazy, czyli \textit{Google Inception-v3}. Modyfikacje są niezauważalne dla człowieka, a polegały na wprowadzeniu szumów do malowania pokrywającego żółwia. W efekcie, niezależnie od kąta ustawienia żółwia, sieć neuronowa będzie uparcie klasyfikować go jako karabin. Rysunek \ref{TurtleAdversarialAttack} przedstawia stopklatkę z filmu zawartego w opublikowanym artykule. \\
+Sieci konwolucyjne są obecnie szeroko wykorzystywanym rozwiązaniem, począwszy od edytorów zdjęć i wideo, a skończywszy na oprogramowaniu medycznym i samochodach autonomicznych. Chociaż te sieci niesamowicie zbliżyły się w ostatnich latach do postrzegania świata w sposób zarezerwowany dotychczas tylko zwierzętom i ludziom, to wciąż istnieje wiele sytuacji w których sieć neuronowa całkowicie traci swoją skuteczność i generuje błędne wyniki. Głównym źródłem takich problemów są cyberataki dokonywane przez hakerów, a lwią część ataków stanowią tzw. \textbf{ataki kontradyktoryjne} (z ang. \textit{adversarial attacks}) \cite{dickson:adversarialMl}. Ataki te polegają w skrócie na dokładaniu do obrazu szumów niewidocznych dla człowieka, które wprowadzają sieć neuronową w błąd. Badania prowadzone w tej dziedzinie przyniosły już wiele zaskakujących wyników. Przykładowo, naukowcy z grupy badawczej LabSix w 2017 roku opublikowali artykuł \cite{labsix:foolingNNs}, w którym pokazali że odpowiednio zmodyfikowana zabawka w kształcie żółwia potrafi całkowicie zmylić popularną sieć neuronową klasyfikującą obrazy, czyli \textit{Google Inception-v3}. Modyfikacje są niezauważalne dla człowieka, a polegały na wprowadzeniu szumów do malowania pokrywającego żółwia. W efekcie, niezależnie od kąta ustawienia żółwia, sieć neuronowa będzie uparcie klasyfikować go jako karabin. Rysunek \ref{TurtleAdversarialAttack} przedstawia stopklatkę z filmu zawartego w opublikowanym artykule.
+
+Bardziej niebezpiecznym przykładem niecnego wykorzystania ataków kontradyktoryjnych są manipulacje przy znakach drogowych, które mają wprowadzać samochody autonomiczne w błąd. Jak wykazały wyniki badań opublikowane w artykule \cite{adversarial:roadSignAttacks}, wystarczy nakleić kilka niepozornych nalepek na znak STOP, aby system rozpoznawania znaków drogowych zaczął go klasyfikować inaczej, np. jako znak ograniczenia prędkości. Testy zostały przeprowadzone na systemie wytrenowanym przez autorów badania, a nie na jakimś komercyjnie dostępnym modelu samochodu autonomicznego, dlatego można założyć że te konkretne ataki nie zadziałałyby na systemy zamontowane w samochodach Tesli lub Waymo. Niemniej jednak, ponieważ algorytmy na których opierają się systemy komercyjne nie różnią się zbytnio w swej zasadzie działania (mogą być co najwyżej inaczej wytrenowane), dlatego należy przyjąć że tego typu ataki są wciąż jak najbardziej możliwe. \\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/ai-adversarial-attack-turtle.png}
 \caption{Przykład ataku kontradyktoryjnego - żółw klasyfikowany jako karabin}
+\source{https://www.labsix.org/physical-objects-that-fool-neural-nets}
 \label{TurtleAdversarialAttack}
 \end{center}
 \end{figure}
 
-Bardziej niebezpiecznym przykładem niecnego wykorzystania ataków kontradyktoryjnych są manipulacje przy znakach drogowych, które mają wprowadzać samochody autonomiczne w błąd. Jak wykazały wyniki badań opublikowane w artykule \cite{adversarial:roadSignAttacks}, wystarczy nakleić kilka niepozornych nalepek na znak STOP, aby system rozpoznawania znaków drogowych zaczął go klasyfikować inaczej, np. jako znak ograniczenia prędkości. Testy zostały przeprowadzone na systemie wytrenowanym przez autorów badania, a nie na jakimś komercyjnie dostępnym modelu samochodu autonomicznego, dlatego można założyć że te konkretne ataki nie zadziałałyby na systemy zamontowane w samochodach Tesli lub Waymo. Niemniej jednak, ponieważ algorytmy na których opierają się systemy komercyjne nie różnią się zbytnio w swej zasadzie działania (mogą być co najwyżej inaczej wytrenowane), dlatego należy przyjąć że tego typu ataki są wciąż jak najbardziej możliwe.
-
+\vspace{-0.5cm}
 Pewną iskierką nadziei na rozwiązanie tego palącego problemu są badania naukowców z MIT oraz laboratorium MIT-IBM Watson \cite{cnns:neuroscienceProtection}, gdzie badacze przedstawiają nową architekturę o nazwie VOneNet, opartą o połączenie aktualnych technik głębokiego uczenia maszynowego z aktualnym stanem wiedzy na temat neurobiologii. Uzyskana w ten sposób architektura wykazuje większą odporność na ataki kontradyktoryjne oraz charakteryzuje się bardziej przewidywalnym zachowaniem.
 
 \subsection{Klasyfikacja obiektów z przekształceniami}
@@ -179,16 +183,17 @@ Jednym z wielu wyzwań w dziedzinie wizji komputerowej jest radzenie sobie ze zm
 \item zdjęcie zostało zrobione w różnych warunkach oświetleniowych.
 \end{itemize*}
 
-Gdy obiekty są częściowo zakryte lub nietypowo oświetlone, ludzki wzrok wciąż jest w stanie znaleźć informacje potrzebne do prawidłowej klasyfikacji obiektu na obrazie. Jednak stworzenie konwolucyjnej sieci neuronowej o takich właściwościach jest zadaniem bardzo trudnym, o czym przekonało się wielu badaczy. Sama pozycja obiektu na fotografii nie stanowi większego problemu, ale jeśli obiekt jest przeskalowany i/lub obrócony, wtedy wiele popularnych modeli sieci konwolucyjnej będzie miało ogromny problem z prawidłowym rozpoznaniem obiektu. Rozwiązaniem tego problemu może być rozszerzenie zbioru danych treningowych o fotografie z odpowiednimi przekształceniami obiektu, o ile zostanie to zrobione w sposób umiejętny. Nie zawsze jednak jest to możliwe, dlatego też potrzeba dalszych badań nad sposobami obsłużenia tego problemu. \\
-
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/object_with_transitions.png}
-\caption{Ta sama rzeźba na pięciu różnych zdjęciach. \\ Źle wytrenowana sieć konwolucyjna może mieć problem z rozpoznaniem obiektu.}
+\caption{Ta sama rzeźba na pięciu różnych ujęciach.}
+\source{https://iq.opengenus.org/disadvantages-of-cnn}
 \label{SculptPhotos}
 \end{center}
 \end{figure}
 
-\vspace{-0.7cm}
+\vspace*{-1.5cm}
+Gdy obiekty są częściowo zakryte lub nietypowo oświetlone, ludzki wzrok wciąż jest w stanie znaleźć informacje potrzebne do prawidłowej klasyfikacji obiektu na obrazie. Jednak stworzenie konwolucyjnej sieci neuronowej o takich właściwościach jest zadaniem bardzo trudnym, o czym przekonało się wielu badaczy. Sama pozycja obiektu na fotografii nie stanowi większego problemu, ale jeśli obiekt jest fotografowany pod różnymi ujęciami (jak to ma miejsce na rysunku \ref{SculptPhotos}), wtedy wiele popularnych modeli sieci konwolucyjnej będzie miało ogromny problem z prawidłowym rozpoznaniem obiektu. Rozwiązaniem tego problemu może być rozszerzenie zbioru danych treningowych o fotografie z odpowiednimi przekształceniami obiektu, o ile zostanie to zrobione w sposób umiejętny. Nie zawsze jednak jest to możliwe, dlatego też potrzeba dalszych badań nad sposobami obsłużenia tego problemu.
+
 \section{Podsumowanie}
 Sieci konwolucyjne to niezwykle obszerny i zarazem fascynujący temat, którego dokładne omówienie wykracza poza zakres tej pracy. W niniejszym rozdziale zostały poruszone tylko te wątki, które według autora były kluczowe do zrozumienia podstawowych elementów zagadnienia. W celu dalszego pogłębienia wiedzy zaleca się samodzielną eksplorację tematu, a dobrym punktem wyjścia może być literatura cytowana w tym rozdziale.

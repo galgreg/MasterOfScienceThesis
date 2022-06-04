@@ -2,7 +2,7 @@
 \vspace{-1cm}
 Samochody autonomiczne są pojazdami, które mają zdolność do interpretacji swojego otoczenia i bezpiecznego poruszania się po nim przy jak najmniejszej ingerencji człowieka siedzącego na fotelu kierowcy. Poziom automatyzacji sterowania może się różnić dla poszczególnych modeli. Organizacja SAE (\textit{Society of Automotive Engineers}) zdefiniowała sześć poziomów automatyzacji sterowania samochodem \cite{synopsys:whatIsAutonomousCar}. W pełni autonomiczne samochody mają być całkowicie pozbawione kierownicy, pedałów oraz innych przyrządów tradycyjnie używanych do sterowania ręcznego.
 
-W chwili obecnej nie istnieje ani jeden model w pełni autonomicznego samochodu, dopuszczonego do produkcji seryjnej. Co więcej, niewiele wskazuje na to, żeby taki stan rzeczy miał się zmienić w przeciągu kilku kolejnych lat \cite{adams:yearsAwaySDCs}\cite{houwelling:wontGetSdcSoon}. Zanim to się wydarzy, inżynierowie oraz badacze zajmujący się tym zagadnieniem będą zmuszeni do rozwiązania jeszcze wielu trudnych problemów technicznych. Oprócz tego dochodzi również kwestia dostosowania przepisów prawnych \cite{businessInsider:autonomiczneAutaPrawo}.
+W chwili obecnej nie istnieje ani jeden model w pełni autonomicznego samochodu, dopuszczonego do produkcji seryjnej. Co więcej, niewiele wskazuje na to, żeby taki stan rzeczy miał się zmienić w przeciągu kilku kolejnych lat \cite{adams:yearsAwaySDCs, houwelling:wontGetSdcSoon}. Zanim to się wydarzy, inżynierowie oraz badacze zajmujący się tym zagadnieniem będą zmuszeni do rozwiązania jeszcze wielu trudnych problemów technicznych. Oprócz tego dochodzi również kwestia dostosowania przepisów prawnych \cite{businessInsider:autonomiczneAutaPrawo}.
 
 Aby zrozumieć działanie samochodów autonomicznych, należy zapoznać się z czterema kluczowymi elementami zagadnienia:
 \begin{enumerate*}
@@ -15,7 +15,7 @@ Aby zrozumieć działanie samochodów autonomicznych, należy zapoznać się z c
 \section{Typy czujników}
 Aby widzieć swoje otoczenie, samochody autonomiczne potrzebują urządzeń dostarczających im odpowiednich danych wejściowych. Urządzenia te można ogólnie nazwać czujnikami. Standardowo istnieją cztery typy czujników, jakie można zastosować w samochodzie autonomicznym \cite{petit:sensorFusion}: \textbf{czujnik ultradźwięków}, \textbf{radar}, \textbf{LiDAR} oraz \textbf{kamera}.
 Za wyjątkiem kamery, wszystkie pozostałe czujniki wykorzystują tzw. ,,regułę czasu przelotu'' (z ang. \textit{time-of-flight principle}).
-Reguła polega na pomiarze odległości od przeszkód oraz prędkości przemieszczania się obiektów na podstawie czasu od emisji sygnału do jego powrotu. Rodzaj sygnału zależy od zastosowanego czujnika - może to być fala ultradźwiękowa, fala radiowa lub wiązka światła. Przykładem zastosowania reguły czasu przelotu jest echolokacja, wykorzystywana m.in. przez nietoperzy.
+Reguła polega na pomiarze odległości od przeszkód oraz prędkości przemieszczania się obiektów na podstawie czasu od emisji sygnału do jego powrotu. Rodzaj sygnału zależy od zastosowanego czujnika - może to być fala ultradźwiękowa, fala radiowa lub wiązka światła. Przykładem zastosowania reguły czasu przelotu jest echolokacja, wykorzystywana m.in. przez nietoperze.
 
 \subsection{Czujnik ultradźwięków}
 Korzysta z fali ultradźwiękowej o zadanej częstotliwości. Z powodu specyfiki rozchodzenia się fali ultradźwiękowej w powietrzu, jego zasięg wynosi do kilku metrów, dlatego jest głównie używany w systemach \textbf{wspomagania parkowania} oraz \textbf{kontroli martwego pola}.
@@ -51,7 +51,7 @@ Wskazując wady LiDAR-u, należy wspomnieć o kilku kwestiach. Pierwszą z nich 
 
 Kolejna wada to zakłócanie sygnału, do jakiego dochodzi gdy w pobliżu siebie znajdą się co najmniej dwa samochody wyposażone w system LiDAR. Im więcej samochodów jednocześnie generujących impulsy świetlne, tym większe ryzyko ,,oślepienia'' innych pojazdów. Producenci będą musieli jakoś temu zaradzić.
 
-Nieznane są również długofalowe skutki pernamentnej ekspozycji na wiązki laserowe generowane przez system LiDAR. Obawy dotyczą zwłaszcza narządu wzroku człowieka \cite{armenta:lidarSafety}\cite{thomasAko:lidarSafety}\cite{hecht:lidarSafety}.
+Nieznane są również długofalowe skutki pernamentnej ekspozycji na wiązki laserowe generowane przez system LiDAR. Obawy dotyczą zwłaszcza narządu wzroku człowieka \cite{armenta:lidarSafety, thomasAko:lidarSafety, hecht:lidarSafety}.
 
 Kolejnym ograniczeniem systemu LiDAR jest pogorszone działanie przy niekorzystnych warunkach pogodowych, takich jak deszcz, śnieg czy mgła. Krople deszczu mogą być przez system interpretowane jako ściana na środku drogi. Niektóre firmy (np. Ford) radzą sobie z tym problemem poprzez opracowanie własnych algorytmów wspomagających interpretację sygnału pobieranego z czujników LiDAR. Niemniej jednak, są to rozwiązania niedojrzałe i wymagające dalszego dopracowania.
 
@@ -90,6 +90,7 @@ Obecna, piąta generacja systemu \textbf{Waymo Driver} wykorzystuje trzy typy cz
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/waymo_driver_sensors.png}
 \caption{Układ czujników systemu Waymo Driver}
+\source{https://blog.waymo.com/2020/03/introducing-5th-generation-waymo-driver.html}
 \label{WaymoDriverSensors}
 \end{center}
 \end{figure}
@@ -104,30 +105,35 @@ Dlaczego NVIDIA DRIVE jest tak wyjątkowe? Ponieważ otwiera ono drogę do zupe�
 Rozwiązania oferowane w ramach NVIDIA DRIVE można podzielić na dwie części: sprzętową (hardware) oraz programową (software).
 
 \subsubsection{Rozwiązania sprzętowe}
-Sprzęt oferowany w ramach NVIDIA DRIVE tworzy rodzinę platform obliczeniowych o nazwie NVIDIA DRIVE AGX. W skład rodziny wchodzą obecnie dwa modele:
+Sprzęt oferowany w ramach NVIDIA DRIVE tworzy rodzinę platform obliczeniowych o nazwie NVIDIA DRIVE AGX \cite{nvidiaDrive:hardware}. W skład rodziny wchodzą obecnie dwa modele:
+\vspace{-0.3cm}
 \begin{enumerate*}
 \item NVIDIA DRIVE AGX Pegasus \\
 Posiada moc obliczeniową 320 TOPS (Tera Operations Per Second), co wciąż czyni go jednym z najszybszych rozwiązań dostępnych na rynku.
-Architekturę oparto na dwóch procesorach NVIDIA Xavier i dwóch układach graficznych TensorCore. Bardzo efektywny energetycznie, pobiera niewielką ilość prądu w stosunku do wydajności jaką posiada. Może zostać wykorzystany przy tworzeniu w pełni autonomicznych systemów jazdy, co oznacza że pedały i kierownica nie są wymagane. \\
-
+Architekturę oparto na dwóch procesorach NVIDIA Xavier i dwóch układach graficznych TensorCore. Bardzo efektywny energetycznie, pobiera niewielką ilość prądu w stosunku do wydajności jaką posiada. Może zostać wykorzystany przy tworzeniu w pełni autonomicznych systemów jazdy, co oznacza że pedały i kierownica nie są wymagane. Wygląd platformy NVIDIA DRIVE AGX Pegasus został przedstawiony na rysunku \ref{NvidiaDrivePegasus}. \\
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=15cm]{resources/figures/nv-drive-pegasus.jpg}
+\includegraphics[width=14.5cm]{resources/figures/nv-drive-pegasus.jpg}
 \caption{NVIDIA DRIVE AGX Pegasus}
+\source{https://www.nvidia.com/en-us/self-driving-cars/drive-platform/hardware}
+\label{NvidiaDrivePegasus}
 \end{center}
 \end{figure}
 \newpage
 \item NVIDIA DRIVE AGX Xavier \\
-Mniejszy od Pegasusa, charakteryzuje się też mniejszą mocą obliczeniową oscylującą w granicach 30 TOPS. Zużycie energii jest jednak bardzo niskie, ponieważ wynosi tylko 30 watów. Ta platforma obliczeniowa jest za słaba żeby obsłużyć w pełni autonomiczne systemy jazdy, ale dobrze sobie radzi przy częściowej automatyzacji sterowania. \\
+Mniejszy od Pegasusa, charakteryzuje się też mniejszą mocą obliczeniową oscylującą w granicach 30 TOPS. Zużycie energii jest jednak bardzo niskie, ponieważ wynosi tylko 30 watów. Ta platforma obliczeniowa jest za słaba żeby obsłużyć w pełni autonomiczne systemy jazdy, ale dobrze sobie radzi przy częściowej automatyzacji sterowania. Rysunek \ref{NvidiaDriveXavier} przedstawia wygląd platformy Xavier. \\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/nv-drive-xavier.jpg}
 \caption{NVIDIA DRIVE AGX Xavier}
+\source{https://www.nvidia.com/en-us/self-driving-cars/drive-platform/hardware}
+\label{NvidiaDriveXavier}
 \end{center}
 \end{figure}
 \end{enumerate*}
 
+\vspace{-1cm}
 Oprócz tego w skład rozwiązań sprzętowych wchodzi także NVIDIA DRIVE Hyperion, czyli najbardziej kompleksowe rozwiązanie oferowane przez firmę NVIDIA \cite{nvidiaDrive:hyperion}. W skład tego rozwiązania wchodzi platforma obliczeniowa (Xavier lub Pegasus), zestaw czujników oraz oprogramowanie sterujące.
 
 \subsubsection{Oprogramowanie NVIDIA DRIVE}
@@ -162,10 +168,12 @@ Moduły oprogramowania NVIDIA DRIVE zostały zaprezentowane na rysunku \ref{Nvid
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/nv-drive-sdk.png}
 \caption{Moduły oprogramowania NVIDIA DRIVE}
+\source{https://developer.nvidia.com/drive/drive-sdk}
 \label{NvidiaDriveSDK}
 \end{center}
 \end{figure}
 
+\vspace{-0.5cm}
 \subsection{Tesla Autopilot}
 Firma Tesla zasłynęła produkcją swoich samochodów elektrycznych. Opracowała również zaawansowany system wspomagania jazdy, noszący nazwę \textbf{Tesla Autopilot} \cite{tesla:autopilotOverview}. System ten został stworzony w celu zwiększenia bezpieczeństwa oraz komfortu podróżowania kierowcy, pasażerów oraz innych uczestników ruchu drogowego. Każdy nowy samochód Tesli wyposażony jest w osiem kamer, a samochody sprzedawane poza Ameryką Północną są również wyposażone w zestaw czujników radarowych. Autopilot nie zapewnia pełnej autonomii samochodu, dlatego też kierowca musi zachować czujność podczas jazdy i być gotów przejąć kontrolę nad sterowaniem gdy zajdzie taka potrzeba.
 
@@ -186,7 +194,7 @@ Tesla oferuje również pakiet rozszerzeń o nazwie \textbf{Full Self-Driving Ca
 \item \textbf{Stop Sign and Traffic Light Control} - pierwsza funkcja przeznaczona do użytku w ruchu miejskim. Pojazdy Tesli wyposażone w tę funkcję potrafią reagować na znaki stop oraz sygnalizację świetlną. Przy dojeżdżaniu do skrzyżowania ze światłami samochód zwalnia (nawet mając zielone), a kierowca musi nacisnąć pedał przyspieszenia aby samochód mógł kontynuować jazdę w trybie automatycznym.
 \end{enumerate*}
 
-Jakby tego było mało, to samochody Tesli są wyposażone w zestaw aktywnych funkcji bezpieczeństwa:
+Dodatkowo samochody Tesli są wyposażone w zestaw aktywnych funkcji bezpieczeństwa:
 \vspace{-0.25cm}
 \begin{enumerate*}
 \item \textbf{Automatic Emergency Braking} - wykrywa przeszkody, w które samochód mógłby uderzyć i odpowiednio do sytuacji uruchamia hamulce;
@@ -211,18 +219,20 @@ Pomimo powyższych zastrzeżeń wygląda na to, że Tesla nieustannie doskonali 
 Podczas konferencji CVPR odbytej w 2021 roku, Andrej Karpathy (szef działu AI w Tesli) wyjaśnił dlaczego Tesla zrezygnowała z wykorzystania czujników LiDAR w swoich samochodach \cite{dickson:teslaDontNeedLidar}. Karpathy wskazał między innymi na problem przygotowania i utrzymania dokładnych i szczegółowych map 3D terenu, po którym ma się poruszać samochód wyposażony w czujniki LiDAR. ,,\textit{Musisz wstępnie zmapować środowisko za pomocą LiDAR-u, a następnie stworzyć mapę w wysokiej rozdzielczości i wstawić tam wszystkie pasy i sygnalizacje świetlne}'' - powiedział Karpathy. Dodał również: ,,\textit{Zbieranie, budowanie i utrzymywanie map LiDAR-owych w wysokiej rozdzielczości jest nieskalowalne. Bardzo trudno utrzymać tę infrastrukturę w stanie aktualnym}''. Samochody Tesli nie potrzebują mieć ręcznie przygotowanych map 3D, ponieważ same potrafią wygenerować sobie takie mapy. ,,\textit{Wszystko co się dzieje, dzieje się po raz pierwszy w samochodzie, na podstawie nagrań z ośmiu kamer otaczających samochód}'' - stwierdził Andrej Karpathy. Samochód musi samodzielnie rozpoznać otoczenie, wykryć i zinterpretować wszystkie elementy infrastruktury drogowej oraz ocenić, które z nich są dla niego istotne. Wszystko to bez jakiejkolwiek wcześniejszej informacji na temat drogi, po której samochód będzie się przemieszczać.
 
 \subsubsection{Platforma sprzętowa}
-Dodatkowym warunkiem, jaki musi spełniać samochód autonomiczny, jest maksymalny dopuszczalny czas obliczeń podczas jazdy samochodem. Wszystko musi odbywać się w czasie rzeczywistym, a zbyt wielkie opóźnienia w przetwarzaniu danych mogłyby doprowadzić do wystąpienia niebezpiecznej sytuacji na drodze. Na szczęście Tesla dysponuje bardzo dobrym sprzętem, opracowanym we współpracy z firmą Samsung \cite{wiggers:teslaDrivingChip}. Nosi on nazwę \textbf{Full Self-Driving Computer} (FSD) i w momencie swojej premiery w 2019 roku był określany jako ,,\textit{najbardziej zaawansowany komputer przeznaczony dla jazdy autonomicznej}''.
+Dodatkowym warunkiem, jaki musi spełniać samochód autonomiczny, jest maksymalny dopuszczalny czas obliczeń podczas jazdy samochodem. Wszystko musi odbywać się w czasie rzeczywistym, a zbyt wielkie opóźnienia w przetwarzaniu danych mogłyby doprowadzić do wystąpienia niebezpiecznej sytuacji na drodze. Na szczęście Tesla dysponuje bardzo dobrym sprzętem, opracowanym we współpracy z firmą Samsung \cite{wiggers:teslaDrivingChip, teslaHardware:detailed}. Nosi on nazwę \textbf{Full Self-Driving Computer} (FSD) i w momencie swojej premiery w 2019 roku był określany jako ,,\textit{najbardziej zaawansowany komputer przeznaczony dla jazdy autonomicznej}''. Wygląd komputera został zaprezentowany na rysunku \ref{TeslaFsdHardware}.
 
 Chipset Samsunga osiąga wydajność 144 TOPS i składa się z dwóch redundantnych, niezależnych pakietów - każdy z nich dysponuje własną pamięcią DRAM, układami pamięci flash oraz zasilaniem. ,,\textit{Każdy z pakietów uruchamia i utrzymuje własną instancję systemu operacyjnego}'' - mówi Pete Bannon, projektant układów scalonych pracujący dla Tesli. Dwa pakiety niezależnie od siebie dokonują obliczeń akcji do wykonania, a następnie wymieniają się ze sobą wynikami obliczeń. Żadna akcja nie zostanie zlecona do wykonania kontrolerom samochodu do czasu jej uzgodnienia i zatwierdzenia przez obydwa pakiety. Układ zachowuje swoją zdolność działania także wtedy, gdy jeden z pakietów (lub któraś z jego części) ulegnie awarii. Elon Musk stwierdził, że: ,,\textit{nawet jeśli część układu ulegnie awarii, samochód wciąż może kontynuować jazdę}''.
 
-FSD składa się z 6 miliardów tranzystorów i 250 milionów bramek logicznych. Jego moduły pamięci LPDDR4 RAM zapewniają przepustowość 68 GB/s, a zintegrowane procesory przetwarzania obrazów potrafią pracować z prędkością do 1 gigapiksela na sekundę. Dodatkowo w zestawie są dwa akceleratory sieci neuronowych, taktowane z częstotliwością 2 GHz i wyposażone w 32 MB pamięci SRAM. Akceleratory mogą dodawać macierze oraz przetwarzać do 1 TB danych na sekundę, a ich wydajność wynosi 36 TOPS dla każdego z nich (czyli łącznie 72 TOPS). Innym ważnym komponentem jest wbudowany układ zabezpieczający, którego zadaniem jest blokowanie kodu nieposiadającego podpisu kryptograficznego Tesli.
+FSD składa się z 6 miliardów tranzystorów i 250 milionów bramek logicznych. Jego moduły pamięci LPDDR4 RAM zapewniają przepustowość 68 GB/s, a zintegrowane procesory przetwarzania obrazów pracują z prędkością do 1 gigapiksela na sekundę. Dodatkowo w zestawie są dwa akceleratory sieci neuronowych, taktowane z częstotliwością 2 GHz i wyposażone w 32 MB pamięci SRAM. Akceleratory mogą dodawać macierze oraz przetwarzać do 1 TB danych na sekundę, a ich wydajność wynosi 36 TOPS dla każdego z nich (czyli łącznie 72 TOPS). Innym ważnym komponentem jest wbudowany układ zabezpieczający, którego zadaniem jest blokowanie kodu nieposiadającego podpisu kryptograficznego Tesli.
 
 Podczas testów zamkniętych, przeprowadzonych przez firmę Tesla, okazało się że komputer FSD jest w stanie przetwarzać 2300 klatek na sekundę - podczas gdy poprzednia generacja komputera osiągała zaledwie 110 klatek na sekundę. \\
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=15cm]{resources/figures/tesla_fsd.png}
+\includegraphics[width=13.5cm]{resources/figures/tesla_fsd.png}
 \caption{Komputer Tesla FSD}
+\source{https://www.autopilotreview.com/tesla-custom-ai-chips-hardware-3}
+\label{TeslaFsdHardware}
 \end{center}
 \end{figure}
 

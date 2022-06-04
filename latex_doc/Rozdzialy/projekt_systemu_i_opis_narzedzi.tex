@@ -11,7 +11,7 @@ W fazie projektowania należy zdefiniować główne założenia projektowe oraz 
 \end{enumerate*}
 
 \subsection{Definicja rozwiązywanego problemu}
-Zaprojektowany system powinien rozwiązywać problem treningu agentów sterujących samochodem wymodelowanym w środowisku symulacji. Samochód powinien pokonywać wyznaczony tor wyścigowy w możliwie najkrótszym czasie. Agenci odbierają informacje o swoim aktualnym położeniu dzięki obrazowi z jednej lub kilku kamer doczepionych do samochodu. W odpowiedzi na te informacje, do środowiska symulacji wysyłane są żądania podjęcia określonych zachowań, np. zmiany poziomu wciśnięcia pedału hamulca. Ponadto, środowisko symulacji na bieżąco przyznaje agentom nagrody i kary w zależności od tego, jak dobrze (lub źle) agent radzi sobie z postawionym zadaniem. Odpowiedni system kar i nagród jest kluczowy dla osiągnięcia zadowalających wyników treningu.
+Zaprojektowany system powinien rozwiązywać problem treningu agentów sterujących samochodem w środowisku symulacji. Samochód powinien pokonywać wyznaczony tor wyścigowy w możliwie najkrótszym czasie. Agenci odbierają informacje o swoim aktualnym położeniu dzięki obrazowi z jednej lub kilku kamer doczepionych do samochodu. W odpowiedzi na te informacje, do środowiska symulacji wysyłane są żądania podjęcia określonych zachowań, np. zmiany poziomu wciśnięcia pedału hamulca. Ponadto, środowisko symulacji na bieżąco przyznaje agentom nagrody i kary w zależności od tego, jak dobrze (lub źle) agent radzi sobie z postawionym zadaniem. Odpowiedni system kar i nagród jest kluczowy dla osiągnięcia zadowalających wyników treningu.
 
 Agentami są konwolucyjne sieci neuronowe, a ich parametry są dostrajane przy użyciu metody uczenia maszynowego zwanej \textbf{uczeniem ze wzmocnieniem} (z ang. \textit{reinforcement learning}) \cite{deepRL:guide}.
 
@@ -25,12 +25,12 @@ Agentami są konwolucyjne sieci neuronowe, a ich parametry są dostrajane przy u
 \end{enumerate*}
 
 \subsection{Architektura systemu}
-System składa się z dwóch zasadniczych modułów: Środowiska Uczenia oraz narzędzia \texttt{mlagents\_learn}. Moduły komunikują się ze sobą za pośrednictwem mechanizmu komunikacji dostarczanego przez zestaw Unity ML-Agents. Więcej informacji na temat każdego z modułów można uzyskać w rozdziale \ref{ImplementationChapter}-tym, poświęconym opisowi implementacji systemu.
+System składa się z dwóch zasadniczych modułów: Środowiska Uczenia oraz narzędzia \texttt{mlagents\_learn}. Moduły komunikują się ze sobą za pośrednictwem mechanizmu komunikacji dostarczanego przez zestaw Unity ML-Agents. Wizualizacja architektury systemu została przedstawiona na rysunku \ref{SystemArchitecture}, a więcej informacji na temat każdego z modułów można uzyskać w rozdziale \ref{ImplementationChapter}-tym, poświęconym opisowi implementacji systemu. \\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/system_architecture.png}
-\caption{Wizualizacja architektury systemu}
+\caption{Wizualizacja architektury systemu.}
 \label{SystemArchitecture}
 \end{center}
 \end{figure}
@@ -110,6 +110,7 @@ Rysunek \ref{UnityMlaComponents} przedstawia diagram opisanych powyżej komponen
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/learning_environment_basic.png}
 \caption{Diagram komponentów Unity ML-Agents}
+\source{https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/ML-Agents-Overview.md}
 \label{UnityMlaComponents}
 \end{center}
 \end{figure}
@@ -120,7 +121,7 @@ Poprawnie skonfigurowane Środowisko Uczenia musi zawierać następujące elemen
 \item Co najmniej jednego Zachowania (z ang. \textit{Behavior}). Zachowanie definiuje określone atrybuty Agenta, takie jak liczba i rodzaj wykonywanych Akcji. Każde Zachowanie jest jednoznacznie identyfikowane poprzez pole \texttt{Behavior Name}. \\
 Istnieją trzy rodzaje Zachowań:
 \begin{itemize*}
-\item Zachowanie Uczące (z ang. \textit{Learning Behavior}) - Zachowanie które musi się wyuczyć. Tego Zachowania używamy podczas treningu sieci neuronowych;
+\item Zachowanie Uczące (z ang. \textit{Learning Behavior}) - Zachowanie którego Agent musi się wyuczyć. Tego Zachowania używamy podczas treningu sieci neuronowych;
 \item Zachowanie Heurystyczne (z ang. \textit{Heuristic Behavior}) - Zachowanie zdefiniowane przez reguły zapisane bezpośrednio w kodzie źródłowym. Przydatne m.in. przy testowaniu nowego Środowiska Uczenia przed rozpoczęciem treningu sieci.
 \item Zachowanie Wnioskujące (z ang. \textit{Inference Behavior}) - Zachowanie wykorzystujące wytrenowany model sieci neuronowej. W gruncie rzeczy, Zachowanie Uczące po skończonym treningu sieci neuronowej zmienia się w Zachowanie Wnioskujące.
 \end{itemize*}
@@ -130,6 +131,7 @@ Istnieją trzy rodzaje Zachowań:
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/learning_environment_example.png}
 \caption{Przykład relacji Agentów z Zachowaniami w Środowisku Uczenia}
+\source{https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/ML-Agents-Overview.md}
 \label{UnityMlaExample}
 \end{center}
 \end{figure}
