@@ -25,6 +25,7 @@ Agentami są konwolucyjne sieci neuronowe, a ich parametry są dostrajane przy u
 \end{enumerate*}
 
 \subsection{Architektura systemu}
+\label{SoftwareArchSection}
 System składa się z dwóch zasadniczych modułów: Środowiska Uczenia oraz narzędzia \texttt{mlagents\_learn}. Moduły komunikują się ze sobą za pośrednictwem mechanizmu komunikacji dostarczanego przez zestaw Unity ML-Agents. Wizualizacja architektury systemu została przedstawiona na rysunku \ref{SystemArchitecture}, a więcej informacji na temat każdego z modułów można uzyskać w rozdziale \ref{ImplementationChapter}-tym, poświęconym opisowi implementacji systemu. \\
 
 \begin{figure}[h]
@@ -83,6 +84,7 @@ Warto również wspomnieć o module Unity Asset Store, który zezwala na wykorzy
 Język programowania stworzony przez firmę Microsoft jako konkurencja dla Javy \cite{csharp:opis}. Jest wysokopoziomowym, obiektowym językiem programowania, ściśle zintegrowanym z platformą .NET (pełniącą rolę frameworka oraz środowiska uruchomieniowego). Charakteryzuje się silnym, statycznym typowaniem. C\# pozwala na tworzenie aplikacji desktopowych (Windows, Linux, MacOS), webowych (poprzez użycie frameworka ASP.NET) oraz multiplatformowych aplikacji mobilnych (poprzez wykorzystanie narzędzia Xamarin). Obecnie jest to jeden z najpopularniejszych języków programowania.
 
 \subsection{Unity ML-Agents}
+\label{UnityMlSection}
 Otwartoźródłowy zestaw narzędzi przeznaczony dla silnika Unity 3D \cite{unitymla:overview}. Został stworzony w celu ułatwienia treningu sieci neuronowych w środowiskach symulowanych komputerowo. Sieci neuronowe mogą być trenowane przy użyciu jednej z kilku możliwych metod uczenia maszynowego:
 \begin{enumerate*}
 \item Uczenie ze wzmocnieniem (z ang. \textit{reinforcement learning}) \cite{deepRL:guide}:
@@ -158,6 +160,7 @@ Opisując narzędzie Unity ML-Agents, należałoby również wspomnieć kilka s�
 \end{enumerate*}
 
 \subsection{Vehicle Physics Pro}
+\label{VppSection}
 Zaawansowany zestaw do symulacji pojazdów dla silnika Unity 3D. VPP zapewnia wydajny, w pełni realistyczny i dokładny model dynamiki dla niemal każdego typu pojazdu i konfiguracji. W skład zestawu wchodzą m.in. \cite{vpp:features}:
 \begin{enumerate*}
 \item Wierne odwzorowanie pracy podzespołów pojazdu, obejmujące m.in.:
