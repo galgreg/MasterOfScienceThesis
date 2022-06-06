@@ -3,7 +3,7 @@
 System stworzony na potrzebę realizacji niniejszej pracy magisterskiej można podzielić na dwa moduły, zgodnie z opisem architektury zamieszczonym w sekcji \ref{SoftwareArchSection}:
 \begin{enumerate*}
 \item Środowisko Uczenia - stworzone w silniku Unity i odpowiedzialne za symulowanie wirtualnego środowiska, po którym przemieszcza się inteligentny agent.
-\item Narzędzie \texttt{mlagents\_learn} - wchodzi w skład frameworka \textit{Unity ML-Agents} (por. \ref{UnityMlSection}) i odpowiada za trening sieci konwolucyjnych. Jest procesem niezależnym od silnika Unity, a komunikacja ze Środowiskiem Uczenia odbywa się poprzez specjalny mechanizm, którego implementacja pochodzi z tego samego frameworka.
+\item Narzędzie \texttt{mlagents\_learn} - wchodzi w skład zestawu \textit{Unity ML-Agents} (por. \ref{UnityMlSection}) i odpowiada za trening sieci konwolucyjnych. Jest procesem niezależnym od silnika Unity, a komunikacja ze Środowiskiem Uczenia odbywa się poprzez specjalny mechanizm, którego implementacja pochodzi z tego samego zestawu narzędziowego.
 \end{enumerate*}
 
 W dalszej części rozdziału znajduje się szczegółowy opis każdego z modułów.
@@ -60,4 +60,29 @@ Na potrzeby implementacji systemu wybrałem dwa tory z pakietu \textbf{Environme
 Tory różnią się od siebie przede wszystkim poziomem trudności - tor nr 2 wymaga od kierowcy znacznie większych umiejętności, ponieważ zakręty są bardziej zróżnicowane.
 
 \subsection{Konfiguracja sceny Unity}
+Na potrzeby eksperymentów obliczeniowych przygotowano kilka scen Unity. Zasadniczo różnią się one detalami, które dokładniej zostaną przedstawione w rozdziale \ref{ExperimentsChapter}-tym, natomiast ich rdzeń jest wszędzie taki sam. Najważniejszym obiektem na scenie jest \texttt{CarAgent}, reprezentujący model samochodu sterowany przez sieć neuronową. Obiekt składa się z kiku komponentów, wśród których najważniejsze to:
+\vspace{-0.5cm}
+\begin{enumerate*}
+\item \textbf{Vehicle Controller} - komponent importowany z zestawu Vehicle Physics Pro (por. \ref{VppSection}). Odpowiada za ustawienia fizyki kluczowych elementów samochodu, takich jak: układ kierowniczy, hamulce, opony i skrzynia biegów \cite{vpp:vehicleController}. Na potrzeby implementacji systemu wprowadziłem następujące zmiany w konfiguracji komponentu:
+\begin{itemize*}
+\item Zmiana skrzyni biegów na automatyczną oraz wyzerowanie wartości parametrów ,,\textit{Gear transition time}'' oraz ,,\textit{Shift interval}'';
+\item Wyłączenie wspomagania kierownicy i systemów wspomagania jazdy: kontroli trakcji (TCS), kontroli stabilności (ESC) oraz zapobiegania nadmiernemu uślizgowi kół (ASR).
+\end{itemize*}
+\item \textbf{Behavior Parameters} - komponent importowany z zestawu Unity ML-Agents (por. \ref{UnityMlSection}). Jego celem jest określenie wartości dla kluczowych parametrów trenowanego zachowania, takich jak rozmiar wektora obserwacji oraz rozmiar wektora akcji. Wartości te ulegały zmianie dla poszczególnych eksperymentów obliczeniowych, dlatego ten aspekt implementacji zostanie dokładniej opisany w kolejnym rozdziale.
+\item \textbf{Klasa dziedzicząca po klasie Agent} - skrypt C\#, w którym zawarto implementację klasy dziedziczącej po klasie \texttt{Agent}, wywodzącej się z zestawu Unity ML-Agents. Na potrzeby eksperymentów obliczeniowych przygotowano kilka wersji implementacji tego skryptu, jednak rdzeń odpowiedzialności pozostaje taki sam. Skrypt jest odpowiedzialny za: prawidłową inicjalizację każdego epizodu treningu, przekazywanie obserwacji ze Środowiska Uczenia do sieci neuronowej, przekazywanie wyjścia z sieci neuronowej do Środowiska Uczenia oraz obliczanie wartości sygnałów nagrody dla danego kroku symulacji. Oprócz tego, każda wersja implementacji posiada własne, dodatkowe odpowiedzialności.
+\item \textbf{Decision Requester} - komponent importowany z zestawu Unity ML-Agents. Jego głównym zadaniem jest określenie częstotliwości podejmowania decyzji przez Agenta.
+\item \textbf{Camera Sensor} - czujnik kamery, importowany z zestawu Unity ML-Agents. Jest niezbędny, jeśli chcemy dostarczać sieci neuronowej obserwacje wizualne ze środowiska. Parametrami komponentu są m.in. wymiary obrazu oraz typ kompresji.
+\end{enumerate*}
+
 \section{Narzędzie mlagents\_learn}
+Główne narzędzie do treningu sieci neuronowych, oferowane przez zestaw Unity ML-Agents \cite{unitymla:trainingMlAgents}. Parametry są przekazywane do narzędzia poprzez wiersz poleceń oraz plik konfiguracyjny utrzymany w formacie YAML \cite{unitymla:configFile}. Zestaw ustawień oraz hiperparametrów zdefiniowanych w pliku konfiguracyjnym zależy w ogromnym stopniu od zastosowanej metody treningowej oraz sposobu konfiguracji Środowiska Uczenia. Konkretna zawartość wykorzystanych plików konfiguracyjnych oraz użyte parametry wywołania narzędzia zostaną zaprezentowane w kolejnym rozdziale.
+
+Wywołanie narzędzia skutkuje uruchomieniem procesu treningowego oraz rozpoczęciem uczenia sieci. W wyniku swojej pracy, proces treningowy generuje trzy artefakty:
+\begin{enumerate*}
+\item \textbf{Podsumowania} - metryki treningowe, aktualizowane podczas trwania treningu. Są bardzo pomocne przy monitorowaniu wyników uczenia sieci oraz ewentualnych aktualizacjach wartości hiperparametrów. Podsumowania można wyświetlić w eleganckiej formie graficznej, wykorzystując w tym celu narzędzie \textit{TensorBoard} \cite{unitymla:tensorboard}.
+\item \textbf{Modele} - katalog z punktami kontrolnymi modelu aktualizowanego podczas szkolenia, a także ostateczny plik modelu. Plik ostateczny jest generowany jednorazowo, czyli po zakończeniu lub przerwaniu uczenia. Wszystkie wygenerowane modele są plikami w formacie ONNX \cite{onnx:website}.
+\item \textbf{Pliki timerów} - zawierają zagregowane metryki procesu uczenia, w tym czas spędzony na określonych blokach kodu. Są bardzo pomocne podczas prac nad poprawą wydajności obliczeń procesu uczenia.
+\end{enumerate*}
+
+\subsection*{Trening sieci}
+Podczas wszystkich eksperymentów obliczeniowych wykorzystywałem do treningu sieci metodę uczenia maszynowego o nazwie \textbf{uczenie ze wzmocnieniem} (z ang. \textit{reinforcement learning}). Zestaw narzędziowy Unity ML-Agents dostarcza implementacji dla dwóch algorytmów wspierających tę metodę - PPO \cite{ppo:opis} oraz SAC \cite{sac:opis}. Po kilku próbach okazało się, że dla moich potrzeb znacznie lepiej sprawdza się algorytm PPO, dlatego właśnie on został przeze mnie użyty we wszystkich eksperymentach obliczeniowych opisanych w rozdziale \ref{ExperimentsChapter}-tym. PPO jest wyjątkowe pośród innych algorytmów uczenia ze wzmocnieniem, ponieważ zachowuje balans pomiędzy łatwością implementacji, złożonością próbki oraz łatwością dostrajania. Z tego też powodu jest oferowany jako domyślny algorytm uczenia ze wzmocnieniem dla zestawu Unity ML-Agents.
