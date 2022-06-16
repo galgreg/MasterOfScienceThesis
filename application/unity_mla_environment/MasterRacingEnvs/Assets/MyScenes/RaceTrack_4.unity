@@ -3800,126 +3800,6 @@ PrefabInstance:
       propertyPath: m_TargetDisplay
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: MaxStep
-      value: 8000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: Checkpoints
-      value: 
-      objectReference: {fileID: 1356181047}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: InvisibleWall
-      value: 
-      objectReference: {fileID: 8725002001774216342}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: DirectionalLight
-      value: 
-      objectReference: {fileID: 2139694678}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: FinishCheckpoint
-      value: 
-      objectReference: {fileID: 461134111}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[1].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[2].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[5].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[8].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[10].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[12].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[1].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[2].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[5].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[8].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[10].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[12].IsReversed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[0].FirstCheckpoint
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[1].FirstCheckpoint
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[2].FirstCheckpoint
-      value: 37
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[3].FirstCheckpoint
-      value: 38
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[4].FirstCheckpoint
-      value: 39
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[5].FirstCheckpoint
-      value: 42
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[6].FirstCheckpoint
-      value: 43
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[8].FirstCheckpoint
-      value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[9].FirstCheckpoint
-      value: 31
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[10].FirstCheckpoint
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[11].FirstCheckpoint
-      value: 32
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[12].FirstCheckpoint
-      value: 31
-      objectReference: {fileID: 0}
-    - target: {fileID: 4561845588734343803, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: StartCarLocations.Array.data[0].StartCheckpointIndex
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4618494551592546202, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
       propertyPath: m_TargetDisplay
       value: 0
@@ -3980,21 +3860,97 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7175375449422530153, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175375449422530153, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175375449422530153, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 7361154688256604129, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
       propertyPath: m_TargetDisplay
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 8993567054684806033, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: m_Model
+    - target: {fileID: 7546873303213277364, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: InvisibleWall
       value: 
+      objectReference: {fileID: 8725002001774216342}
+    - target: {fileID: 7546873303213277364, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: DirectionalLight
+      value: 
+      objectReference: {fileID: 2139694678}
+    - target: {fileID: 7546873303213277364, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: FinishCheckpoint
+      value: 
+      objectReference: {fileID: 461134111}
+    - target: {fileID: 8312303333982204576, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: 8993567054684806033, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: m_BehaviorType
+    - target: {fileID: 8312303333982204576, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8993567054684806033, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
-      propertyPath: m_BrainParameters.VectorObservationSize
-      value: 3
+    - target: {fileID: 8312303333982204576, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8312303333982204576, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8312303333982204576, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Checkpoints
+      value: 
+      objectReference: {fileID: 1356181047}
+    - target: {fileID: 0}
+      propertyPath: InvisibleWall
+      value: 
+      objectReference: {fileID: 8725002001774216342}
+    - target: {fileID: 0}
+      propertyPath: DirectionalLight
+      value: 
+      objectReference: {fileID: 2139694678}
+    - target: {fileID: 0}
+      propertyPath: FinishCheckpoint
+      value: 
+      objectReference: {fileID: 461134111}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[1].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[2].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[5].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[8].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[10].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[12].IsReverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartCarLocations.Array.data[0].StartCheckpointIndex
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}

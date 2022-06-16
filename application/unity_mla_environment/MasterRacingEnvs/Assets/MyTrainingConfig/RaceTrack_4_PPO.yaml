@@ -2,8 +2,8 @@
 # mlagents-learn MasterRacingEnvs/Assets/MyTrainingConfig/RaceTrack_2_PPO.yaml --run-id=RaceTrack_2_PPO --results-dir=MasterRacingEnvs/Assets/MyTrainingResults
 
 engine_settings:
-  width: 80 # default = 84
-  height: 45 # default = 84
+  width: 240 # default = 84
+  height: 135 # default = 84
   quality_level: 5 # default = 5
   time_scale: 20 # default = 20
   target_frame_rate: -1 # default = -1

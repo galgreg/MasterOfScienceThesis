@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 6667397145551717341}
   - component: {fileID: 8993567054684806033}
   - component: {fileID: 2882927996886537511}
-  - component: {fileID: 4561845588734343803}
+  - component: {fileID: 7546873303213277364}
   - component: {fileID: 3629628160846233280}
   - component: {fileID: 473022401892441427}
   - component: {fileID: 3426123404948092559}
@@ -891,7 +891,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: CarAgentBehaviour
   TeamId: 0
   m_UseChildSensors: 1
@@ -912,7 +912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DecisionPeriod: 2
   TakeActionsBetweenDecisions: 1
---- !u!114 &4561845588734343803
+--- !u!114 &7546873303213277364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -921,41 +921,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 6667397145551717333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0028ba6eaa67ddbbaa0219be865b0b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 3223e367aa074d009884916f6f343cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 6000
+  MaxStep: 8000
   CarAgentObject: {fileID: 6667397145551717333}
   StartCarLocations:
   - Position: {x: -44.2, y: -0.04, z: -137.56}
     Rotation: {x: 0, y: 30, z: 0}
+    FirstCheckpoint: 35
+    IsReversed: 0
   - Position: {x: -44.2, y: -0.04, z: -137.56}
     Rotation: {x: 0, y: 210, z: 0}
+    FirstCheckpoint: 34
+    IsReversed: 1
   - Position: {x: 13.5, y: 0, z: -109.16}
     Rotation: {x: 0, y: 269.68167, z: 0}
+    FirstCheckpoint: 37
+    IsReversed: 1
   - Position: {x: 13.5, y: 0, z: -109.16}
     Rotation: {x: 0, y: 90, z: 0}
+    FirstCheckpoint: 38
+    IsReversed: 0
   - Position: {x: 157.51808, y: 4.3805475, z: -116.499725}
     Rotation: {x: -5.2, y: 109.45916, z: 0}
+    FirstCheckpoint: 39
+    IsReversed: 0
   - Position: {x: 161.96, y: 8.05, z: -194.88}
     Rotation: {x: 0, y: 90, z: 0}
+    FirstCheckpoint: 42
+    IsReversed: 1
   - Position: {x: 161.96, y: 8.05, z: -194.88}
     Rotation: {x: 0, y: -90, z: 0}
+    FirstCheckpoint: 43
+    IsReversed: 0
   - Position: {x: 65.080696, y: 8.118, z: -161.6996}
     Rotation: {x: 0, y: -76, z: 0}
+    FirstCheckpoint: 0
+    IsReversed: 0
   - Position: {x: 65.080696, y: 8.05, z: -161.6996}
     Rotation: {x: 0, y: 104, z: 0}
+    FirstCheckpoint: 44
+    IsReversed: 1
   - Position: {x: -89.78648, y: 0.08604419, z: -217.1088}
     Rotation: {x: 0, y: 171.55017, z: -4.566}
+    FirstCheckpoint: 31
+    IsReversed: 0
   - Position: {x: -89.78648, y: 0.08604419, z: -217.1088}
     Rotation: {x: 0, y: -9, z: 4.5659995}
+    FirstCheckpoint: 30
+    IsReversed: 1
   - Position: {x: -80.082634, y: 0.011740236, z: -228.36275}
     Rotation: {x: -1.384, y: 86.31765, z: -0.423}
+    FirstCheckpoint: 32
+    IsReversed: 0
   - Position: {x: -80.093285, y: 0.0020578192, z: -228.33345}
     Rotation: {x: -1.384, y: 286, z: 1.4921664}
+    FirstCheckpoint: 31
+    IsReversed: 1
   InvisibleWall: {fileID: 0}
   FinishCheckpoint: {fileID: 0}
   DirectionalLight: {fileID: 0}
@@ -973,8 +999,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 4618494551592546202}
   m_SensorName: FrontSensor
-  m_Width: 80
-  m_Height: 45
+  m_Width: 240
+  m_Height: 135
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -993,8 +1019,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 3457431948469317301}
   m_SensorName: LeftSensor
-  m_Width: 80
-  m_Height: 45
+  m_Width: 240
+  m_Height: 135
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -1013,8 +1039,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 5738145002848734352}
   m_SensorName: RightSensor
-  m_Width: 80
-  m_Height: 45
+  m_Width: 240
+  m_Height: 135
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -1033,8 +1059,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 7361154688256604129}
   m_SensorName: RearSensor
-  m_Width: 80
-  m_Height: 45
+  m_Width: 240
+  m_Height: 135
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
