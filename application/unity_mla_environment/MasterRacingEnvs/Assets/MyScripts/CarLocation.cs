@@ -6,6 +6,4 @@ using UnityEngine;
 public class CarLocation {
     public Vector3 Position;
     public Vector3 Rotation;
-    public int FirstCheckpoint;
-    public bool IsReversed;
 }

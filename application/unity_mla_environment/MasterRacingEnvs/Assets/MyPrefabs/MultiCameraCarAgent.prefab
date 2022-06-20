@@ -999,8 +999,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 4618494551592546202}
   m_SensorName: FrontSensor
-  m_Width: 240
-  m_Height: 135
+  m_Width: 128
+  m_Height: 72
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -1019,8 +1019,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 3457431948469317301}
   m_SensorName: LeftSensor
-  m_Width: 240
-  m_Height: 135
+  m_Width: 128
+  m_Height: 72
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -1039,8 +1039,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 5738145002848734352}
   m_SensorName: RightSensor
-  m_Width: 240
-  m_Height: 135
+  m_Width: 128
+  m_Height: 72
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1
@@ -1059,8 +1059,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 7361154688256604129}
   m_SensorName: RearSensor
-  m_Width: 240
-  m_Height: 135
+  m_Width: 128
+  m_Height: 72
   m_Grayscale: 0
   m_ObservationType: 0
   m_ObservationStacks: 1

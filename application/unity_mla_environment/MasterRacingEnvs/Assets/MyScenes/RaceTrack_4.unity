@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5682686, g: 0.5554085, b: 0.5301816, a: 1}
+  m_IndirectSpecularColor: {r: 0.5682798, g: 0.5554054, b: 0.5301621, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3908,49 +3908,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: Checkpoints
+    - target: {fileID: 8993567054684806033, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
+      propertyPath: m_Model
       value: 
-      objectReference: {fileID: 1356181047}
-    - target: {fileID: 0}
-      propertyPath: InvisibleWall
-      value: 
-      objectReference: {fileID: 8725002001774216342}
-    - target: {fileID: 0}
-      propertyPath: DirectionalLight
-      value: 
-      objectReference: {fileID: 2139694678}
-    - target: {fileID: 0}
-      propertyPath: FinishCheckpoint
-      value: 
-      objectReference: {fileID: 461134111}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[1].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[2].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[5].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[8].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[10].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[12].IsReverse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: StartCarLocations.Array.data[0].StartCheckpointIndex
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5022602860645237092, guid: c3c3f06b3d54e3721aedc34daf482488, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4ce8183e842abde3a8fe1055dfc886b, type: 3}
