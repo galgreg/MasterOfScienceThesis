@@ -1,2 +1,168 @@
 \chapter{Eksperymenty obliczeniowe}
 \label{ExperimentsChapter}
+\vspace*{-1cm}
+W tym rozdziale zostanie zaprezentowana część praktyczna tworzonej pracy, która polega na przeprowadzeniu kilku eksperymentów obliczeniowych w oparciu o przygotowane przez autora oprogramowanie. Rozdział rozpoczyna się od omówienia przyjętej metodyki eksperymentów, następnie zostaną przedstawione najistotniejsze szczegóły implementacyjne poszczególnych eksperymentów obliczeniowych. Rozdział zakończy się analizą uzyskanych wyników oraz opisem wypływających z tego wniosków.
+
+\section{Metodyka eksperymentów}
+Metodyka eksperymentów obliczeniowych polega na sformułowaniu listy założeń, na których ma się oprzeć przeprowadzenie wszystkich eksperymentów. Oto najważniejsze z przyjętych założeń:
+\vspace*{-0.5cm}
+\begin{enumerate*}
+\item Każdy eksperyment obliczeniowy polega na wytrenowaniu konwolucyjnej sieci neuronowej w przygotowanym Środowisku Uczenia oraz ewaluacji wyuczonego modelu.
+\item Parametry dla każdego eksperymentu powinny zostać dostarczone w postaci zewnętrznego pliku konfiguracyjnego o zdefiniowanym formacie. Ścieżkę do pliku konfiguracyjnego należy podać jako argument linii poleceń.
+\item Wynikiem przeprowadzonego treningu sieci konwolucyjnej powinien być plik z wytrenowanym modelem oraz statystyki z przebiegu treningu.
+\item Do samodzielnego przeprowadzenia eksperymentów obliczeniowych należy mieć zainstalowane odpowiednie narzędzia (zgodnie z opisem z rozdziału \ref{DesignSystemChapter}-ciego), jak również posiadać kod źródłowy aplikacji wymaganej do wykonania eksperymentów.
+\item Wytrenowany model sieci neuronowej powinien posiadać format danych pozwalający na jego wizualizację przy użyciu zewnętrznego oprogramowania.
+\end{enumerate*}
+
+\section{Opis implementacji}
+Implementacja systemu została już częściowo opisana w rozdziale \ref{ImplementationChapter}-tym, natomiast każdy z przeprowadzonych eksperymentów wymagał dostosowania pewnych detali w implementacji. Poniżej zamieszczam opis tych elementów implementacji, które nie zostały jeszcze opisane, a są zbyt ważne aby je pominąć.
+
+\subsection{Środowiska Uczenia}
+\label{LearningEnvsSubsection}
+W ramach prac nad częścią eksperymentalną zostały przygotowane 4 Środowiska Uczenia, będące niczym innym jak scenami silnika Unity. Każde Środowisko Uczenia posiada własną charakterystykę oraz pewne cechy szczególne, wyróżniające je na tle pozostałych Środowisk.
+
+\subsubsection{RaceTrack\_1}
+Te Środowisko Uczenia zostało oparte na torze wyścigowym ,,\textit{Figure 8 Track}'' z pakietu \textbf{Environmental Race Track Pack} (por. \ref{RaceTracksSection}). Najważniejszą cechą Środowiska jest brak oświetlenia, co zostało dołożone w kolejnych Środowiskach. Wykorzystaną tutaj implementacją klasy Agent jest \textit{SimpleCarAgent} (por. \ref{AgentImplementations}). Rysunek \ref{RaceTrack1AgentComps} przedstawia najważniejsze komponenty obiektu sceny \textit{CarAgent}. \\
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{resources/figures/race_track_1_agent_components.png}
+\caption{Najważniejsze komponenty obiektu \textit{CarAgent} w Środowisku Uczenia \textit{RaceTrack\_1}}
+\label{RaceTrack1AgentComps}
+\end{center}
+\end{figure}
+\noindent
+Na podstawie rysunku można wysnuć kilka wniosków:
+\vspace{-0.5cm}
+\begin{itemize*}
+\item Do agenta są dostarczane dwie obserwacje wektorowe;
+\item Agent jest zobligowany do wykonywania dwóch akcji dla każdego kroku symulacji;
+\item Wykorzystaną implementacją klasy \textit{Agent} jest klasa \textit{SimpleCarAgent};
+\item Decyzje są podejmowane dla co drugiego kroku symulacji. Pomiędzy decyzjami należy wykonywać zlecone akcje w każdym kroku symulacji;
+\item Wykorzystywane są obserwacje wizualne w postaci pojedynczego czujnika, zbierającego obraz z kamery umieszczonej na miejscu fotela kierowcy. Obserwacje wizualne mają rozdzielczość $240 \times 135$ pikseli. Rysunek \ref{RaceTrack1Cockpit} przedstawia widok z kamery stanowiącej źródło danych wejściowych dla obserwacji wizualnych.
+\end{itemize*}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{resources/figures/race_track_1_cockpit.png}
+\caption{Widok z fotela kierowcy w Środowisku Uczenia \textit{RaceTrack\_1}}
+\label{RaceTrack1Cockpit}
+\end{center}
+\end{figure}
+
+\subsubsection{RaceTrack\_2}
+Jest to Środowisko \textit{RaceTrack\_1} z dodanym oświetleniem, którego parametry są losowo ustawiane przed rozpoczęciem każdego epizodu symulacji. Parametry oświetlenia ulegające zmianie to \textbf{pozycja}, \textbf{rotacja} (orientacja), \textbf{kolor} oraz \textbf{intensywność}.
+
+\subsubsection{RaceTrack\_3}
+Środowisko Uczenia oparte na torze wyścigowym ,,,\textit{Coastal Race Track}'' z pakietu \textbf{Environmental Race Track Pack} (por. \ref{RaceTracksSection}). Ponieważ tor wyścigowy jest bardziej skomplikowany, przygotowana została nowa implementacja klasy \textit{Agent} - klasa \textit{AdvancedCarAgent}. Reszta komponentów obiektu sceny \textit{CarAgent} pozostała bez zmian. Rysunek \ref{RaceTrack3Cockpit} przedstawia widok z kamery dla tego Środowiska Uczenia. \\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{resources/figures/race_track_3_cockpit.png}
+\caption{Widok z fotela kierowcy w Środowisku Uczenia \textit{RaceTrack\_3}}
+\label{RaceTrack3Cockpit}
+\end{center}
+\end{figure}
+
+\vspace*{-0.7cm}
+\subsubsection{RaceTrack\_4}
+Ostatnie i najciekawsze ze Środowisk Uczenia, ponieważ tutaj zastosowano inny model percepcji samochodu - zamiast pojedynczej kamery umieszczonej na fotelu kierowcy, zastosowany został system kamer zamontowanych z czterech stron samochodu: przodu, tyłu, lewej i prawej. Z racji ograniczeń sprzętowych wynikających z posiadanej karty graficznej (por. \ref{ComputerTechSpecs}), rozdzielczość obserwacji wizualnych musiała zostać zmniejszona do wymiarów $128 \times 72$ pikseli. Reszta konfiguracji Środowiska Uczenia pozostała niezmieniona względem Środowiska \textit{RaceTrack\_3}. Widok z kamer zamontowanych w samochodzie został zaprezentowany na rysunku \ref{RaceTrack4View}.
+
+\subsection{Implementacje klasy Agent}
+\label{AgentImplementations}
+W toku prac nad aplikacją zostało napisanych i przetestowanych wiele wersji implementacji klasy \textit{Agent} z zestawu Unity ML-Agents, jednak ostatecznie do wykorzystania zostały wyznaczone dwie klasy: \textit{SimpleCarAgent} oraz \textit{AdvancedCarAgent}. Chociaż są do siebie podobne, to jednak istnieje kilka różnic na które koniecznie trzeba zwrócić uwagę - tutaj zostanie to opisane.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{resources/figures/race_track_4_view.png}
+\caption{Widok z kamer w Środowisku Uczenia \textit{RaceTrack\_4}}
+\vspace*{-0.3cm}
+\caption*{(a) Kamera z przodu samochodu. (b) Kamera z lewej strony samochodu.}
+\vspace*{-0.3cm}
+\caption*{(c) Kamera z prawej strony samochodu. (d) Kamera z tyłu samochodu.}
+\label{RaceTrack4View}
+\end{center}
+\end{figure}
+
+\subsubsection{SimpleCarAgent}
+Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_1} oraz \textit{RaceTrack\_2} (por. \ref{LearningEnvsSubsection}). Jest odpowiedzialna za:
+\vspace*{-0.5cm}
+\begin{enumerate*}
+\item \textit{Prawidłową inicjalizację każdego epizodu treningu} - przywrócenie samochodu do pozycji startowej oraz zmianę właściwości oświetlenia (jego pozycji, orientacji, koloru oraz intensywności).
+\item \textit{Przekazywanie obserwacji ze Środowiska Uczenia do sieci neuronowej} - pobierane są 3 obserwacje ze środowiska - jedna wizualna (obraz z kamery) oraz dwie wektorowe (znormalizowana prędkość samochodu oraz informacja o tym, czy w danej chwili samochód dotyka jakiejś przeszkody).
+\item \textit{Przekazywanie wyjścia z sieci neuronowej do Środowiska Uczenia} - sieć neuronowa generuje dwie wartości (zwane Akcjami), które są liczbami rzeczywistymi z domkniętego przedziału od $-1$ do $1$. Pierwsza wartość to stopień wciśnięcia pedału hamulca lub przepustnicy (gdzie $-1$ to maksymalnie wciśnięty hamulec, a $1$ to maksymalnie wciśnięta przepustnica), a druga to kąt skrętu kierownicy (gdzie $0$ oznacza jazdę na wprost, $-1$ maksymalny skręt w lewo a $1$ maksymalny skręt w prawo).
+\item \textit{Obliczanie wartości sygnałów nagrody dla danego kroku symulacji} - sygnały nagród są obliczane na podstawie dwóch przesłanek: prędkości samochodu oraz kolizji z przeszkodami. Nagroda za prędkość jest proporcjonalna do prędkości samochodu, co oznacza że większa prędkość oznacza większą nagrodę. Za kolizje z przeszkodami przyznawane są kary, proporcjonalne do prędkości z jaką doszło do kolizji z przeszkodą. Dodatkowo przyznawana jest kara o stałej wartości za każdy krok symulacji, w którym samochód styka się z jakąś przeszkodą.
+\end{enumerate*}
+\noindent
+Zmienne publiczne, jakie można przypisać do tej klasy z poziomu edytora Unity, to:
+\vspace*{-0.5cm}
+\begin{itemize*}
+\item \texttt{MaxStep} - maksymalna liczba kroków symulacji dla danego epizodu;
+\item \texttt{CarAgentObject} - Referencja na obiekt sceny \textit{CarAgent};
+\item \texttt{StartCarPosition} - Pozycja początkowa samochodu;
+\item \texttt{StartCarRotation} - Orientacja początkowa samochodu;
+\item \texttt{DirectionalLight} - Referencja na obiekt oświetlenia (może być pusta, jeśli oświetlenie nie jest używane).
+\end{itemize*}
+
+\subsubsection{AdvancedCarAgent}
+Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_3} oraz \textit{RaceTrack\_4} (por. \ref{LearningEnvsSubsection}). Posiada dokładnie te same odpowiedzialności co klasa \textit{SimpleCarAgent}, jak również większość kodu jest taka sama. Główna różnica polega na tym, że klasa \textit{AdvancedCarAgent} wspiera możliwość resetowania samochodu przy starcie nowego epizodu do wielu różnych pozycji oraz orientacji. Listę pozycji i orientacji można uzupełniać z poziomu edytora Unity, co widać na rysunku \ref{AdvancedCarAgentLocList}, gdzie został zaprezentowany fragment listy \texttt{StartCarLocations}. \\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=6.5cm]{resources/figures/advanced_car_agent_loc_list.png}
+\caption{\textit{AdvancedCarAgent} - fragment listy \texttt{StartCarLocations}.}
+\label{AdvancedCarAgentLocList}
+\end{center}
+\end{figure}
+
+\subsection{Konfiguracja treningu}
+Konfiguracja treningu odbywa się poprzez przygotowanie pliku konfiguracyjnego w formacie YAML \cite{unitymla:configFile}. Dla każdego Środowiska Uczenia został przygotowany osobny plik konfiguracyjny, jednak różnice pomiędzy nimi są kosmetyczne i dotyczą detali. Oto zawartość pliku konfiguracyjnego dla Środowiska \textit{RaceTrack\_3}:
+
+\begin{minted}[ fontsize=\fontsize{10}{9} ] {yaml}
+engine_settings:
+  width: 240
+  height: 135
+  quality_level: 5
+  time_scale: 20
+  target_frame_rate: -1
+  capture_frame_rate: 60
+  no_graphics: false
+torch_settings:
+  device: cuda
+behaviors:
+  CarAgentBehaviour:
+    trainer_type: ppo
+    summary_freq: 50000
+    time_horizon: 256
+    max_steps: 30000000
+    keep_checkpoints: 10
+    checkpoint_interval: 500000
+    threaded: true
+    network_settings:
+      hidden_units: 128
+      num_layers: 2
+      normalize: true
+      vis_encode_type: simple
+      conditioning_type: none
+    reward_signals:
+      extrinsic:
+        strength: 1.0
+        gamma: 0.99
+\end{minted}
+
+Najważniejsze ustawienia dotyczą sekcji \texttt{behaviors}, ponieważ one mają największy wpływ na kształt treningu. W tym miejscu warto omówić kilka z nich:
+\begin{enumerate*}
+\item \texttt{trainer\_type} - wybór algorytmu uczącego. Dla wszystkich eksperymentów obliczeniowych wybrano algorytm PPO \cite{ppo:opis}, ponieważ w toku prac nad aplikacją okazał się być lepszym wyborem niż SAC \cite{sac:opis};
+\item \texttt{time\_horizon} - jak wiele kroków symulacji należy zebrać przed dodaniem ich do ,,bufora doświadczenia''. Wartość parametru powinna znajdować się w kompromisie pomiędzy mniej stronniczym, ale wyższym oszacowaniem wariancji (długi horyzont czasowy) i bardziej stronniczym, ale mniej zróżnicowanym oszacowaniem (krótki horyzont czasowy). Gdy nagrody są często przyznawane lub epizody trwają dość długo, wtedy mniejsza liczba może być lepszym wyborem. Niemniej jednak, wartość ta powinna być na tyle wielka, aby można było uchwycić wszystkie ważne zachowania w sekwencji działań agenta;
+\item \texttt{max\_steps} - maksymalna liczba kroków symulacji przed zakończeniem treningu;
+\item \texttt{keep\_checkpoints} - maksymalna liczba modeli sieci neuronowych, pozostawionych do zapisu. Modele te są zapisywane w odstępach określonych wartością parametru \texttt{checkpoint\_interval}, która oznacza interwał czasowy wyrażony w krokach symulacji treningowej; 
+\item \texttt{network\_settings} - ustawienia sieci neuronowej. Najważniejsze z nich to:
+\begin{itemize*}
+\item \texttt{hidden\_units} - liczba neuronów w pełni połączonej warstwie ukrytej;
+\item \texttt{num\_layers} - liczba warstw ukrytych;
+\item \texttt{vis\_encode\_type} - typ enkodera dla obserwacji wizualnych.
+\end{itemize*}
+\end{enumerate*}
+
+\section{Przebieg eksperymentów}
+\section{Analiza wyników}
+\section{Wnioski}
