@@ -9,13 +9,13 @@ Metodyka eksperymentów obliczeniowych polega na sformułowaniu listy założeń
 \begin{enumerate*}
 \item Każdy eksperyment obliczeniowy polega na wytrenowaniu konwolucyjnej sieci neuronowej w przygotowanym Środowisku Uczenia oraz ewaluacji wyuczonego modelu.
 \item Parametry dla każdego eksperymentu powinny zostać dostarczone w postaci zewnętrznego pliku konfiguracyjnego o zdefiniowanym formacie. Ścieżkę do pliku konfiguracyjnego należy podać jako argument linii poleceń.
-\item Wynikiem przeprowadzonego treningu sieci konwolucyjnej powinien być plik z wytrenowanym modelem oraz statystyki z przebiegu treningu.
+\item Wynikiem przeprowadzonego treningu sieci konwolucyjnej powinien być plik z wytrenowanym modelem.
 \item Do samodzielnego przeprowadzenia eksperymentów obliczeniowych należy mieć zainstalowane odpowiednie narzędzia (zgodnie z opisem z rozdziału \ref{DesignSystemChapter}-ciego), jak również posiadać kod źródłowy aplikacji wymaganej do wykonania eksperymentów.
 \item Wytrenowany model sieci neuronowej powinien posiadać format danych pozwalający na jego wizualizację przy użyciu zewnętrznego oprogramowania.
 \end{enumerate*}
 
 \section{Opis implementacji}
-Implementacja systemu została już częściowo opisana w rozdziale \ref{ImplementationChapter}-tym, natomiast każdy z przeprowadzonych eksperymentów wymagał dostosowania pewnych detali w implementacji. Poniżej zamieszczam opis tych elementów implementacji, które nie zostały jeszcze opisane, a są zbyt ważne aby je pominąć.
+Implementacja systemu została częściowo opisana w rozdziale \ref{ImplementationChapter}-tym, natomiast każdy z przeprowadzonych eksperymentów wymagał dostosowania pewnych detali w implementacji. Poniżej zamieszczam opis tych elementów implementacji, które nie zostały jeszcze opisane, a są zbyt ważne aby je pominąć.
 
 \subsection{Środowiska Uczenia}
 \label{LearningEnvsSubsection}
@@ -37,7 +37,7 @@ Na podstawie rysunku można wysnuć kilka wniosków:
 \item Do agenta są dostarczane dwie obserwacje wektorowe;
 \item Agent jest zobligowany do wykonywania dwóch akcji dla każdego kroku symulacji;
 \item Wykorzystaną implementacją klasy \textit{Agent} jest klasa \textit{SimpleCarAgent};
-\item Decyzje są podejmowane dla co drugiego kroku symulacji. Pomiędzy decyzjami należy wykonywać zlecone akcje w każdym kroku symulacji;
+\item Decyzje są podejmowane dla co drugiego kroku symulacji. Pomiędzy decyzjami należy wykonywać ostatnio obliczone Akcje;
 \item Wykorzystywane są obserwacje wizualne w postaci pojedynczego czujnika, zbierającego obraz z kamery umieszczonej na miejscu fotela kierowcy. Obserwacje wizualne mają rozdzielczość $240 \times 135$ pikseli. Rysunek \ref{RaceTrack1Cockpit} przedstawia widok z kamery stanowiącej źródło danych wejściowych dla obserwacji wizualnych.
 \end{itemize*}
 
@@ -65,7 +65,7 @@ Jest to Środowisko \textit{RaceTrack\_1} z dodanym oświetleniem, którego para
 
 \subsection{Implementacje klasy Agent}
 \label{AgentImplementations}
-W toku prac nad aplikacją zostało napisanych i przetestowanych wiele wersji implementacji klasy \textit{Agent} z zestawu Unity ML-Agents, jednak ostatecznie do wykorzystania zostały wyznaczone dwie klasy: \textit{SimpleCarAgent} oraz \textit{AdvancedCarAgent}. Chociaż są do siebie podobne, to jednak istnieje kilka różnic na które koniecznie trzeba zwrócić uwagę - tutaj zostanie to opisane.
+W toku prac nad aplikacją zostało napisanych i przetestowanych wiele wersji implementacji klasy \textit{Agent} z zestawu Unity ML-Agents, jednak ostatecznie do wykorzystania zostały wyznaczone dwie klasy: \textit{SimpleCarAgent} oraz \textit{AdvancedCarAgent}. Chociaż są do siebie podobne, to jednak istnieje kilka różnic na które koniecznie trzeba zwrócić uwagę.
 
 \subsubsection{SimpleCarAgent}
 Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_1} oraz \textit{RaceTrack\_2} (por. \ref{LearningEnvsSubsection}). Jest odpowiedzialna za:
