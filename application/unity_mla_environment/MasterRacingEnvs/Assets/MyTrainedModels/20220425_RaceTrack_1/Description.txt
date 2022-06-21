@@ -15,7 +15,7 @@ Output:
 2) Throttle/braking level as normalized value from range [-1:1].
 
 Training details:
-1) Model trained on RaceTrack_2 scene, with single instance of car agent.
+1) Model trained on RaceTrack_1 scene, with single instance of car agent.
 2) Each episode always started from the same car position and rotation:
     - Car Position: Vector3(13.6800003,-1.28699994,-10.2700005)
     - Car Rotation: Vector3(0,90,0)

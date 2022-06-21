@@ -19,7 +19,7 @@ Implementacja systemu została już częściowo opisana w rozdziale \ref{Impleme
 
 \subsection{Środowiska Uczenia}
 \label{LearningEnvsSubsection}
-W ramach prac nad częścią eksperymentalną zostały przygotowane 4 Środowiska Uczenia, będące niczym innym jak scenami silnika Unity. Każde Środowisko Uczenia posiada własną charakterystykę oraz pewne cechy szczególne, wyróżniające je na tle pozostałych Środowisk.
+W ramach prac nad częścią eksperymentalną zostały przygotowane 3 Środowiska Uczenia, będące niczym innym jak scenami silnika Unity. Każde Środowisko Uczenia posiada własną charakterystykę oraz pewne cechy szczególne, wyróżniające je na tle pozostałych Środowisk.
 
 \subsubsection{RaceTrack\_1}
 Te Środowisko Uczenia zostało oparte na torze wyścigowym ,,\textit{Figure 8 Track}'' z pakietu \textbf{Environmental Race Track Pack} (por. \ref{RaceTracksSection}). Najważniejszą cechą Środowiska jest brak oświetlenia, co zostało dołożone w kolejnych Środowiskach. Wykorzystaną tutaj implementacją klasy Agent jest \textit{SimpleCarAgent} (por. \ref{AgentImplementations}). Rysunek \ref{RaceTrack1AgentComps} przedstawia najważniejsze komponenty obiektu sceny \textit{CarAgent}. \\
@@ -63,25 +63,9 @@ Jest to Środowisko \textit{RaceTrack\_1} z dodanym oświetleniem, którego para
 \end{center}
 \end{figure}
 
-\vspace*{-0.7cm}
-\subsubsection{RaceTrack\_4}
-Ostatnie i najciekawsze ze Środowisk Uczenia, ponieważ tutaj zastosowano inny model percepcji samochodu - zamiast pojedynczej kamery umieszczonej na fotelu kierowcy, zastosowany został system kamer zamontowanych z czterech stron samochodu: przodu, tyłu, lewej i prawej. Z racji ograniczeń sprzętowych wynikających z posiadanej karty graficznej (por. \ref{ComputerTechSpecs}), rozdzielczość obserwacji wizualnych musiała zostać zmniejszona do wymiarów $128 \times 72$ pikseli. Reszta konfiguracji Środowiska Uczenia pozostała niezmieniona względem Środowiska \textit{RaceTrack\_3}. Widok z kamer zamontowanych w samochodzie został zaprezentowany na rysunku \ref{RaceTrack4View}.
-
 \subsection{Implementacje klasy Agent}
 \label{AgentImplementations}
 W toku prac nad aplikacją zostało napisanych i przetestowanych wiele wersji implementacji klasy \textit{Agent} z zestawu Unity ML-Agents, jednak ostatecznie do wykorzystania zostały wyznaczone dwie klasy: \textit{SimpleCarAgent} oraz \textit{AdvancedCarAgent}. Chociaż są do siebie podobne, to jednak istnieje kilka różnic na które koniecznie trzeba zwrócić uwagę - tutaj zostanie to opisane.
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=15cm]{resources/figures/race_track_4_view.png}
-\caption{Widok z kamer w Środowisku Uczenia \textit{RaceTrack\_4}}
-\vspace*{-0.3cm}
-\caption*{(a) Kamera z przodu samochodu. (b) Kamera z lewej strony samochodu.}
-\vspace*{-0.3cm}
-\caption*{(c) Kamera z prawej strony samochodu. (d) Kamera z tyłu samochodu.}
-\label{RaceTrack4View}
-\end{center}
-\end{figure}
 
 \subsubsection{SimpleCarAgent}
 Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_1} oraz \textit{RaceTrack\_2} (por. \ref{LearningEnvsSubsection}). Jest odpowiedzialna za:
@@ -104,7 +88,7 @@ Zmienne publiczne, jakie można przypisać do tej klasy z poziomu edytora Unity,
 \end{itemize*}
 
 \subsubsection{AdvancedCarAgent}
-Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_3} oraz \textit{RaceTrack\_4} (por. \ref{LearningEnvsSubsection}). Posiada dokładnie te same odpowiedzialności co klasa \textit{SimpleCarAgent}, jak również większość kodu jest taka sama. Główna różnica polega na tym, że klasa \textit{AdvancedCarAgent} wspiera możliwość resetowania samochodu przy starcie nowego epizodu do wielu różnych pozycji oraz orientacji. Listę pozycji i orientacji można uzupełniać z poziomu edytora Unity, co widać na rysunku \ref{AdvancedCarAgentLocList}, gdzie został zaprezentowany fragment listy \texttt{StartCarLocations}. \\
+Klasa użyta w Środowisku Uczenia \textit{RaceTrack\_3} (por. \ref{LearningEnvsSubsection}). Posiada dokładnie te same odpowiedzialności co klasa \textit{SimpleCarAgent}, jak również większość kodu jest taka sama. Główna różnica polega na tym, że klasa \textit{AdvancedCarAgent} wspiera możliwość resetowania samochodu przy starcie nowego epizodu do wielu różnych pozycji oraz orientacji. Listę pozycji i orientacji można uzupełniać z poziomu edytora Unity, co widać na rysunku \ref{AdvancedCarAgentLocList}, gdzie został zaprezentowany fragment listy \texttt{StartCarLocations}. \\
 
 \begin{figure}[h]
 \begin{center}
@@ -163,6 +147,97 @@ Najważniejsze ustawienia dotyczą sekcji \texttt{behaviors}, ponieważ one maj�
 \end{itemize*}
 \end{enumerate*}
 
-\section{Przebieg eksperymentów}
-\section{Analiza wyników}
+Rozpoczęcie treningu sieci odbywa się poprzez wywołanie komendy \texttt{mlagents\_learn}, której dokładne wykorzystanie zostało opisane w dokumentacji zestawu Unity ML-Agents \cite{unitymla:trainingMlAgents}.
+
+\section{Przebieg eksperymentów i analiza wyników}
+Dla każdego z przygotowanych Środowisk Uczenia przeprowadzono dokładnie jeden eksperyment obliczeniowy, polegający na wytrenowaniu konwolucyjnej sieci neuronowej do jazdy samochodem po wybranym torze wyścigowym, a następnie ewaluacji wytrenowanego modelu pod kątem przystosowania do rzeczywistej funkcji celu, jaką jest pokonanie toru wyścigowego w możliwie najkrótszym czasie.
+
+\subsection{RaceTrack\_1}
+Środowisko najłatwiejsze do wytrenowania konwolucyjnej sieci neuronowej, ponieważ brak jest zmiennego oświetlenia sceny, a zakręty są łagodne i niewymagające trudnych manewrów do wykonania. Wytrenowanie modelu zajęło 1647798 kroków symulacji. \\
+Obserwacje sieci obejmowały:
+\vspace*{-0.5cm}
+\begin{enumerate*}
+\item Obserwacje wizualne z kamery umieszczonej na fotelu kierowcy, czyli obrazki RGB o wymiarach $240 \times 135$ pikseli;
+\item Obserwacje wektorowe:
+\begin{itemize*}
+\item Bieżąca, znormalizowana prędkość samochodu;
+\item Wartość logiczna informująca, czy samochód w danej chwili styka się z jakąś przeszkodą.
+\end{itemize*}
+\end{enumerate*}
+
+Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, którego pozycja i orientacja były resetowane na początku każdego epizodu symulacji. Epizod kończył się w momencie przejechania pełnego okrążenia lub po wyczerpaniu zakładanego limitu czasowego dla danego epizodu. Z obserwacji wytrenowanego modelu wynika, że:
+\vspace*{-0.5cm}
+\begin{enumerate*}
+\item Model charakteryzuje się niestabilnym tempem jazdy, a wykonane pomiary czasowe wskazują na dość znaczne odchyły w czasach okrążeń.
+\item Wytrenowany model jest w stanie bezpiecznie przejechać kilka okrążeń pod rząd, choć ma tendencje do bardzo agresywnego wchodzenia w pierwszy zakręt, co czasem kończy się poważną kraksą - samochód obraca się o 90 stopni w stosunku do zakładanego kierunku jazdy.
+\item Po wystąpieniu poważnej kraksy, wytrenowany model nie potrafi zazwyczaj wrócić do dalszej jazdy, lecz stara się zminimalizować straty poprzez oddalenie się od barierki, tak aby nie było naliczanej kary za kontakt z przeszkodami.
+\item Model radzi sobie z jazdą tylko wtedy, gdy kolor drogi wyraźnie kontrastuje z poboczem - przy załączonym oświetleniu kierunkowym sieć się gubi, dojeżdżając do miejsca gdzie droga zbyt się rozjaśnia z powodu oświetlenia.
+\end{enumerate*}
+
+\subsection{RaceTrack\_2}
+Środowisko Uczenia bardzo podobnie skonfigurowane do \textit{RaceTrack\_1}, jednak z jedną zasadniczą różnicą - trening odbywał się przy załączonym oświetleniu kierunkowym, którego właściwości były losowo ustawiane dla każdego epizodu treningowego. Model został wytrenowany po 4654498 krokach symulacji. Obserwacje modelu wykazały, że:
+\begin{enumerate*}
+\item Jego tempo jazdy jest znacznie stabilniejsze od poprzedniego modelu, ponieważ różnice między najszybszym i najwolniejszym okrążeniem były średnio 4-krotnie mniejsze niż dla poprzedniego modelu.
+\item Model wciąż wykazuje tendencje do agresywnego wchodzenia w pierwszy zakręt, co często kończy się poważną kraksą.
+\item Po wystąpieniu poważnej kraksy (obrócenie o 90 stopni lub więcej), samochód staje w miejscu lub wręcz zawraca i zaczyna jechać ,,pod prąd''. Pod tym względem zachowanie tego modelu niezbyt odbiega od zachowania modelu poprzedniego.
+\item Model dobrze sobie radzi ze zmiennym oświetleniem, chociaż wciąż się gubi dla niektórych przypadków brzegowych.
+\end{enumerate*}
+
+\subsection{RaceTrack\_3}
+W tym Środowisku Uczenia trening potrwał znacznie dłużej niż na obydwu poprzednich Środowiskach razem wziętych i wyniósł prawie 13 milionów kroków symulacji (było to dokładnie 12999786). Wynika to z faktu, że te Środowisko jest dużo trudniejsze do wytrenowania, ponieważ tor wyścigowy jest bardziej zróżnicowany i składa się z zakrętów o bardziej odmiennej charakterystyce. Z obserwacji wytrenowanego modelu wynika, że:
+\begin{enumerate*}
+\item Jego zachowanie jest dosyć nierówne. Z jednej strony, zdarza się że przez dłuższy odcinek czasu samochód całkiem znośnie pokonuje kolejne zakręty, zwalniając przed ostrzejszymi nawrotami. Z drugiej strony, chwilę później na łagodniejszym zakręcie samochód potrafi uderzyć pełnym impetem w barierkę, obrócić się bokiem do drogi i dalej nie ruszyć.
+\item Model wypracował sobie strategię utrzymania toru jazdy samochodu przy mocnym zderzeniu z barierką na ostrym zakręcie. W takich sytuacjach następuje skręt kierownicy do skrajnej pozycji w kierunku zakrętu - czyli przy zakręcie w lewo następuje maksymalny skręt kierownicą na lewo.
+\item Jeśli samochód po kraksie nie jest obrócony prostopadle do kierunku jazdy, lecz pod pewnym mniejszym kątem, to wtedy jest szansa że samochód powróci do dalszej jazdy. Jeśli jednak samochód obróci się o więcej niż 90 stopni, to nie zawróci, ponieważ model nie posiada żadnych informacji na temat tego, w którą stronę samochód powinien się poruszać. W najlepszym wypadku samochód ruszy w drugą stronę.
+\item Podobnie jak poprzedni model, całkiem dobrze radzi sobie ze zmiennym oświetleniem.
+\item Przejeżdżając przez ciasne nawroty, samochód zwalnia aby uniknąć kolizji. W skrajnych przypadkach potrafi całkowicie się zatrzymać i dalej nie ruszyć, pomimo tego że sytuacja pozwalałaby na dalszą jazdę.
+\end{enumerate*}
+
+\section{Analiza wytrenowanego modelu}
+Model wytrenowany w Środowisku \textit{RaceTrack\_3} został załadowany do programu o nazwie Netron (por. \ref{NetronOpis}). Rysunek \ref{ModelVisualization} przedstawia wizualizację załadowanego modelu. \\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=13.5cm]{resources/figures/model_visualization.png}
+\caption{Wizualizacja modelu wytrenowanego w Środowisku Uczenia \textit{RaceTrack\_3}}
+\label{ModelVisualization}
+\end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=13.5cm]{resources/figures/trained_model_inspector.png}
+\caption{Podgląd wytrenowanego modelu w inspektorze edytora Unity}
+\label{TrainedModelInspector}
+\end{center}
+\vspace*{-0.5cm}
+\end{figure}
+
+Więcej informacji na temat każdego z operatorów (czyli typów warstw sieci) można znaleźć na stronie dokumentacji standardu ONNX \cite{onnx:operators}. Wykorzystane operatory posiadają następujące znaczenie:
+\vspace*{-0.5cm}
+\begin{enumerate*}
+\item \textbf{obs\_0}, \textbf{obs\_1} - obserwacje wejściowe (odpowiednio: wizualne i wektorowe);
+\item \textbf{Conv} - warstwa konwolucyjna;
+\item \textbf{LeakyRelu} - funkcja aktywacji LeakyRelu;
+\item \textbf{Reshape} - warstwa zmieniająca kształt (wymiary) danych wejściowych;
+\item \textbf{Add}, \textbf{Sub}, \textbf{Mul}, \textbf{Div} - operacje dodawania, odejmowania, mnożenia i dzielenia;
+\item \textbf{Clip} - operacja obcinania wartości do zadanej dziedziny;
+\item \textbf{Concat} - warstwa łącząca;
+\item \textbf{Gemm} - warstwa ogólnego mnożenia macierzy;
+\item \textbf{Sigmoid} - funkcja aktywacji Sigmoid;
+\item \textbf{Exp} - operacja potęgowania;
+\item \textbf{RandomNormalLike} - generator tensorów losowych.
+\end{enumerate*}
+
+Ten sam model można również podejrzeć w inspektorze edytora Unity, co zostało zaprezentowane na rysunku \ref{TrainedModelInspector}. Wytrenowany model składa się z 30 warstw oraz 1765298 wag, których wartości musiały być dostrojone podczas trwania treningu. Cały plik modelu waży 7061240 bajtów, co w przybliżeniu daje nam 6,73 MB.
+
 \section{Wnioski}
+W wyniku przeprowadzonych eksperymentów obliczeniowych, autor niniejszej pracy sformułował kilka wniosków:
+
+\begin{enumerate*}
+\item Złożoność Środowiska Uczenia w bezpośredni sposób przekłada się na długość treningu sieci neuronowej. Pomimo braku zmian w topologii sieci, jej hiperparametrach czy też algorytmie uczącym, każde kolejne z opisanych Środowisk Uczenia wymagało zauważalnie więcej obliczeń podczas treningu modelu. Wynikało to z faktu, że każde kolejne Środowisko było bardziej różnorodne, co utrudniało algorytmowi uczącemu odnalezienie powiązań między wzorcami wizualnymi i oczekiwanymi akcjami.
+\item Zaprojektowana funkcja nagród (zależna od prędkości samochodu oraz występujących kolizji) okazała się być wystarczająca jedynie dla wyuczenia się podstawowych manewrów, takich jak jazda po prostej oraz bezkolizyjne pokonywanie łagodnych zakrętów. Przejeżdżając przez ciaśniejsze zakręty, model wykazuje zbyt agresywne zachowanie, co zazwyczaj kończy się poważną stłuczką i brakiem możliwości dalszej jazdy. Aby to zmienić, funkcję nagród należałoby przeprojektować, co jest zadaniem wysoce nietrywialnym i wymagającym wiele czasu poświęconego na testowanie różnych rozwiązań.
+\item Pomimo treningu przy zmiennym oświetleniu, rodzaj i natężenie oświetlenia wciąż mają istotny wpływ na jakość zachowania modelu.
+\item Model wytrenowany na jednym Środowisku Uczenia nie potrafi się poprawnie zachować na pozostałych Środowiskach. Powodów takiego stanu rzeczy należałoby upatrywać w zauważalnych różnicach wizualnych pomiędzy Środowiskami.
+\item Uzyskane wyniki eksperymentów pozwalają na zaobserwowanie korelacji pomiędzy Środowiskiem Uczenia a długością treningu, natomiast nie wnoszą żadnej wiedzy na temat wpływu konfiguracji na skuteczność wyuczonego modelu. Dalsze badania w tym zakresie są jak najbardziej wskazane.
+\end{enumerate*}
