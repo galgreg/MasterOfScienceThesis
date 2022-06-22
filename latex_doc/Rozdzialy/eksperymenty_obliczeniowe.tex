@@ -136,7 +136,7 @@ behaviors:
 Najważniejsze ustawienia dotyczą sekcji \texttt{behaviors}, ponieważ one mają największy wpływ na kształt treningu. W tym miejscu warto omówić kilka z nich:
 \begin{enumerate*}
 \item \texttt{trainer\_type} - wybór algorytmu uczącego. Dla wszystkich eksperymentów obliczeniowych wybrano algorytm PPO \cite{ppo:opis}, ponieważ w toku prac nad aplikacją okazał się być lepszym wyborem niż SAC \cite{sac:opis};
-\item \texttt{time\_horizon} - jak wiele kroków symulacji należy zebrać przed dodaniem ich do ,,bufora doświadczenia''. Wartość parametru powinna znajdować się w kompromisie pomiędzy mniej stronniczym, ale wyższym oszacowaniem wariancji (długi horyzont czasowy) i bardziej stronniczym, ale mniej zróżnicowanym oszacowaniem (krótki horyzont czasowy). Gdy nagrody są często przyznawane lub epizody trwają dość długo, wtedy mniejsza liczba może być lepszym wyborem. Niemniej jednak, wartość ta powinna być na tyle wielka, aby można było uchwycić wszystkie ważne zachowania w sekwencji działań agenta;
+\item \texttt{time\_horizon} - jak wiele kroków symulacji należy zebrać przed dodaniem ich do ,,bufora doświadczenia''. Wartość parametru powinna znajdować się w kompromisie pomiędzy mniej stronniczym, ale wyższym oszacowaniem wariancji (długi horyzont czasowy) i bardziej stronniczym, ale mniej zróżnicowanym oszacowaniem (krótki horyzont czasowy). Gdy nagrody są często przyznawane lub epizody trwają dość długo, wtedy mniejsza liczba może być lepszym wyborem. Niemniej jednak, wartość ta powinna być na tyle duża, aby można było uchwycić wszystkie ważne zachowania w sekwencji działań agenta;
 \item \texttt{max\_steps} - maksymalna liczba kroków symulacji przed zakończeniem treningu;
 \item \texttt{keep\_checkpoints} - maksymalna liczba modeli sieci neuronowych, pozostawionych do zapisu. Modele te są zapisywane w odstępach określonych wartością parametru \texttt{checkpoint\_interval}, która oznacza interwał czasowy wyrażony w krokach symulacji treningowej; 
 \item \texttt{network\_settings} - ustawienia sieci neuronowej. Najważniejsze z nich to:
@@ -229,7 +229,15 @@ Więcej informacji na temat każdego z operatorów (czyli typów warstw sieci) m
 \item \textbf{RandomNormalLike} - generator tensorów losowych.
 \end{enumerate*}
 
-Ten sam model można również podejrzeć w inspektorze edytora Unity, co zostało zaprezentowane na rysunku \ref{TrainedModelInspector}. Wytrenowany model składa się z 30 warstw oraz 1765298 wag, których wartości musiały być dostrojone podczas trwania treningu. Cały plik modelu waży 7061240 bajtów, co w przybliżeniu daje nam 6,73 MB.
+Ten sam model można również podejrzeć w inspektorze edytora Unity, co zostało zaprezentowane na rysunku \ref{TrainedModelInspector}. Wytrenowany model składa się z 30 warstw oraz 1765298 wag, których wartości musiały być dostrojone podczas trwania treningu. Cały plik modelu ma rozmiar 7061240 bajtów, co w przybliżeniu daje nam 6,73 MB.
+
+W tym miejscu należy wyjaśnić, dlaczego zastosowano powyżej opisaną architekturę modelu sieci. Powody są następujące:
+\begin{enumerate*}
+\item Punktem wyjścia była chęć przeprowadzenia treningu w oparciu o dane wizualne, a do takich zadań doskonałym wyborem są konwolucyjne sieci neuronowe (por. rozdział \ref{CNNsChapter}-gi). Dlatego architektura sieci posiada warstwy konwolucyjne.
+\item Dwie warstwy konwolucyjne są domyślnym wyborem, oferowanym przez zestaw Unity ML-Agents. Po  kilku testach, autor postanowił pozostać przy tej wartości, ponieważ okazała się być wystarczająco dobra dla potrzeb treningu.
+\item Autor eksperymentował z różnymi rozdzielczościami obrazu wejściowego, rozpoczynając od możliwie najmniejszych wartości. Taki kierunek poszukiwań wydawał się właściwy, ponieważ mniejsze dane wejściowe oznaczają zwykle krótszy trening, a w konsekwencji szybszą ewaluację zaprojektowanego modelu. Jednakże zbyt niska rozdzielczość to brak detali istotnych do nauczenia się modelu, dlatego wybór właściwej rozdzielczości jest zawsze kwestią kompromisu. Po wielu testach, autor ostatecznie przyjął rozdzielczość $240 \times 135$, ponieważ przy niższej rozdzielczości ciasne nawroty były zauważane zbyt późno i model nie miał możliwości dohamować przed zakrętem.
+\item Pozostałe elementy architektury sieci pochodzą z domyślnej konfiguracji zestawu Unity ML-Agent. Konfiguracja ta okazała się sprawdzać bardzo dobrze, dlatego autor pracy postanowił przy niej pozostać.
+\end{enumerate*}
 
 \section{Wnioski}
 W wyniku przeprowadzonych eksperymentów obliczeniowych, autor niniejszej pracy sformułował kilka wniosków:
