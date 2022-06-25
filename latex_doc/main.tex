@@ -195,11 +195,16 @@ $^1$ uwzględniając merytoryczny wkład promotora (w ramach prowadzonego semina
 \input{Rozdzialy/eksperymenty_obliczeniowe.tex}
 \input{Rozdzialy/podsumowanie.tex}
 
-%   this is for BibTeX
-\bibliographystyle{plplain}
+% Adds the list of figures to the table of contents.
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Spis rysunków}
+\listoffigures
+
+% Adds the bibliography to the table of contents
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliografia}
 \bibliography{literatura}
 
-%adds the bibliography to the table of contents
-\addcontentsline{toc}{chapter}
-         {\protect\numberline{Bibliografia\hspace{-96pt}}}
 \end{document}

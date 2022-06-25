@@ -17,6 +17,7 @@ Metodyka eksperymentów obliczeniowych polega na sformułowaniu listy założeń
 \section{Opis implementacji}
 Implementacja systemu została częściowo opisana w rozdziale \ref{ImplementationChapter}-tym, natomiast każdy z przeprowadzonych eksperymentów wymagał dostosowania pewnych detali w implementacji. Poniżej zamieszczam opis tych elementów implementacji, które nie zostały jeszcze opisane, a są zbyt ważne aby je pominąć.
 
+\clearpage
 \subsection{Środowiska Uczenia}
 \label{LearningEnvsSubsection}
 W ramach prac nad częścią eksperymentalną zostały przygotowane 3 Środowiska Uczenia, będące niczym innym jak scenami silnika Unity. Każde Środowisko Uczenia posiada własną charakterystykę oraz pewne cechy szczególne, wyróżniające je na tle pozostałych Środowisk.
@@ -50,7 +51,7 @@ Na podstawie rysunku można wysnuć kilka wniosków:
 \end{figure}
 
 \subsubsection{RaceTrack\_2}
-Jest to Środowisko \textit{RaceTrack\_1} z dodanym oświetleniem, którego parametry są losowo ustawiane przed rozpoczęciem każdego epizodu symulacji. Parametry oświetlenia ulegające zmianie to \textbf{pozycja}, \textbf{rotacja} (orientacja), \textbf{kolor} oraz \textbf{intensywność}.
+Jest to Środowisko \textit{RaceTrack\_1} z dodanym oświetleniem kierunkowym, którego parametry są losowo ustawiane przed rozpoczęciem każdego epizodu symulacji. Parametry oświetlenia ulegające zmianie to \textbf{pozycja}, \textbf{rotacja} (orientacja), \textbf{kolor} oraz \textbf{intensywność}.
 
 \subsubsection{RaceTrack\_3}
 Środowisko Uczenia oparte na torze wyścigowym ,,,\textit{Coastal Race Track}'' z pakietu \textbf{Environmental Race Track Pack} (por. \ref{RaceTracksSection}). Ponieważ tor wyścigowy jest bardziej skomplikowany, przygotowana została nowa implementacja klasy \textit{Agent} - klasa \textit{AdvancedCarAgent}. Reszta komponentów obiektu sceny \textit{CarAgent} pozostała bez zmian. Rysunek \ref{RaceTrack3Cockpit} przedstawia widok z kamery dla tego Środowiska Uczenia. \\
@@ -153,7 +154,7 @@ Rozpoczęcie treningu sieci odbywa się poprzez wywołanie komendy \texttt{mlage
 Dla każdego z przygotowanych Środowisk Uczenia przeprowadzono dokładnie jeden eksperyment obliczeniowy, polegający na wytrenowaniu konwolucyjnej sieci neuronowej do jazdy samochodem po wybranym torze wyścigowym, a następnie ewaluacji wytrenowanego modelu pod kątem przystosowania do rzeczywistej funkcji celu, jaką jest pokonanie toru wyścigowego w możliwie najkrótszym czasie.
 
 \subsection{RaceTrack\_1}
-Środowisko najłatwiejsze do wytrenowania konwolucyjnej sieci neuronowej, ponieważ brak jest zmiennego oświetlenia sceny, a zakręty są łagodne i niewymagające trudnych manewrów do wykonania. Wytrenowanie modelu zajęło 1647798 kroków symulacji. \\
+Środowisko najłatwiejsze do wytrenowania konwolucyjnej sieci neuronowej, ponieważ brak jest zmiennego oświetlenia sceny, a zakręty są łagodne i niewymagające trudnych manewrów do wykonania. Wytrenowanie modelu zajęło 1 647 798 kroków symulacji. \\
 Obserwacje sieci obejmowały:
 \vspace*{-0.5cm}
 \begin{enumerate*}
@@ -165,7 +166,7 @@ Obserwacje sieci obejmowały:
 \end{itemize*}
 \end{enumerate*}
 
-Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, którego pozycja i orientacja były resetowane na początku każdego epizodu symulacji. Epizod kończył się w momencie przejechania pełnego okrążenia lub po wyczerpaniu zakładanego limitu czasowego dla danego epizodu. Z obserwacji wytrenowanego modelu wynika, że:
+Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, którego pozycja i orientacja były resetowane na początku każdego epizodu symulacji. Epizod kończył się w momencie przejechania pełnego okrążenia lub po wyczerpaniu zakładanego limitu czasowego dla danego epizodu. Z testów wytrenowanego modelu wynika, że:
 \vspace*{-0.5cm}
 \begin{enumerate*}
 \item Model charakteryzuje się niestabilnym tempem jazdy, a wykonane pomiary czasowe wskazują na dość znaczne odchyły w czasach okrążeń.
@@ -175,7 +176,7 @@ Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, k
 \end{enumerate*}
 
 \subsection{RaceTrack\_2}
-Środowisko Uczenia bardzo podobnie skonfigurowane do \textit{RaceTrack\_1}, jednak z jedną zasadniczą różnicą - trening odbywał się przy załączonym oświetleniu kierunkowym, którego właściwości były losowo ustawiane dla każdego epizodu treningowego. Model został wytrenowany po 4654498 krokach symulacji. Obserwacje modelu wykazały, że:
+Środowisko Uczenia bardzo podobnie skonfigurowane do \textit{RaceTrack\_1}, jednak z jedną zasadniczą różnicą - trening odbywał się przy załączonym oświetleniu kierunkowym, którego właściwości były losowo ustawiane dla każdego epizodu treningowego. Model został wytrenowany po 4 654 498 krokach symulacji. Obserwacje modelu wykazały, że:
 \begin{enumerate*}
 \item Jego tempo jazdy jest znacznie stabilniejsze od poprzedniego modelu, ponieważ różnice między najszybszym i najwolniejszym okrążeniem były średnio 4-krotnie mniejsze niż dla poprzedniego modelu.
 \item Model wciąż wykazuje tendencje do agresywnego wchodzenia w pierwszy zakręt, co często kończy się poważną kraksą.
@@ -184,15 +185,17 @@ Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, k
 \end{enumerate*}
 
 \subsection{RaceTrack\_3}
-W tym Środowisku Uczenia trening potrwał znacznie dłużej niż na obydwu poprzednich Środowiskach razem wziętych i wyniósł prawie 13 milionów kroków symulacji (było to dokładnie 12999786). Wynika to z faktu, że te Środowisko jest dużo trudniejsze do wytrenowania, ponieważ tor wyścigowy jest bardziej zróżnicowany i składa się z zakrętów o bardziej odmiennej charakterystyce. Z obserwacji wytrenowanego modelu wynika, że:
+W tym Środowisku Uczenia trening potrwał znacznie dłużej niż na obydwu poprzednich Środowiskach razem wziętych i wyniósł 12 999 786 milionów kroków symulacji. Wynika to z faktu, że te Środowisko jest dużo trudniejsze do wytrenowania, ponieważ tor wyścigowy jest bardziej zróżnicowany i składa się z zakrętów o bardziej odmiennej charakterystyce. \\
+Z obserwacji wytrenowanego modelu wynika, że:
 \begin{enumerate*}
 \item Jego zachowanie jest dosyć nierówne. Z jednej strony, zdarza się że przez dłuższy odcinek czasu samochód całkiem znośnie pokonuje kolejne zakręty, zwalniając przed ostrzejszymi nawrotami. Z drugiej strony, chwilę później na łagodniejszym zakręcie samochód potrafi uderzyć pełnym impetem w barierkę, obrócić się bokiem do drogi i dalej nie ruszyć.
 \item Model wypracował sobie strategię utrzymania toru jazdy samochodu przy mocnym zderzeniu z barierką na ostrym zakręcie. W takich sytuacjach następuje skręt kierownicy do skrajnej pozycji w kierunku zakrętu - czyli przy zakręcie w lewo następuje maksymalny skręt kierownicą na lewo.
-\item Jeśli samochód po kraksie nie jest obrócony prostopadle do kierunku jazdy, lecz pod pewnym mniejszym kątem, to wtedy jest szansa że samochód powróci do dalszej jazdy. Jeśli jednak samochód obróci się o więcej niż 90 stopni, to nie zawróci, ponieważ model nie posiada żadnych informacji na temat tego, w którą stronę samochód powinien się poruszać. W najlepszym wypadku samochód ruszy w drugą stronę.
+\item Jeśli samochód po zderzeniu z barierką nie został obrócony prostopadle do kierunku jazdy, lecz pod pewnym mniejszym kątem, to wtedy jest szansa że samochód powróci do dalszej jazdy. Jeśli jednak samochód obróci się o więcej niż 90 stopni, to nie zawróci, ponieważ model nie posiada żadnych informacji na temat tego, w którą stronę samochód powinien się poruszać. W najlepszym wypadku samochód ruszy w drugą stronę.
 \item Podobnie jak poprzedni model, całkiem dobrze radzi sobie ze zmiennym oświetleniem.
 \item Przejeżdżając przez ciasne nawroty, samochód zwalnia aby uniknąć kolizji. W skrajnych przypadkach potrafi całkowicie się zatrzymać i dalej nie ruszyć, pomimo tego że sytuacja pozwalałaby na dalszą jazdę.
 \end{enumerate*}
 
+\clearpage
 \section{Analiza wytrenowanego modelu}
 Model wytrenowany w Środowisku \textit{RaceTrack\_3} został załadowany do programu o nazwie Netron (por. \ref{NetronOpis}). Rysunek \ref{ModelVisualization} przedstawia wizualizację załadowanego modelu. \\
 
@@ -229,7 +232,7 @@ Więcej informacji na temat każdego z operatorów (czyli typów warstw sieci) m
 \item \textbf{RandomNormalLike} - generator tensorów losowych.
 \end{enumerate*}
 
-Ten sam model można również podejrzeć w inspektorze edytora Unity, co zostało zaprezentowane na rysunku \ref{TrainedModelInspector}. Wytrenowany model składa się z 30 warstw oraz 1765298 wag, których wartości musiały być dostrojone podczas trwania treningu. Cały plik modelu ma rozmiar 7061240 bajtów, co w przybliżeniu daje nam 6,73 MB.
+Ten sam model można również podejrzeć w inspektorze edytora Unity, co zostało zaprezentowane na rysunku \ref{TrainedModelInspector}. Wytrenowany model składa się z 30 warstw oraz 1 765 298 wag, których wartości musiały zostać dostrojone podczas treningu. Cały plik modelu ma rozmiar 7 061 240 bajtów, co w przybliżeniu daje nam 6,73 MB.
 
 W tym miejscu należy wyjaśnić, dlaczego zastosowano powyżej opisaną architekturę modelu sieci. Powody są następujące:
 \begin{enumerate*}

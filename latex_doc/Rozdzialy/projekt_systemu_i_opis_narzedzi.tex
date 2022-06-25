@@ -3,7 +3,7 @@
 W poniższym rozdziale zostaną zaprezentowane kluczowe decyzje projektowe oraz założenia, jakie zostały przyjęte w toku prac nad implementacją systemu. Oprócz tego zostanie również przedstawiony opis narzędzi, które zostały wykorzystane do stworzenia aplikacji.
 
 \section{Projekt systemu}
-W fazie projektowania należy zdefiniować główne założenia projektowe oraz odpowiednio zaprojektować architekturę systemu. Podsumowując wyniki uzyskane w tej fazie, zdecydowałem się rozpatrzeć trzy najważniejsze zagadnienia:
+W fazie projektowania należy zdefiniować główne założenia projektowe oraz odpowiednio zaprojektować architekturę systemu. Podsumowując wyniki uzyskane w tej fazie, autor pracy zdecydował się rozpatrzeć trzy najważniejsze zagadnienia:
 \begin{enumerate*}
 \item Definicja \textbf{rozwiązywanego problemu},
 \item Lista \textbf{celów i założeń systemu},
@@ -20,7 +20,6 @@ Agentami są konwolucyjne sieci neuronowe, a ich parametry są dostrajane przy u
 \item Stworzony system powinien być możliwie prosty w obsłudze.
 \item Wytrenowane modele powinny być zapisywane do pliku o ustalonym formacie. Format pliku musi być rozpoznawany i obsługiwany przez aplikację.
 \item Dane konfiguracyjne powinny być dostarczane z zewnętrznego pliku o ustalonym formacie.
-\item System powinien zapisywać przebieg treningu sieci neuronowych w postaci plików dziennika. Pliki te powinny zawierać informacje ułatwiające późniejszą analizę treningu.
 \item System powinien posiadać możliwość podglądu ,,na żywo'' postępów treningu sieci podczas jego trwania.
 \end{enumerate*}
 
@@ -123,7 +122,7 @@ Poprawnie skonfigurowane Środowisko Uczenia musi zawierać następujące elemen
 \item Co najmniej jednego Zachowania (z ang. \textit{Behavior}). Zachowanie definiuje określone atrybuty Agenta, takie jak liczba i rodzaj wykonywanych Akcji. Każde Zachowanie jest jednoznacznie identyfikowane poprzez pole \texttt{Behavior Name}. \\
 Istnieją trzy rodzaje Zachowań:
 \begin{itemize*}
-\item Zachowanie Uczące (z ang. \textit{Learning Behavior}) - Zachowanie którego Agent musi się wyuczyć. Tego Zachowania używamy podczas treningu sieci neuronowych;
+\item Zachowanie Uczące (z ang. \textit{Learning Behavior}) - Zachowanie, którego Agent musi się wyuczyć. Tego Zachowania używamy podczas treningu sieci neuronowych;
 \item Zachowanie Heurystyczne (z ang. \textit{Heuristic Behavior}) - Zachowanie zdefiniowane przez reguły zapisane bezpośrednio w kodzie źródłowym. Przydatne m.in. przy testowaniu nowego Środowiska Uczenia przed rozpoczęciem treningu sieci.
 \item Zachowanie Wnioskujące (z ang. \textit{Inference Behavior}) - Zachowanie wykorzystujące wytrenowany model sieci neuronowej. W gruncie rzeczy, Zachowanie Uczące po skończonym treningu sieci neuronowej zmienia się w Zachowanie Wnioskujące.
 \end{itemize*}
@@ -146,7 +145,7 @@ Opisując narzędzie Unity ML-Agents, należałoby również wspomnieć kilka s�
 \begin{enumerate*}
 \item Obserwacje (z ang. \textit{Observations}) - zestaw danych wejściowych, niezbędnych do wykonania zleconego Agentowi zadania. Obserwacje mogą być generowane na kilka sposobów:
 \begin{itemize*}
-\item Nadpisanie metody \texttt{Agent.CollectObservations()} i przesłanie obserwacji do dostarczonego (przez parametr metody) obiektu klasy \texttt{VectorSensor}. Ten sposób najlepiej wykorzystać do aspektów środowiska które można opisać numerycznie i niewizualnie.
+\item Nadpisanie metody \texttt{Agent.CollectObservations()} i przesłanie obserwacji do dostarczonego (przez parametr metody) obiektu klasy \texttt{VectorSensor}. Ten sposób najlepiej wykorzystać do aspektów środowiska, które można opisać numerycznie i niewizualnie.
 \item Dodanie atrybutu \texttt{[Observable]} do pól i właściwości Agenta. Atrybut \\ \texttt{[Observable]} wspiera obecnie podstawowe typy danych (takie jak  \texttt{int}, \texttt{float} czy \texttt{bool}), jak również klasy \texttt{Vector2}, \texttt{Vector3}, \texttt{Vector4}, \texttt{Quaternion} oraz typy enumeracyjne.
 \item Implementacja interfejsu \texttt{ISensor}, korzystając z \texttt{SensorComponent} dołączanego do Agenta. Obecnie istnieje kilka implementacji komponentu \texttt{SensorComponent} dostarczanych przez API zestawu Unity ML-Agents. Najważniejsze z nich to:
 \begin{itemize*}
@@ -159,6 +158,7 @@ Opisując narzędzie Unity ML-Agents, należałoby również wspomnieć kilka s�
 \item Nagrody (z ang. \textit{Rewards}) - informacja zwrotna, pozwalająca ocenić jak dobre (lub złe) są Akcje wykonywane obecnie przez Agenta. System Nagród jest najważniejszym elementem w uczeniu ze wzmocnieniem, ponieważ sposób jego skonstruowania ma decydujący wpływ na to, czy trening sieci neuronowej się powiedzie.
 \end{enumerate*}
 
+\clearpage
 \subsection{Vehicle Physics Pro}
 \label{VppSection}
 Zaawansowany zestaw do symulacji pojazdów dla silnika Unity 3D. VPP zapewnia wydajny, w pełni realistyczny i dokładny model dynamiki dla niemal każdego typu pojazdu i konfiguracji. W skład zestawu wchodzą m.in. \cite{vpp:features}:
@@ -192,9 +192,10 @@ Większość aspektów symulacji podlega możliwościom dostosowania do potrzeb 
 \subsection{Conda}
 System zarządzania pakietami i środowiskami, posiadający wsparcie dla wielu języków programowania, m.in.: Python, Scala, Java, Fortran \cite{conda:overview}. Conda pozwala łatwo tworzyć, zapisywać i ładować środowiska uruchomieniowe oraz sprawnie przełączać się pomiędzy nimi. Wykorzystując zaledwie kilka prostych poleceń, użytkownik jest w stanie skonfigurować całkowicie odrębne środowisko do uruchomienia wybranej wersji Pythona z określonymi pakietami dodatkowymi. Każde środowisko może posiadać całkowicie odmienną konfigurację.
 
+\clearpage
 \subsection{Netron}
 \label{NetronOpis}
-Przeglądarka sieci neuronowych \cite{netron:github}. Netron posiada wsparcie dla wielu popularnych technologii wykorzystywanych w uczeniu maszynowym, takich jak ONNX, Keras, czy Barracuda. Ten program jest przeze mnie wykorzystywany do wizualizacji sieci neuronowych, otrzymanych w wyniku przeprowadzenia serii eksperymentów obliczeniowych.
+Przeglądarka sieci neuronowych \cite{netron:github}. Netron posiada wsparcie dla wielu popularnych technologii wykorzystywanych w uczeniu maszynowym, takich jak ONNX, Keras, czy Barracuda. Ten program został wykorzystany do wizualizacji modelu wytrenowanej sieci neuronowej, otrzymanej w wyniku przeprowadzenia serii eksperymentów obliczeniowych.
 
 \vspace{0.5cm}
 
