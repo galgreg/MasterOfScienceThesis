@@ -1,15 +1,9 @@
 \chapter{Opis implementacji}
 \label{ImplementationChapter}
-System stworzony na potrzebę realizacji niniejszej pracy magisterskiej można podzielić na dwa moduły, zgodnie z opisem architektury zamieszczonym w sekcji \ref{SoftwareArchSection}:
-\begin{enumerate*}
-\item Środowisko Uczenia - stworzone w silniku Unity i odpowiedzialne za symulowanie wirtualnego środowiska, po którym przemieszcza się inteligentny agent.
-\item Narzędzie \texttt{mlagents\_learn} - wchodzi w skład zestawu \textit{Unity ML-Agents} (por. \ref{UnityMlSection}) i odpowiada za trening sieci konwolucyjnych. Jest procesem niezależnym od silnika Unity, a komunikacja ze Środowiskiem Uczenia odbywa się poprzez specjalny mechanizm, którego implementacja pochodzi z tego samego zestawu narzędziowego.
-\end{enumerate*}
-
-W dalszej części rozdziału znajduje się szczegółowy opis każdego z modułów.
+System stworzony na potrzeby realizacji niniejszej pracy magisterskiej dzieli się na dwa główne moduły: Środowisko Uczenia oraz narzędzie \texttt{mlagents\_learn}. W tym rozdziale zostaną przedstawione najważniejsze szczegóły implementacyjne obydwu modułów.
 
 \section{Środowisko Uczenia}
-Jest typowym projektem stworzonym na silniku Unity, a w jego skład wchodzi wiele katalogów i plików. W tym rozdziale autor pracy skupił uwagę na opisanie jedynie najważniejszych elementów potrzebnych do zrozumienia aplikacji, zakładając że resztę informacji czytelnik pracy może pozyskać z dokumentacji silnika, stanowiącej bardzo dobre źródło wiedzy o tym narzędziu.
+Standardowy projekt, stworzony poprzez wykorzystanie silnika Unity. Składa się z wielu elementów, jednak w tym rozdziale autor pracy skupia uwagę czytelnika na opisie tylko najważniejszych z nich. Osoby zainteresowane dalszym zgłębianiem tematu mogą zapoznać się z dokumentacją Unity, ponieważ stanowi ona bardzo dobre źródło wiedzy o tym narzędziu.
 
 \subsection{Wykorzystane assety}
 Assety to komponenty przeznaczone do wykorzystania w projektach uruchamianych na silniku Unity. Assety mogą być zasobami różnych typów, począwszy od modeli 3D i plików audio, a skończywszy na skryptach języka C\#. W ramach silnika Unity udostępniana jest specjalna usługa o nazwie \textit{Unity Asset Store} \cite{unity:assetStore}, która zapewnia dostęp do darmowych i płatnych assetów.
@@ -39,11 +33,12 @@ Dokładny opis tego zestawu został zamieszczony w sekcji \ref{VppSection}, tuta
 \end{center}
 \end{figure}
 
-\newpage
+\vspace*{-0.5cm}
 \subsection{Tory wyścigowe}
 \label{RaceTracksSection}
-Na potrzeby implementacji systemu wykorzystano dwa tory z pakietu \textbf{Environmental Race Track Pack}: ,,\textit{Figure 8 Track}'' oraz ,,\textit{Coastal Race Track}''. Tory uległy delikatnym modyfikacjom, polegającym przede wszystkim na usunięciu niepotrzebnych elementów sceny oraz zmianie jej oświetlenia. Widok torów z lotu ptaka został uwieczniony na rysunku \ref{RaceTracksFig}. \\
+Na potrzeby implementacji systemu wykorzystano dwa tory z pakietu \textbf{Environmental Race Track Pack}: ,,\textit{Figure 8 Track}'' oraz ,,\textit{Coastal Race Track}''. Tory uległy delikatnym modyfikacjom, polegającym przede wszystkim na usunięciu niepotrzebnych elementów sceny oraz zmianie jej oświetlenia. Widok torów z lotu ptaka został uwieczniony na rysunku \ref{RaceTracksFig}. Tory różnią się od siebie przede wszystkim poziomem trudności - tor nr 2 wymaga od kierowcy znacznie większych umiejętności, ponieważ zakręty są bardziej zróżnicowane.
 
+\clearpage
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=14.5cm]{resources/figures/race_tracks_marked.png}
@@ -56,12 +51,8 @@ Na potrzeby implementacji systemu wykorzystano dwa tory z pakietu \textbf{Enviro
 \end{center}
 \end{figure}
 
-\vspace{-0.5cm}
-Tory różnią się od siebie przede wszystkim poziomem trudności - tor nr 2 wymaga od kierowcy znacznie większych umiejętności, ponieważ zakręty są bardziej zróżnicowane.
-
 \subsection{Konfiguracja sceny Unity}
 Na potrzeby eksperymentów obliczeniowych przygotowano kilka scen Unity. Zasadniczo różnią się one detalami, które dokładniej zostaną przedstawione w rozdziale \ref{ExperimentsChapter}-tym, natomiast ich rdzeń jest wszędzie taki sam. Najważniejszym obiektem na scenie jest \texttt{CarAgent}, reprezentujący model samochodu sterowany przez sieć neuronową. Obiekt składa się z kiku komponentów, wśród których najważniejsze to:
-\vspace{-0.5cm}
 \begin{enumerate*}
 \item \textbf{Vehicle Controller} - komponent importowany z zestawu Vehicle Physics Pro (por. \ref{VppSection}). Odpowiada za ustawienia fizyki kluczowych elementów samochodu, takich jak: układ kierowniczy, hamulce, opony i skrzynia biegów \cite{vpp:vehicleController}. Na potrzeby implementacji systemu wprowadzono następujące zmiany w konfiguracji komponentu:
 \begin{itemize*}
@@ -74,7 +65,6 @@ Na potrzeby eksperymentów obliczeniowych przygotowano kilka scen Unity. Zasadni
 \item \textbf{Camera Sensor} - czujnik kamery, importowany z zestawu Unity ML-Agents. Jest niezbędny, jeśli chcemy dostarczać sieci neuronowej obserwacji wizualnych ze środowiska. Parametrami komponentu są m.in. wymiary obrazu oraz typ kompresji.
 \end{enumerate*}
 
-\clearpage
 \section{Narzędzie mlagents\_learn}
 Główne narzędzie do treningu sieci neuronowych, oferowane przez zestaw Unity ML-Agents \cite{unitymla:trainingMlAgents}. Parametry są przekazywane do narzędzia poprzez wiersz poleceń oraz plik konfiguracyjny utrzymany w formacie YAML \cite{unitymla:configFile}. Zestaw ustawień oraz hiperparametrów zdefiniowanych w pliku konfiguracyjnym zależy w ogromnym stopniu od zastosowanej metody treningowej oraz sposobu konfiguracji Środowiska Uczenia. Konkretna zawartość wykorzystanych plików konfiguracyjnych zostanie zaprezentowana w kolejnym rozdziale.
 

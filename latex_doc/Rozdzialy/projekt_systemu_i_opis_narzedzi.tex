@@ -3,67 +3,41 @@
 W poniższym rozdziale zostaną zaprezentowane kluczowe decyzje projektowe oraz założenia, jakie zostały przyjęte w toku prac nad implementacją systemu. Oprócz tego zostanie również przedstawiony opis narzędzi, które zostały wykorzystane do stworzenia aplikacji.
 
 \section{Projekt systemu}
-W fazie projektowania należy zdefiniować główne założenia projektowe oraz odpowiednio zaprojektować architekturę systemu. Podsumowując wyniki uzyskane w tej fazie, autor pracy zdecydował się rozpatrzeć trzy najważniejsze zagadnienia:
-\begin{enumerate*}
-\item Definicja \textbf{rozwiązywanego problemu},
-\item Lista \textbf{celów i założeń systemu},
-\item \textbf{Architektura systemu}, rozpatrywana na najwyższym poziomie abstrakcji.
-\end{enumerate*}
+W fazie projektowania należy zdefiniować główne założenia projektowe oraz odpowiednio zaprojektować architekturę systemu. W dalszej części tego rozdziału zostaną omówione trzy kluczowe zagadnienia, jakie powstały w wyniku prac przeprowadzonych w ramach realizacji tej fazy.
 
-\subsection{Definicja rozwiązywanego problemu}
-Zaprojektowany system powinien rozwiązywać problem treningu agentów sterujących samochodem w środowisku symulacji. Samochód powinien pokonywać wyznaczony tor wyścigowy w możliwie najkrótszym czasie. Agenci odbierają informacje o swoim aktualnym położeniu dzięki obrazowi z jednej lub kilku kamer doczepionych do samochodu. W odpowiedzi na te informacje, do środowiska symulacji wysyłane są żądania podjęcia określonych zachowań, np. zmiany poziomu wciśnięcia pedału hamulca. Ponadto, środowisko symulacji na bieżąco przyznaje agentom nagrody i kary w zależności od tego, jak dobrze (lub źle) agent radzi sobie z postawionym zadaniem. Odpowiedni system kar i nagród jest kluczowy dla osiągnięcia zadowalających wyników treningu.
+\subsection{Problem do rozwiązania}
+Zaprojektowany system powinien być zdolny do rozwiązania problemu uczenia konwolucyjnej sieci neuronowej, przeznaczonej do kierowania samochodem poruszającym się po wirtualnym torze wyścigowym. Sieć generuje komendy dla samochodu na podstawie obrazu z kamery umieszczonej wewnątrz pojazdu.
 
-Agentami są konwolucyjne sieci neuronowe, a ich parametry są dostrajane przy użyciu metody uczenia maszynowego zwanej \textbf{uczeniem ze wzmocnieniem} (z ang. \textit{reinforcement learning}) \cite{deepRL:guide}.
+Trening sieci neuronowej ma się odbywać poprzez wykorzystanie metody uczenia maszynowego o nazwie \textbf{uczenie ze wzmocnieniem} (z ang. \textit{reinforcement learning}) \cite{deepRL:guide}. Jako algorytm uczący wykorzystano algorytm PPO \cite{ppo:opis}.
 
 \subsection{Cele i założenia}
 \begin{enumerate*}
 \item Stworzony system powinien być możliwie prosty w obsłudze.
-\item Wytrenowane modele powinny być zapisywane do pliku o ustalonym formacie. Format pliku musi być rozpoznawany i obsługiwany przez aplikację.
-\item Dane konfiguracyjne powinny być dostarczane z zewnętrznego pliku o ustalonym formacie.
-\item System powinien posiadać możliwość podglądu ,,na żywo'' postępów treningu sieci podczas jego trwania.
+\item Po skończonym treningu, model sieci neuronowej ma być przechowywany w pliku o formacie ONNX \cite{onnx:website}. Plik z modelem musi być rozpoznawany w systemie, tak aby była możliwość ewaluacji wyuczonego modelu.
+\item Konfiguracja treningu ma być tworzona w pliku tekstowym o zdefiniowanym formacie. Przy starcie treningu należy podać ścieżkę do pliku z konfiguracją.
+\item System musi udostępniać możliwość podglądu ,,na żywo'' przebiegu trwającego treningu sieci neuronowej.
 \end{enumerate*}
 
 \subsection{Architektura systemu}
 \label{SoftwareArchSection}
-System składa się z dwóch zasadniczych modułów: Środowiska Uczenia oraz narzędzia \texttt{mlagents\_learn}. Moduły komunikują się ze sobą za pośrednictwem mechanizmu komunikacji dostarczanego przez zestaw Unity ML-Agents. Wizualizacja architektury systemu została przedstawiona na rysunku \ref{SystemArchitecture}, a więcej informacji na temat każdego z modułów można uzyskać w rozdziale \ref{ImplementationChapter}-tym, poświęconym opisowi implementacji systemu. \\
+System jest złożony z dwóch głównych modułów, niezależnych od siebie: Środowiska Uczenia oraz narzędzia \texttt{mlagents\_learn}. Komunikacja między modułami odbywa się poprzez mechanizm zdefiniowany w zestawie Unity ML-Agents. Uproszczona wizualizacja systemu została zobrazowana na rysunku \ref{SystemArchitecture}. Aby dowiedzieć się więcej na temat każdego z modułów, należy zapoznać się z rozdziałem \ref{ImplementationChapter}-tym, gdzie znajduje się opis ich implementacji. \\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=15cm]{resources/figures/system_architecture.png}
-\caption{Wizualizacja architektury systemu.}
+\caption{Moduły systemu}
 \label{SystemArchitecture}
 \end{center}
 \end{figure}
 
 \section{Opis narzędzi}
-W tej sekcji zamieszczam opis narzędzi wykorzystanych do implementacji systemu.
-\subsection{Unity}
-Multiplatformowy silnik gier 2D i 3D \cite{unity:opis}, napisany w językach C/C++.
-Skrypty silnika należy pisać w języku C\#.
-Gry tworzone na silniku Unity mogą być uruchamiane na bardzo wielu platformach sprzętowych i systemowych \cite{unity:buildTargets}:
-\begin{enumerate*}
-\item Komputery osobiste (PC):
-\begin{itemize*}
-\item Windows,
-\item Linux,
-\item Mac OS X;
-\end{itemize*}
-\item Urządzenia mobilne (smartfony):
-\begin{itemize*}
-\item Android,
-\item iOS;
-\end{itemize*}
-\item Konsole do gier:
-\begin{itemize*}
-\item PlayStation 4,
-\item PlayStation 5,
-\item Xbox One,
-\item Nintendo Switch;
-\end{itemize*}
-\item i wiele innych.
-\end{enumerate*}
+Aby zaimplementować system, autor pracy musiał korzystać z pewnych narzędzi. \\
+Poniżej znajduje się ich opis.
 
-Unity posiada bardzo atrakcyjne warunki licencyjne - niemal wszystkie funkcje silnika są dostępne za darmo dla twórców nieprzekraczających 100 tysięcy dolarów rocznego dochodu.
+\subsection{Unity}
+Jeden z najpopularniejszych silników gier \cite{unity:opis}, wspierający zdecydowaną większość platform dostępnych obecnie na rynku. Do tych platform należy zaliczyć: komputery klasy PC (Windows, MacOS, Linux), urządzenia mobilne (iOS, Android), konsole do gier (PlayStation 4, PlayStation 5, Xbox One, Nintendo Switch) oraz wiele innych. Pełna lista wspieranych platform jest dostępna na stronie dokumentacji silnika Unity \cite{unity:buildTargets}.
+
+Warto również wspomnieć o bardzo atrakcyjnych warunkach licencyjnych - większość funkcji oferowanych przez silnik jest legalnie dostępna za darmo dla użytkowników, których roczny dochód nie przekracza 100 000 dolarów.
 
 W Unity powstało wiele popularnych gier, takich jak:
 \begin{enumerate*}
@@ -77,7 +51,7 @@ W Unity powstało wiele popularnych gier, takich jak:
 \item i wiele innych.
 \end{enumerate*}
 
-Warto również wspomnieć o module Unity Asset Store, który zezwala na wykorzystanie płatnych i darmowych komponentów, takich jak tekstury, modele czy skrypty.
+Ostatnią funkcją wartą uwagi jest moduł \textbf{Unity Asset Store}, który pozwala na publikowanie oraz pobieranie zarówno darmowych, jak i płatnych komponentów do wykorzystania w projektach silnika Unity. Komponenty mogą zawierać zasoby różnego typu, takie jak modele 3D, skrypty języka C\# lub pliki audio.
 
 \subsection{C\#}
 Język programowania stworzony przez firmę Microsoft jako konkurencja dla Javy \cite{csharp:opis}. Jest wysokopoziomowym, obiektowym językiem programowania, ściśle zintegrowanym z platformą .NET (pełniącą rolę frameworka oraz środowiska uruchomieniowego). Charakteryzuje się silnym, statycznym typowaniem. C\# pozwala na tworzenie aplikacji desktopowych (Windows, Linux, MacOS), webowych (poprzez użycie frameworka ASP.NET) oraz multiplatformowych aplikacji mobilnych (poprzez wykorzystanie narzędzia Xamarin). Obecnie jest to jeden z najpopularniejszych języków programowania.
@@ -96,29 +70,20 @@ Otwartoźródłowy zestaw narzędzi przeznaczony dla silnika Unity 3D \cite{unit
 \item Inna metoda uczenia maszynowego - zdefiniowana przez użytkownika.
 \end{enumerate*}
 
-Zestaw Unity ML-Agents składa się z pięciu podstawowych komponentów:
+Zestaw Unity ML-Agents jest złożony z pięciu podstawowych modułów:
 \begin{enumerate*}
 \item Środowisko Uczenia (z ang. \textit{Learning Environment}) - obejmuje scenę Unity oraz wszystkie obiekty znajdujące się na niej. Scena Unity dostarcza środowisko do generowania obserwacji, wykonywania działań i uczenia się.
-\item Niskopoziomowe API Pythona (z ang. \textit{Python Low-Level API}) \cite{unitymla:pythonapi} - zawiera niskopoziomowy interfejs programistyczny służący do komunikacji ze Środowiskiem Uczenia. API Pythona nie jest częścią silnika Unity, ale istnieje jako osobny byt komunikujący się z Unity dzięki Zewnętrznemu Komunikatorowi. API jest zaimplementowane w języku Python i zawarte w pakiecie o nazwie \texttt{mlagents\_envs}.
-\item Zewnętrzny Komunikator (z ang. \textit{External Communicator}) - łączy Środowisko Uczenia z Niskopoziomowym API Pythona.
-\item Trenerzy Pythona (z ang. \textit{Python Trainers}) - zawiera wszystkie algorytmy uczenia maszynowego dostarczane przez Unity ML-Agents. Algorytmy zaimplementowane są w języku Python i należą do pakietu o nazwie \texttt{mlagents}. Pakiet udostępnia narzędzie wiersza poleceń o nazwie \texttt{mlagents-learn}, które obsługuje wszystkie metody treningu i opcje opisane powyżej.
-\item Gym Wrapper - opisany w dokumentacji zestawu \cite{unitymla:gymWrapper}. Mało istotny dla dalszych rozważań.
+\item Niskopoziomowe API języka Python (z ang. \textit{Python Low-Level API}) \cite{unitymla:pythonapi} - cytując dokumentację zestawu Unity ML-Agents \cite{unitymla:overview}, jest to ,,\textit{niskopoziomowy interfejs programistyczny, służący do komunikacji ze Środowiskiem Uczenia. API Pythona istnieje jako osobny byt (niezależny od silnika Unity), komunikujący się ze sceną Unity dzięki Zewnętrznemu Komunikatorowi. API jest zaimplementowane w języku Python i zawarte w pakiecie o nazwie} \texttt{mlagents\_envs}''.
+\item Zewnętrzny Komunikator (z ang. \textit{External Communicator}) - odpowiedzialny za komunikację pomiędzy Środowiskiem Uczenia a Niskopoziomowym API języka Python.
+\item Trenerzy Pythona (z ang. \textit{Python Trainers}) - zestaw algorytmów uczenia maszynowego, napisanych w języku Python. Algorytmy te są częścią pakietu \texttt{mlagents}, w skład którego wchodzi także konsolowe narzędzie o nazwie \texttt{mlagents-learn}, odpowiedzialne za obsługę wszystkich metod treningu wspieranych przez Unity ML-Agents.
+\item Gym Wrapper - opisany w dokumentacji zestawu \cite{unitymla:gymWrapper}, zupełnie nieistotny dla dalszych rozważań.
 \end{enumerate*}
 
-Rysunek \ref{UnityMlaComponents} przedstawia diagram opisanych powyżej komponentów zestawu Unity ML-Agents. Gym Wrapper został na nim pominięty.
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=15cm]{resources/figures/learning_environment_basic.png}
-\caption{Diagram komponentów Unity ML-Agents}
-\source{https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/ML-Agents-Overview.md}
-\label{UnityMlaComponents}
-\end{center}
-\end{figure}
+Komponenty zestawu Unity ML-Agents zostały zilustrowane na rysunku \ref{UnityMlaComponents}, na którym narysowano wszystkie komponenty poza Gym Wrapperem.
 
 Poprawnie skonfigurowane Środowisko Uczenia musi zawierać następujące elementy:
 \begin{enumerate*}
-\item Co najmniej jednego Agenta (z ang. \textit{Agent}). Agent to komponent dołączany do obiektu klasy \texttt{GameObject}, umiejscowionego na scenie Unity. Każdy Agent jest instancją klasy dziedziczącej po klasie \texttt{Agent}. Agent zajmuje się generowaniem Obserwacji, wykonywaniem Akcji oraz przydzielaniem Nagród.
+\item Co najmniej jednego Agenta (z ang. \textit{Agent}). Agent to komponent dołączany do obiektu klasy \texttt{GameObject}, umiejscowionego na scenie Unity. Każdy Agent jest instancją klasy dziedziczącej po klasie \texttt{Agent} i jest odpowiedzialny za przygotowanie Obserwacji dla sieci neuronowej, wykonywanie Akcji generowanych przez sieć neuronową oraz obliczanie wartości sygnałów Nagrody.
 \item Co najmniej jednego Zachowania (z ang. \textit{Behavior}). Zachowanie definiuje określone atrybuty Agenta, takie jak liczba i rodzaj wykonywanych Akcji. Każde Zachowanie jest jednoznacznie identyfikowane poprzez pole \texttt{Behavior Name}. \\
 Istnieją trzy rodzaje Zachowań:
 \begin{itemize*}
@@ -130,10 +95,10 @@ Istnieją trzy rodzaje Zachowań:
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=15cm]{resources/figures/learning_environment_example.png}
-\caption{Przykład relacji Agentów z Zachowaniami w Środowisku Uczenia}
+\includegraphics[width=15cm]{resources/figures/learning_environment_basic.png}
+\caption{Diagram komponentów Unity ML-Agents}
 \source{https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/ML-Agents-Overview.md}
-\label{UnityMlaExample}
+\label{UnityMlaComponents}
 \end{center}
 \end{figure}
 
@@ -142,6 +107,18 @@ Każdy Agent musi być powiązany z dokładnie jednym Zachowaniem, a Zachowanie 
 Rysunek \ref{UnityMlaExample} przedstawia przykładowy diagram zależności Agentów z Zachowaniami w Środowisku Uczenia. Agenci \texttt{A1} i \texttt{A2} są podłączeni do Zachowania Uczącego. Agenci \texttt{C1} i \texttt{D1} są podłączeni odpowiednio do Zachowania Wnioskującego i Heurystycznego.
 
 Opisując narzędzie Unity ML-Agents, należałoby również wspomnieć kilka słów o samym Agencie. Każdy Agent wykonuje cyklicznie trzy czynności: generuje Obserwacje, wykonuje zlecone Akcje i oblicza wartość Nagrody. Omówmy każdy z tych elementów:
+
+\newpage
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{resources/figures/learning_environment_example.png}
+\caption{Przykład relacji Agentów z Zachowaniami w Środowisku Uczenia}
+\source{https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/ML-Agents-Overview.md}
+\label{UnityMlaExample}
+\end{center}
+\vspace{-1cm}
+\end{figure}
+
 \begin{enumerate*}
 \item Obserwacje (z ang. \textit{Observations}) - zestaw danych wejściowych, niezbędnych do wykonania zleconego Agentowi zadania. Obserwacje mogą być generowane na kilka sposobów:
 \begin{itemize*}
@@ -158,10 +135,9 @@ Opisując narzędzie Unity ML-Agents, należałoby również wspomnieć kilka s�
 \item Nagrody (z ang. \textit{Rewards}) - informacja zwrotna, pozwalająca ocenić jak dobre (lub złe) są Akcje wykonywane obecnie przez Agenta. System Nagród jest najważniejszym elementem w uczeniu ze wzmocnieniem, ponieważ sposób jego skonstruowania ma decydujący wpływ na to, czy trening sieci neuronowej się powiedzie.
 \end{enumerate*}
 
-\clearpage
 \subsection{Vehicle Physics Pro}
 \label{VppSection}
-Zaawansowany zestaw do symulacji pojazdów dla silnika Unity 3D. VPP zapewnia wydajny, w pełni realistyczny i dokładny model dynamiki dla niemal każdego typu pojazdu i konfiguracji. W skład zestawu wchodzą m.in. \cite{vpp:features}:
+Zaawansowany zestaw do symulacji pojazdów dla silnika Unity 3D. VPP zapewnia wydajny, w pełni realistyczny i dokładny model dynamiki dla niemal każdego typu pojazdu i konfiguracji. Większość aspektów symulacji podlega możliwościom dostosowania do potrzeb użytkownika. W skład zestawu wchodzą m.in. \cite{vpp:features}:
 \begin{enumerate*}
 \item Wierne odwzorowanie pracy podzespołów pojazdu, obejmujące m.in.:
 \begin{itemize*}
@@ -187,36 +163,24 @@ Zaawansowany zestaw do symulacji pojazdów dla silnika Unity 3D. VPP zapewnia wy
 \item Szczegółowa dokumentacja.
 \end{enumerate*}
 
-Większość aspektów symulacji podlega możliwościom dostosowania do potrzeb użytkownika.
-
-\subsection{Conda}
-System zarządzania pakietami i środowiskami, posiadający wsparcie dla wielu języków programowania, m.in.: Python, Scala, Java, Fortran \cite{conda:overview}. Conda pozwala łatwo tworzyć, zapisywać i ładować środowiska uruchomieniowe oraz sprawnie przełączać się pomiędzy nimi. Wykorzystując zaledwie kilka prostych poleceń, użytkownik jest w stanie skonfigurować całkowicie odrębne środowisko do uruchomienia wybranej wersji Pythona z określonymi pakietami dodatkowymi. Każde środowisko może posiadać całkowicie odmienną konfigurację.
-
-\clearpage
 \subsection{Netron}
 \label{NetronOpis}
 Przeglądarka sieci neuronowych \cite{netron:github}. Netron posiada wsparcie dla wielu popularnych technologii wykorzystywanych w uczeniu maszynowym, takich jak ONNX, Keras, czy Barracuda. Ten program został wykorzystany do wizualizacji modelu wytrenowanej sieci neuronowej, otrzymanej w wyniku przeprowadzenia serii eksperymentów obliczeniowych.
 
-\vspace{0.5cm}
-
-\subsection{Wykorzystane wersje oprogramowania}
+\subsection{Wykorzystane wersje narzędzi}
 \begin{enumerate*}
 \item Unity - 2020.3.28f
 \item C\# - Mono 6.12.0.122
 \item Unity ML-Agents - 0.28.0
 \item Vehicle Physics Pro - 9.2
-\item Conda - 4.9.2
 \item Netron - 5.7.6
 \end{enumerate*}
 
-\vspace{0.5cm}
-
-\subsection{Specyfikacja techniczna stacji roboczej}
+\subsection{Specyfikacja techniczna komputera}
 \label{ComputerTechSpecs}
-Oto specyfikacja techniczna stacji roboczej (komputera), na którym została wykonana implementacja systemu oraz zostały przeprowadzone wszystkie eksperymenty obliczeniowe:
+Oto specyfikacja techniczna komputera, na którym autor wykonał całą pracę związaną z implementacją systemu oraz przeprowadzeniem eksperymentów obliczeniowych:
 \begin{enumerate*}
-\item Typ urządzenia - Laptop
-\item Marka i model urządzenia - Dell Inspiron 7559 \cite{dellInspiron:specs}
+\item Marka i model komputera - Dell Inspiron 7559 \cite{dellInspiron:specs}
 \item Procesor - Intel® Core™ i7-6700HQ (2.6 GHz) \cite{intelCpu:specs}
 \item Pamięć RAM - SODIMM DDR3 Synchronous 1600 MHz (32 GB)
 \item Karty graficzne:

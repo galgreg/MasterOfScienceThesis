@@ -4,11 +4,10 @@
 W tym rozdziale zostanie zaprezentowana część praktyczna tworzonej pracy, która polega na przeprowadzeniu kilku eksperymentów obliczeniowych w oparciu o przygotowane przez autora oprogramowanie. Rozdział rozpoczyna się od omówienia przyjętej metodyki eksperymentów, następnie zostaną przedstawione najistotniejsze szczegóły implementacyjne poszczególnych eksperymentów obliczeniowych. Rozdział zakończy się analizą uzyskanych wyników oraz opisem wypływających z tego wniosków.
 
 \section{Metodyka eksperymentów}
-Metodyka eksperymentów obliczeniowych polega na sformułowaniu listy założeń, na których ma się oprzeć przeprowadzenie wszystkich eksperymentów. Oto najważniejsze z przyjętych założeń:
-\vspace*{-0.5cm}
+W ramach opracowania metodyki eksperymentów obliczeniowych, autor pracy przyjął następujące założenia:
 \begin{enumerate*}
-\item Każdy eksperyment obliczeniowy polega na wytrenowaniu konwolucyjnej sieci neuronowej w przygotowanym Środowisku Uczenia oraz ewaluacji wyuczonego modelu.
-\item Parametry dla każdego eksperymentu powinny zostać dostarczone w postaci zewnętrznego pliku konfiguracyjnego o zdefiniowanym formacie. Ścieżkę do pliku konfiguracyjnego należy podać jako argument linii poleceń.
+\item Każdy eksperyment obliczeniowy polega na wytrenowaniu konwolucyjnej sieci neuronowej w przygotowanym Środowisku Uczenia. Po skończonym treningu, model podlega ewaluacji poprzez ocenę jego zachowania podczas jazdy po torze wyścigowym.
+\item Konfiguracja treningu sieci neuronowej musi być zdefiniowana w pliku tekstowym o formacie akceptowanym przez narzędzie \texttt{mlagents\_learn}. Ścieżka do pliku będzie określana przy starcie treningu, jako jeden z parametrów wywołania narzędzia \texttt{mlagents\_learn}.
 \item Wynikiem przeprowadzonego treningu sieci konwolucyjnej powinien być plik z wytrenowanym modelem.
 \item Do samodzielnego przeprowadzenia eksperymentów obliczeniowych należy mieć zainstalowane odpowiednie narzędzia (zgodnie z opisem z rozdziału \ref{DesignSystemChapter}-ciego), jak również posiadać kod źródłowy aplikacji wymaganej do wykonania eksperymentów.
 \item Wytrenowany model sieci neuronowej powinien posiadać format danych pozwalający na jego wizualizację przy użyciu zewnętrznego oprogramowania.
@@ -17,7 +16,6 @@ Metodyka eksperymentów obliczeniowych polega na sformułowaniu listy założeń
 \section{Opis implementacji}
 Implementacja systemu została częściowo opisana w rozdziale \ref{ImplementationChapter}-tym, natomiast każdy z przeprowadzonych eksperymentów wymagał dostosowania pewnych detali w implementacji. Poniżej zamieszczam opis tych elementów implementacji, które nie zostały jeszcze opisane, a są zbyt ważne aby je pominąć.
 
-\clearpage
 \subsection{Środowiska Uczenia}
 \label{LearningEnvsSubsection}
 W ramach prac nad częścią eksperymentalną zostały przygotowane 3 Środowiska Uczenia, będące niczym innym jak scenami silnika Unity. Każde Środowisko Uczenia posiada własną charakterystykę oraz pewne cechy szczególne, wyróżniające je na tle pozostałych Środowisk.
@@ -48,6 +46,7 @@ Na podstawie rysunku można wysnuć kilka wniosków:
 \caption{Widok z fotela kierowcy w Środowisku Uczenia \textit{RaceTrack\_1}}
 \label{RaceTrack1Cockpit}
 \end{center}
+\vspace*{-1cm}
 \end{figure}
 
 \subsubsection{RaceTrack\_2}
@@ -70,7 +69,6 @@ W toku prac nad aplikacją zostało napisanych i przetestowanych wiele wersji im
 
 \subsubsection{SimpleCarAgent}
 Klasa użyta w Środowiskach Uczenia \textit{RaceTrack\_1} oraz \textit{RaceTrack\_2} (por. \ref{LearningEnvsSubsection}). Jest odpowiedzialna za:
-\vspace*{-0.5cm}
 \begin{enumerate*}
 \item \textit{Prawidłową inicjalizację każdego epizodu treningu} - przywrócenie samochodu do pozycji startowej oraz zmianę właściwości oświetlenia (jego pozycji, orientacji, koloru oraz intensywności).
 \item \textit{Przekazywanie obserwacji ze Środowiska Uczenia do sieci neuronowej} - pobierane są 3 obserwacje ze środowiska - jedna wizualna (obraz z kamery) oraz dwie wektorowe (znormalizowana prędkość samochodu oraz informacja o tym, czy w danej chwili samochód dotyka jakiejś przeszkody).
@@ -156,7 +154,6 @@ Dla każdego z przygotowanych Środowisk Uczenia przeprowadzono dokładnie jeden
 \subsection{RaceTrack\_1}
 Środowisko najłatwiejsze do wytrenowania konwolucyjnej sieci neuronowej, ponieważ brak jest zmiennego oświetlenia sceny, a zakręty są łagodne i niewymagające trudnych manewrów do wykonania. Wytrenowanie modelu zajęło 1 647 798 kroków symulacji. \\
 Obserwacje sieci obejmowały:
-\vspace*{-0.5cm}
 \begin{enumerate*}
 \item Obserwacje wizualne z kamery umieszczonej na fotelu kierowcy, czyli obrazki RGB o wymiarach $240 \times 135$ pikseli;
 \item Obserwacje wektorowe:
@@ -167,7 +164,6 @@ Obserwacje sieci obejmowały:
 \end{enumerate*}
 
 Model był trenowany na pojedynczej instancji obiektu sceny \textit{CarAgent}, którego pozycja i orientacja były resetowane na początku każdego epizodu symulacji. Epizod kończył się w momencie przejechania pełnego okrążenia lub po wyczerpaniu zakładanego limitu czasowego dla danego epizodu. Z testów wytrenowanego modelu wynika, że:
-\vspace*{-0.5cm}
 \begin{enumerate*}
 \item Model charakteryzuje się niestabilnym tempem jazdy, a wykonane pomiary czasowe wskazują na dość znaczne odchyły w czasach okrążeń.
 \item Wytrenowany model jest w stanie bezpiecznie przejechać kilka okrążeń pod rząd, choć ma tendencje do bardzo agresywnego wchodzenia w pierwszy zakręt, co czasem kończy się poważną kraksą - samochód obraca się o 90 stopni w stosunku do zakładanego kierunku jazdy.

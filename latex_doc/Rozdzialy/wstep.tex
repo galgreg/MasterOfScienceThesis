@@ -1,31 +1,34 @@
 \chapter*{Wstęp}
 \addcontentsline{toc}{chapter}{Wstęp}
-Przedmiotem pracy jest zastosowanie konwolucyjnej sieci neuronowej oraz technik głębokiego uczenia maszynowego do rozwiązania problemu sterowania samochodem autonomicznym. Ponieważ jest to bardzo złożone zagadnienie, dlatego wiele uwagi zostało poświęconej na potrzeby dobrego zrozumienia jego podstawowych elementów.
+Zastosowanie konwolucyjnej sieci neuronowej do przetwarzania obrazu z kamer zamontowanych wokół 
+samochodu autonomicznego to skomplikowane zagadnienie, które stało się głównym tematem rozpatrywanym w niniejszej pracy. Aby uczynić go bardziej zrozumiałym dla czytelnika, autor włożył wiele wysiłku w celu zaprezentowania najważniejszych pojęć teoretycznych, związanych z tematem pracy.
 
-\vspace*{1.5cm}
 \section*{Cel i zakres pracy}
-Jako cel pracy przyjęto opracowanie prostego systemu uczącego konwolucyjne sieci neuronowe w oparciu o symulacje uruchamiane w przygotowanym środowisku wirtualnym. Sieć neuronowa rozwiązuje problem jazdy samochodem po torze wyścigowym w oparciu o obraz z kamer zamontowanych w samochodzie. \\
-Zakres pracy obejmuje poniższe zagadnienia:
+W ramach pracy stworzono aplikację, której zadaniem jest trening konwolucyjnych sieci neuronowych na podstawie obserwacji wizualnych z wirtualnego toru wyścigowego. Sieć neuronowa otrzymuje obraz z kamery umieszczonej wewnątrz samochodu, a wartości generowane przez sieć są wykorzystywane do sterowania pojazdem. \\
+Zakresem pracy są objęte:
 \begin{enumerate*}
-\item Przegląd literatury na temat samochodów autonomicznych, wykorzystywanych typów czujników oraz wiodących rozwiązań na rynku.
-\item Przegląd literatury na temat konwolucyjnych sieci neuronowych.
-\item Zaprojektowanie systemu uczącego konwolucyjne sieci neuronowe oraz wybór odpowiednich narzędzi do jego implementacji.
-\item Implementacja systemu uczącego konwolucyjne sieci neuronowe w oparciu o obraz z kamer zamontowanych w wirtualnym samochodzie oraz inne sygnały płynące ze środowiska symulacji.
-\item Przeprowadzenie eksperymentów obliczeniowych na utworzonym systemie oraz analiza uzyskanych wyników.
+\item Przedstawienie podstawowych pojęć związanych z samochodami autonomicznymi. Przegląd literatury pod kątem stosowanych typów czujników oraz najważniejszych projektów komercyjnych.
+\item Opis teorii z zakresu konwolucyjnych sieci neuronowych.
+\item Projekt systemu przeznaczonego do treningu konwolucyjnych sieci neuronowych. Opis narzędzi wykorzystanych przy implementacji.
+\item Implementacja systemu przeznaczonego do treningu konwolucyjnych sieci neuronowych na podstawie obrazu z kamery umieszczonej wewnątrz wirtualnego samochodu.
+\item Wykonanie eksperymentów obliczeniowych na opracowanym systemie oraz analiza uzyskanych wyników.
 \end{enumerate*}
 
 \newpage
 \section*{Struktura pracy}
-Praca jest złożona z pięciu numerowanych rozdziałów, a każdy z nich dotyczy określonego elementu omawianego tematu. Kolejność rozdziałów jest realizacją zasady ,,\textit{od ogółu do szczegółu}'' - praca rozpoczyna się od omówienia teoretycznych pojęć, niezbędnych do zrozumienia jej dalszej treści. Natomiast dwa ostatnie rozdziały dotyczą bardzo konkretnych oraz praktycznych zagadnień. Lista rozdziałów przedstawia się następująco:
+Struktura pracy została ukształtowana według tej samej konwencji, jaka została przyjęta dla poprzedniej pracy autora \cite{galios:thesis}. Cytując: ,,\textit{Praca składa się z pięciu numerowanych rozdziałów. Każdy rozdział dotyczy konkretnego aspektu omawianego tematu, a kolejność rozdziałów realizuje zasadę od ogółu do szczegółu. Praca rozpoczyna się od rozdziałów omawiających ogólne zagadnienia teoretyczne,
+niezbędne do zrozumienia dalszych rozdziałów pracy. Kończy się natomiast rozdziałem będącym opisem bardzo konkretnych i praktycznych aspektów tematu.}''
+
+Lista rozdziałów przedstawia się następująco:
 \begin{enumerate*}
 \item \textbf{Samochody autonomiczne} \\
-Rozdział opisuje problematykę zagadnienia samochodów autonomicznych, kładąc szczególny nacisk na zaprezentowanie oraz porównanie ze sobą urządzeń wykorzystywanych w modelu percepcji samochodów. Pokaźna część rozdziału została poświęcona opisaniu wiodących rozwiązań oferowanych obecnie na rynku.
+Opis problematyki zagadnienia samochodów autonomicznych, ze szczególnym naciskiem na omówienie urządzeń wykorzystywanych w modelu percepcji samochodów. Pokaźna część rozdziału została poświęcona na opisanie wiodących rozwiązań oferowanych na rynku.
 \item \textbf{Konwolucyjne sieci neuronowe} \\
-Rozdział zawiera najistotniejsze zagadnienia teoretyczne z zakresu konwolucyjnych sieci neuronowych, ich treningu oraz obszaru zastosowań. Przedstawione zagadnienia to niezbędne minimum, potrzebne do prawidłowego zrozumienia dalszej części pracy.
+Przegląd subiektywnie wybranych pojęć teoretycznych, które zostały uznane przez autora pracy za istotne w kontekście zrozumienia konwolucyjnych sieci neuronowych oraz ich wykorzystania w dalszej części pracy.
 \item \textbf{Projekt systemu i opis narzędzi} \\
-Rozdział został podzielony na dwie części. W pierwszej z nich zostały opisane główne założenia projektowe dla implementowanego systemu. Z kolei w części drugiej zamieszczono opis narzędzi wykorzystanych podczas implementacji systemu.
+Rozdział poświęcony opisowi architektury systemu stworzonego w ramach pisania tej pracy. Dodatkowo, w rozdziale znalazł się opis narzędzi użytych do implementacji systemu.
 \item \textbf{Opis implementacji} \\
-Rozdział przedstawia opis implementacji systemu wykonanego na potrzeby tej pracy. Szczególny nacisk został położony na opisanie kluczowych komponentów wchodzących w skład systemu.
+Rozdział zawiera szczegóły dotyczące implementacji systemu stworzonego w ramach pisania pracy. Szczególny nacisk został położony na opisanie kluczowych modułów systemu.
 \item \textbf{Eksperymenty obliczeniowe} \\
-Rozdział poświęcony na przedstawienie metodyki przeprowadzanych eksperymentów obliczeniowych oraz analizę uzyskanych wyników.
+Tutaj znajdują się szczegóły związane z eksperymentami obliczeniowymi, przeprowadzonymi w ramach tworzenia niniejszej pracy. W rozdziale znalazł się m.in. opis metodyki przyjętej dla eksperymentów obliczeniowych, opis przebiegu eksperymentów oraz wnioski z uzyskanych wyników.
 \end{enumerate*}
